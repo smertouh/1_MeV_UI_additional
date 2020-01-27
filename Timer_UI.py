@@ -29,7 +29,9 @@ import PyQt5.QtGui as QtGui
 
 import tango
 
+from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
+from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
@@ -63,7 +65,6 @@ class MainWindow(QMainWindow):
         global logger
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
-
         # logging config
         self.logger = logger
         # members definition
@@ -74,25 +75,16 @@ class MainWindow(QMainWindow):
         self.elapsed_time = 0.0
         self.pulse_duration = 0.0
         self.pulse_start = time.time()
-
         # Load the UI
         uic.loadUi(UI_FILE, self)
         # Default main window parameters
-        ##self.setMinimumSize(QSize(480, 640))        # min size
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
-        ##self.setWindowTitle(APPLICATION_NAME)       # title
-        ##self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
-        # Connect signals with slots
-        ##self.plainTextEdit_1.textChanged.connect(self.refresh_on)
-        ##self.checkBox_25.clicked.connect(self.phandler)
+        self.setWindowTitle(APPLICATION_NAME)       # title
+        self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
         # Connect menu actions
         self.actionQuit.triggered.connect(qApp.quit)
         self.actionAbout.triggered.connect(self.show_about)
-        # Additional decorations
-        ##self.radioButton.setStyleSheet('QRadioButton {background-color: red}')
-        ##self.doubleSpinBox_4.setSingleStep(0.1)
-        ##self.doubleSpinBox_21.setKeyboardTracking(False)
         # Clock at status bar
         self.clock = QLabel(" ")
         self.statusBar().addPermanentWidget(self.clock)
@@ -105,162 +97,73 @@ class MainWindow(QMainWindow):
 
         self.restore_settings(self.config_widgets)
 
-        test = False
-        # read attributes TangoWidgets list
-        if not test:
-            self.rdwdgts = (
-                # magnet 1
-                TangoLED('binp/nbi/magnet1/output_state', self.pushButton_37),
-                TangoLabel('binp/nbi/magnet1/voltage', self.label_140),
-                TangoLabel('binp/nbi/magnet1/current', self.label_142),
-                # magnet 2
-                TangoLED('binp/nbi/magnet2/output_state', self.pushButton_33),
-                TangoLabel('binp/nbi/magnet2/voltage', self.label_125),
-                TangoLabel('binp/nbi/magnet2/current', self.label_127),
-                # pg
-                TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_30),
-                TangoLabel('binp/nbi/pg_offset/voltage', self.label_121),
-                TangoLabel('binp/nbi/pg_offset/current', self.label_122),
-                # rf system
-                TangoLED('binp/nbi/timing/di63', self.pushButton_32),
-                # lauda
-                TangoLED('binp/nbi/lauda/6230_0', self.pushButton_34),  # Pump On
-                TangoLED('binp/nbi/lauda/6230_7', self.pushButton_31),  # Valve
-                TangoLabel('binp/nbi/lauda/1012', self.label_23),       # Return
-                # acceleration
-                TangoLabel('ET7000_server/test/pet9_7026/ai00', self.label_34),
-                # extraction
-                TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_25),
-                TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_25),
-                # timer
-                #TangoLED('binp/nbi/timing/', self.pushButton_6),  # shot is running
-                #TangoLabel('binp/nbi/timing/', self.label_3),  # elapsed
-                #TangoLabel('binp/nbi/timing/', self.label_5),  # remained
-            )
-            # write attributes TangoWidgets list
-            self.wtwdgts = (
-                # magnet 1
-                TangoAbstractSpinBox('binp/nbi/magnet1/programmed_current', self.doubleSpinBox_49, False),
-                TangoRadioButton('binp/nbi/magnet1/output_state', self.radioButton_52, False),
-                TangoAbstractSpinBox('binp/nbi/magnet1/programmed_voltage', self.doubleSpinBox_50, False),
-                # magnet 2
-                TangoRadioButton('binp/nbi/magnet2/output_state', self.radioButton_49, False),
-                TangoAbstractSpinBox('binp/nbi/magnet2/programmed_current', self.doubleSpinBox_43, False),
-                TangoAbstractSpinBox('binp/nbi/magnet2/programmed_voltage', self.doubleSpinBox_44, False),
-                # pg
-                TangoRadioButton('binp/nbi/pg_offset/output_state', self.radioButton_48, False),
-                TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_current', self.doubleSpinBox_41, False),
-                TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_voltage', self.doubleSpinBox_42, False),
-                # rf system
-                TangoAbstractSpinBox('binp/nbi/dac0/channel0', self.spinBox_3, False),
-                TangoAbstractSpinBox('binp/nbi/dac0/channel1', self.spinBox_2, False),
-                TangoPushButton('binp/nbi/timing/do0', self.pushButton_7, False),
-                TangoPushButton('binp/nbi/timing/do1', self.pushButton_8, False),
-                TangoPushButton('binp/nbi/timing/do2', self.pushButton_5, False),
-                # lauda
-                TangoAbstractSpinBox('binp/nbi/lauda/1100', self.spinBox_4, False),  # SetPoint
-                TangoPushButton('binp/nbi/lauda/6210_3', self.pushButton_4, False),  # Valve
-                TangoPushButton('binp/nbi/lauda/6210_1', self.pushButton_3, False),  # Run
-                TangoPushButton('binp/nbi/lauda/6210_0', self.pushButton_6, False),  # Enable
-                TangoPushButton('binp/nbi/lauda/6210_2', self.pushButton_9, False),  # Reset
-                # extraction
-                TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao00', self.doubleSpinBox_5, False),
-                TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao01', self.doubleSpinBox_6, False),
-                # acceleration
-                TangoAbstractSpinBox('ET7000_server/test/pet9_7026/ao00', self.doubleSpinBox_7, False),
-                TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_8, False),
-                # timer
-                #TangoAbstractSpinBox('binp/nbi/timing/', self.spinBox, False),  # period
-                #TangoPushButton('binp/nbi/timing/', self.pushButton, False),  # run
-                #TangoComboBox('binp/nbi/timing/', self.comboBox, False),  # single/periodical
-            )
-        else:
-            self.rdwdgts = (TangoLED('binp/test/test1/output_state', self.pushButton_37),
-                            TangoLabel('binp/test/test1/voltage', self.label_140),
-                            TangoLabel('binp/test/test1/current', self.label_142),
-                            TangoLED('binp/test/test2/output_state', self.pushButton_33),
-                            TangoLabel('binp/test/test2/voltage', self.label_125),
-                            TangoLabel('binp/test/test2/current', self.label_127),
-                            )
-            # write attributes TangoWidgets list
-            self.wtwdgts = (TangoAbstractSpinBox('binp/test/test1/programmed_current', self.doubleSpinBox_49, False),
-                            TangoRadioButton('binp/test/test1/output_state', self.radioButton_52),
-                            TangoAbstractSpinBox('binp/test/test1/programmed_voltage', self.doubleSpinBox_50, False),
-                            TangoRadioButton('binp/test/test2/output_state', self.radioButton_49),
-                            TangoAbstractSpinBox('binp/test/test2/programmed_current', self.doubleSpinBox_43, False),
-                            TangoAbstractSpinBox('binp/test/test2/programmed_voltage', self.doubleSpinBox_44, False),
-                            )
+        # read only attributes TangoWidgets list
+        self.rdwdgts = (
+            # timer
+            #TangoLED('binp/nbi/timing/Start_single', self.pushButton_6),  # shot is running
+            #TangoLabel('binp/nbi/timing/', self.label_5),  # remained
+            TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
+            TangoLabel('binp/nbi/adc0/Elapsed', self.label_6),  # pulse duration
+        )
+        # read write attributes TangoWidgets list
+        self.wtwdgts = (
+            # timer
+            TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox, False),  # period
+            TangoPushButton('binp/nbi/timing/Start_single', self.pushButton, False),  # run
+            TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox, False),  # single/periodical
+        )
+        # additional decorations
+        self.label_4.setVisible(False)
+        self.label_5.setVisible(False)
         # Connect signals with slots
-        # acceleration
-        self.checkBox_6.stateChanged.connect(self.cb6_callback)
-        # extraction
-        self.checkBox_2.stateChanged.connect(self.cb2_callback)
-        # lauda
-        self.pushButton_3.clicked.connect(self.lauda_pump_on_callback)
         # timer
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
+        self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
         self.pushButton.clicked.connect(self.timer_run_callback)  # run button
-
-    def cb6_callback(self, value):
-        if value:
-            self.doubleSpinBox_8.setReadOnly(False)
-            self.doubleSpinBox_7.setReadOnly(False)
-        else:
-            self.doubleSpinBox_8.setValue(0.0)
-            self.doubleSpinBox_8.setReadOnly(True)
-            self.doubleSpinBox_7.setValue(0.0)
-            self.doubleSpinBox_7.setReadOnly(True)
-
-    def cb2_callback(self, value):
-        if value:
-            self.doubleSpinBox_5.setReadOnly(False)
-            self.doubleSpinBox_6.setReadOnly(False)
-        else:
-            self.doubleSpinBox_5.setValue(0.0)
-            self.doubleSpinBox_5.setReadOnly(True)
-            self.doubleSpinBox_6.setValue(0.0)
-            self.doubleSpinBox_6.setReadOnly(True)
-
-    def lauda_pump_on_callback(self, value):
-        if value:
-            # enable
-            self.pushButton_6.setChecked(True)
-            # reset
-            self.pushButton_9.setChecked(True)
-            self.pushButton_9.setChecked(False)
+        # find timer device
+        self.timer = None
+        for d in TangoWidget.DEVICES:
+            if d[0] == 'binp/nbi/timing':
+                self.timer = d[1]
+                break
 
     def single_periodical_callback(self, value):
-        if value == 0:
+        if value == 0:  # single
             # hide remained
             self.label_4.setVisible(False)
             self.label_5.setVisible(False)
-            self.pushButton.setCheckable(False)
-        elif value == 1:
+            # run button
+            self.pushButton.setText('Run')
+            #self.pushButton.setVisible(True)
+            #self.pushButton.setCheckable(False)
+        elif value == 1:  # periodical
             # show remained
             self.label_4.setVisible(True)
             self.label_5.setVisible(True)
-            self.pushButton.setCheckable(True)
+            # run button
+            #self.pushButton.setVisible(False)
+            self.pushButton.setText('Stop')
+            #self.pushButton.setCheckable(True)
+            #self.pushButton.setChecked(True)
 
     def timer_run_callback(self, value):
-        # elapsed to 0.0
-        self.label_5.setText('0.0 s')
-        self.elapsed_time = 0.0
-        self.pulse_duration = 0.0
-        self.pulse_start = time.time()
-        if value:
-            self.pushButton.setText('Stop')
-        else:
-            self.pushButton.setText('Run')
+        if self.comboBox.currentIndex() == 0:
+            self.pushButton.tango_widget.callback(True)
+        elif self.comboBox.currentIndex() == 1:
+            self.comboBox.setCurrentIndex(0)
+            if self.timer is None:
+                return
+            #for k in range(12):
+            #    self.timer.write_attribute('channel_state'+str(k), 0)
 
-    def get_widgets(self, obj, s=''):
-        lout = obj.layout()
-        for k in range(lout.count()):
-            wgt = lout.itemAt(k).widget()
-            #print(s, wgt)
-            if wgt is not None and wgt not in self.config_widgets:
-                self.config_widgets.append(wgt)
-            if isinstance(wgt, QtWidgets.QFrame):
-                self.get_widgets(wgt, s=s + '   ')
+    def check_timer_state(self):
+        if self.timer is None:
+            return
+        state = False
+        for k in range(12):
+            av = self.timer.read_attribute('channel_state'+str(k))
+            state = state or av.value
+        return state
 
     def show_about(self):
         QMessageBox.information(self, 'About', APPLICATION_NAME + ' Version ' + APPLICATION_VERSION +
@@ -331,16 +234,22 @@ class MainWindow(QMainWindow):
 
     def timer_handler(self):
         t0 = time.time()
-        #self.elapsed += 1
         t = time.strftime('%H:%M:%S')
         self.clock.setText('%s' % t)
-        #self.clock.setText('Elapsed: %ds    %s' % (self.elapsed, t))
-        if len(self.rdwdgts) <= 0:
+        if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
         # pulse duration update
-        self.pulse_duration = time.time() - self.pulse_start
-        self.label_6.setText('%d s' % int(self.pulse_duration))
-        self.elapsed = time.time()
+        if self.check_timer_state():
+            self.pushButton_29.setEnabled(True)
+            self.label_6.setVisible(True)
+        else:
+            self.pushButton_29.setEnabled(False)
+            self.label_6.setVisible(False)
+        # remained
+        self.remained = self.spinBox.value() - int(self.label_3.text())
+        self.label_5.setText('%d s' % self.remained)
+
+        self.elapsed = 0.0
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
@@ -365,8 +274,6 @@ def get_widgets(obj: QtWidgets.QWidget):
     lout = obj.layout()
     for k in range(lout.count()):
         wgt = lout.itemAt(k).widget()
-        #if wgt is not None and not isinstance(wgt, QtWidgets.QFrame) and wgt not in wgts:
-        #if wgt is not None and wgt not in wgts:
         if wgt is not None and isinstance(wgt, QtWidgets.QWidget) and wgt not in wgts:
             wgts.append(wgt)
         if isinstance(wgt, QtWidgets.QFrame):
@@ -375,16 +282,6 @@ def get_widgets(obj: QtWidgets.QWidget):
                 if wgt1 not in wgts:
                     wgts.append(wgt1)
     return wgts
-
-def cb_set_color(cb: QCheckBox, m, colors=('green', 'red')):
-    if isinstance(m, bool):
-        if m:
-            cb.setStyleSheet('QCheckBox::indicator { background: ' + colors[0] + ';}')
-        else:
-            cb.setStyleSheet('QCheckBox::indicator { background: ' + colors[1] + ';}')
-            # cb.setStyleSheet('QCheckBox::indicator { background: red;}')
-    if isinstance(m, str):
-        cb.setStyleSheet('QCheckBox::indicator { background: ' + m + ';}')
 
 def get_widget_state(obj, config, name=None):
     try:
