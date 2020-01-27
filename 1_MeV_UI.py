@@ -29,6 +29,7 @@ import PyQt5.QtGui as QtGui
 
 import tango
 
+from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
@@ -201,6 +202,12 @@ class MainWindow(QMainWindow):
         # timer
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
         self.pushButton.clicked.connect(self.timer_run_callback)  # run button
+        # find timer device
+        self.timer = None
+        for d in TangoWidget.DEVICES:
+            if d[0] == 'binp/nbi/timing':
+                self.timer = d[1]
+                break
 
     def cb6_callback(self, value):
         if value:
@@ -231,16 +238,18 @@ class MainWindow(QMainWindow):
             self.pushButton_9.setChecked(False)
 
     def single_periodical_callback(self, value):
-        if value == 0:
+        if value == 0:  # single
             # hide remained
             self.label_4.setVisible(False)
             self.label_5.setVisible(False)
-            self.pushButton.setCheckable(False)
-        elif value == 1:
+            self.pushButton.setVisible(True)
+            #self.pushButton.setCheckable(False)
+        elif value == 1:  # periodical
             # show remained
             self.label_4.setVisible(True)
             self.label_5.setVisible(True)
-            self.pushButton.setCheckable(True)
+            self.pushButton.setVisible(False)
+            #self.pushButton.setCheckable(True)
 
     def timer_run_callback(self, value):
         # elapsed to 0.0
@@ -248,10 +257,22 @@ class MainWindow(QMainWindow):
         self.elapsed_time = 0.0
         self.pulse_duration = 0.0
         self.pulse_start = time.time()
+        if not self.pushButton.isCheckable():
+            return
         if value:
             self.pushButton.setText('Stop')
         else:
             self.pushButton.setText('Run')
+
+    def check_timer_state(self):
+        if self.timer is None:
+            return
+        state = False
+        for k in range(12):
+            av = self.timer.read_attribute('channel_state'+str(k))
+            state = state or av.value
+        return state
+
 
     def get_widgets(self, obj, s=''):
         lout = obj.layout()
@@ -338,6 +359,7 @@ class MainWindow(QMainWindow):
         #self.clock.setText('Elapsed: %ds    %s' % (self.elapsed, t))
         if len(self.rdwdgts) <= 0:
             return
+        print(self.check_timer_state(), time.time()-t0)
         # pulse duration update
         self.pulse_duration = time.time() - self.pulse_start
         self.label_6.setText('%d s' % int(self.pulse_duration))
