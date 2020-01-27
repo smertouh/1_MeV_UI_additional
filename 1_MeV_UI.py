@@ -136,10 +136,11 @@ class MainWindow(QMainWindow):
                 TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_25),
                 # timer
                 #TangoLED('binp/nbi/timing/Start_single', self.pushButton_6),  # shot is running
-                TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
                 #TangoLabel('binp/nbi/timing/', self.label_5),  # remained
+                TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
+                TangoLabel('binp/nbi/adc0/Elapsed', self.label_6),  # pulse duration
             )
-            # write attributes TangoWidgets list
+            # writable attributes TangoWidgets list
             self.wtwdgts = (
                 # magnet 1
                 TangoAbstractSpinBox('binp/nbi/magnet1/programmed_current', self.doubleSpinBox_49, False),
@@ -242,27 +243,27 @@ class MainWindow(QMainWindow):
             # hide remained
             self.label_4.setVisible(False)
             self.label_5.setVisible(False)
-            self.pushButton.setVisible(True)
+            # run button
+            self.pushButton.setText('Run')
+            #self.pushButton.setVisible(True)
             #self.pushButton.setCheckable(False)
         elif value == 1:  # periodical
             # show remained
             self.label_4.setVisible(True)
             self.label_5.setVisible(True)
-            self.pushButton.setVisible(False)
+            # run button
+            #self.pushButton.setVisible(False)
+            self.pushButton.setText('Stop')
             #self.pushButton.setCheckable(True)
+            #self.pushButton.setChecked(True)
 
     def timer_run_callback(self, value):
-        # elapsed to 0.0
-        self.label_5.setText('0.0 s')
-        self.elapsed_time = 0.0
-        self.pulse_duration = 0.0
-        self.pulse_start = time.time()
-        if not self.pushButton.isCheckable():
-            return
-        if value:
-            self.pushButton.setText('Stop')
-        else:
-            self.pushButton.setText('Run')
+        if self.comboBox.currentIndex() == 1:
+            self.comboBox.setCurrentIndex(0)
+            if self.timer is None:
+                return
+            #for k in range(12):
+            #    self.timer.write_attribute('channel_state'+str(k), 0)
 
     def check_timer_state(self):
         if self.timer is None:
@@ -353,17 +354,22 @@ class MainWindow(QMainWindow):
 
     def timer_handler(self):
         t0 = time.time()
-        #self.elapsed += 1
         t = time.strftime('%H:%M:%S')
         self.clock.setText('%s' % t)
-        #self.clock.setText('Elapsed: %ds    %s' % (self.elapsed, t))
-        if len(self.rdwdgts) <= 0:
+        if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
-        print(self.check_timer_state(), time.time()-t0)
         # pulse duration update
-        self.pulse_duration = time.time() - self.pulse_start
-        self.label_6.setText('%d s' % int(self.pulse_duration))
-        self.elapsed = time.time()
+        if self.check_timer_state():
+            self.pushButton_29.setEnabled(True)
+            self.label_6.setVisible(True)
+        else:
+            self.pushButton_29.setEnabled(False)
+            self.label_6.setVisible(False)
+        # remained
+        self.remained = self.spinBox.value() - int(self.label_3.text())
+        self.label_5.setText('%d s' % self.remained)
+
+        self.elapsed = 0.0
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
@@ -388,8 +394,6 @@ def get_widgets(obj: QtWidgets.QWidget):
     lout = obj.layout()
     for k in range(lout.count()):
         wgt = lout.itemAt(k).widget()
-        #if wgt is not None and not isinstance(wgt, QtWidgets.QFrame) and wgt not in wgts:
-        #if wgt is not None and wgt not in wgts:
         if wgt is not None and isinstance(wgt, QtWidgets.QWidget) and wgt not in wgts:
             wgts.append(wgt)
         if isinstance(wgt, QtWidgets.QFrame):
