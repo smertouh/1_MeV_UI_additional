@@ -22,13 +22,11 @@ class TangoComboBox(TangoWriteWidget):
             self.widget.setCurrentIndex(int(self.attr.value))
         except:
             pass
+        #self.widget.blockSignals(bs)
         return self.attr.value
 
     def decorate_error(self):
         self.widget.setStyleSheet('color: gray')
-
-    def update(self, decorate_only=True) -> None:
-        super().update(decorate_only)
 
     def compare(self):
         try:
@@ -48,5 +46,4 @@ class TangoComboBox(TangoWriteWidget):
         else:
             if time.time() - self.time > TangoWidget.RECONNECT_TIMEOUT:
                 self.connect_attribute_proxy()
-            else:
-                self.decorate_error()
+            self.decorate_error()

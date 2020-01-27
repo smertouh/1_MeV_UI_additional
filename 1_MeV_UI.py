@@ -201,7 +201,10 @@ class MainWindow(QMainWindow):
         # lauda
         self.pushButton_3.clicked.connect(self.lauda_pump_on_callback)
         # timer
+        self.label_4.setVisible(False)
+        self.label_5.setVisible(False)
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
+        self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
         self.pushButton.clicked.connect(self.timer_run_callback)  # run button
         # find timer device
         self.timer = None
@@ -258,12 +261,15 @@ class MainWindow(QMainWindow):
             #self.pushButton.setChecked(True)
 
     def timer_run_callback(self, value):
-        if self.comboBox.currentIndex() == 1:
+        if self.comboBox.currentIndex() == 0:
+            self.pushButton.tango_widget.callback(True)
+        elif self.comboBox.currentIndex() == 1:
             self.comboBox.setCurrentIndex(0)
             if self.timer is None:
                 return
             #for k in range(12):
             #    self.timer.write_attribute('channel_state'+str(k), 0)
+
 
     def check_timer_state(self):
         if self.timer is None:
