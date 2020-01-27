@@ -19,10 +19,12 @@ class TangoComboBox(TangoWriteWidget):
         self.widget.activated.connect(self.callback)
 
     def set_widget_value(self):
+        bs = self.widget.blockSignals(True)
         try:
             self.widget.setCurrentIndex(int(self.attr.value))
         except:
             pass
+        self.widget.blockSignals(bs)
         return self.attr.value
 
     def decorate_error(self):
