@@ -30,6 +30,7 @@ import PyQt5.QtGui as QtGui
 import tango
 
 from TangoWidgets.TangoCheckBox import TangoCheckBox
+from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
@@ -133,8 +134,8 @@ class MainWindow(QMainWindow):
                 TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_25),
                 TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_25),
                 # timer
-                #TangoLED('binp/nbi/timing/', self.pushButton_6),  # shot is running
-                #TangoLabel('binp/nbi/timing/', self.label_3),  # elapsed
+                #TangoLED('binp/nbi/timing/Start_single', self.pushButton_6),  # shot is running
+                TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
                 #TangoLabel('binp/nbi/timing/', self.label_5),  # remained
             )
             # write attributes TangoWidgets list
@@ -170,9 +171,9 @@ class MainWindow(QMainWindow):
                 TangoAbstractSpinBox('ET7000_server/test/pet9_7026/ao00', self.doubleSpinBox_7, False),
                 TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_8, False),
                 # timer
-                #TangoAbstractSpinBox('binp/nbi/timing/', self.spinBox, False),  # period
-                #TangoPushButton('binp/nbi/timing/', self.pushButton, False),  # run
-                #TangoComboBox('binp/nbi/timing/', self.comboBox, False),  # single/periodical
+                TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox, False),  # period
+                TangoPushButton('binp/nbi/timing/Start_single', self.pushButton, False),  # run
+                TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox, False),  # single/periodical
             )
         else:
             self.rdwdgts = (TangoLED('binp/test/test1/output_state', self.pushButton_37),
