@@ -69,8 +69,6 @@ class MainWindow(QMainWindow):
         self.logger = logger
         # members definition
         self.n = 0
-        self.refresh_flag = False
-        self.last_selection = -1
         self.elapsed = 0.0
         self.elapsed_time = 0.0
         self.pulse_duration = 0.0
@@ -233,6 +231,7 @@ class MainWindow(QMainWindow):
             return False
 
     def timer_handler(self):
+        return
         t0 = time.time()
         t = time.strftime('%H:%M:%S')
         self.clock.setText('%s' % t)
@@ -248,8 +247,6 @@ class MainWindow(QMainWindow):
         # remained
         self.remained = self.spinBox.value() - int(self.label_3.text())
         self.label_5.setText('%d s' % self.remained)
-
-        self.elapsed = 0.0
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
@@ -261,12 +258,8 @@ class MainWindow(QMainWindow):
                 self.n = 0
             count += 1
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
-                self.elapsed = time.time() - self.elapsed
-                #print('total loop', int((time.time()-t0)*1000.0), 'ms')
-                #print('total loop', '%5.3f s'%self.elapsed)
+                self.elapsed = time.time() - t0
                 return
-        #print(int((time.time()-t0)*1000.0), 'ms')
-        #time.sleep(1.0)
 
 
 def get_widgets(obj: QtWidgets.QWidget):

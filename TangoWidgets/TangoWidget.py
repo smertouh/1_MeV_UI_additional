@@ -25,7 +25,6 @@ class TangoWidget:
         self.widget = widget
         self.widget.tango_widget = self
         self.readonly = readonly
-        self.attr_proxy = None
         self.attr = None
         self.config = None
         self.format = None
@@ -68,27 +67,11 @@ class TangoWidget:
             self.logger.debug('Attribute %s disconnected', self.name)
 
     def connect_attribute_proxy(self, name: str = None):
-        #print('connect_attribute_proxy_1', name)
+        self.time = time.time()
         if name is None:
             name = self.name
-        self.time = time.time()
-        #print('connect_attribute_proxy_2', name)
         try:
-            if isinstance(self.attr_proxy, tango.AttributeProxy):
-                self.attr_proxy.ping()
-                if not self.attr_proxy.is_polled():
-                    self.logger.info('Recommended to swith polling on for %s', name)
-                self.attr = self.attr_proxy.read()
-                self.config = self.attr_proxy.get_config()
-                self.format = self.config.format
-                try:
-                    self.coeff = float(self.config.display_unit)
-                except:
-                    self.coeff = 1.0
-                self.connected = True
-                self.logger.debug('Reconnected to Attribute %s', name)
-            elif isinstance(name, str):
-                #print('connect_attribute_proxy_3', name)
+            if isinstance(name, str):
                 n = name.rfind('/')
                 self.dn = name[:n]
                 self.an = name[n+1:]
@@ -100,46 +83,36 @@ class TangoWidget:
                 if self.dp is None:
                     self.dp = tango.DeviceProxy(self.dn)
                     TangoWidget.DEVICES.append((self.dn, self.dp))
-                    #print('ping to', self.dn, self.dp.ping(), 'ms')
-                #print('connect_attribute_proxy_9', name)
-                #self.attr_proxy = tango.AttributeProxy(name)
-                self.attr_proxy = None
-                #print('connect_attribute_proxy_4', name)
-                #self.attr_proxy.ping()
-                #print('connect_attribute_proxy_5', name)
                 if not self.dp.is_attribute_polled(self.an):
-                #if not self.attr_proxy.is_polled():
                     self.logger.info('Recommended to swith polling on for %s', name)
                 self.attr = self.dp.read_attribute(self.an)
-                #self.attr = self.attr_proxy.read()
                 self.config = self.dp.get_attribute_config_ex(self.an)[0]
-                #self.config = self.attr_proxy.get_config()
                 self.format = self.config.format
                 try:
                     self.coeff = float(self.config.display_unit)
                 except:
                     self.coeff = 1.0
                 self.connected = True
+                self.time = time.time()
                 self.logger.info('Connected to Attribute %s', name)
             else:
                 self.logger.warning('<str> required for attribute name')
                 self.name = str(name)
                 self.dp = None
-                self.attr_proxy = None
                 self.attr = None
                 self.config = None
                 self.format = None
                 self.connected = False
+                self.time = time.time()
         except:
-            #print('connect_attribute_proxy_6', name)
             self.logger.warning('Can not create attribute %s', name)
             self.name = str(name)
             self.dp = None
-            self.attr_proxy = None
             self.attr = None
             self.config = None
             self.format = None
             self.connected = False
+            self.time = time.time()
 
     def decorate_error(self):
         if hasattr(self.widget, 'setText'):
