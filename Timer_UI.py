@@ -37,7 +37,7 @@ from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
 
 ORGANIZATION_NAME = 'BINP'
-APPLICATION_NAME = 'Magnets_UI'
+APPLICATION_NAME = 'Timer_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
 APPLICATION_VERSION = '0_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
