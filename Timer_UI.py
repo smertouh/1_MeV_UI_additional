@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
         self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
         self.pushButton.clicked.connect(self.timer_run_callback)  # run button
         # find timer device
-        self.timer = None
+        self.timer_device = None
         for d in TangoWidget.DEVICES:
             if d[0] == 'binp/nbi/timing':
                 self.timer = d[1]
@@ -153,21 +153,22 @@ class MainWindow(QMainWindow):
             self.pushButton.tango_widget.callback(True)
         elif self.comboBox.currentIndex() == 1:
             self.comboBox.setCurrentIndex(0)
-            if self.timer is None:
+            if self.timer_device is None:
                 return
             #for k in range(12):
             #    self.timer.write_attribute('channel_state'+str(k), 0)
 
     def check_timer_state(self):
-        if self.timer is None:
+        if self.timer_device is None:
             return
         state = False
         for k in range(12):
             try:
-                av = self.timer.read_attribute('channel_state'+str(k))
+                av = self.timer_device.read_attribute('channel_state'+str(k))
                 state = state or av.value
             except:
-                pass
+                logger.debug("Exception ", exc_info=True)
+        print(state)
         return state
 
     def show_about(self):
@@ -183,7 +184,7 @@ class MainWindow(QMainWindow):
     def onQuit(self) :
         # Save global settings
         self.save_settings(self.config_widgets)
-        timer.stop()
+        self.timer.stop()
         
     def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
         global CONFIG
@@ -254,8 +255,7 @@ class MainWindow(QMainWindow):
         try:
             self.remained = self.spinBox.value() - int(self.label_3.text())
         except:
-
-
+            self.remained = 0.0
         self.label_5.setText('%d s' % self.remained)
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
