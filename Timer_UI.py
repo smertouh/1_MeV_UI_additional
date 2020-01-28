@@ -179,6 +179,8 @@ class MainWindow(QMainWindow):
             self.frame.setVisible(True)
         else:
             self.frame.setVisible(False)
+            self.resize(QSize(400, 340))  # size
+            #self.resize(QSize(self.sizeHint().width(), self.frame_3.sizeHint().height()))
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
