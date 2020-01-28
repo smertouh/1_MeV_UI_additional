@@ -124,6 +124,10 @@ class MainWindow(QMainWindow):
             if d[0] == 'binp/nbi/timing':
                 self.timer = d[1]
                 break
+        # Defile and start timer task
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timer_handler)
+        self.timer.start(TIMER_PERIOD)
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
@@ -159,8 +163,11 @@ class MainWindow(QMainWindow):
             return
         state = False
         for k in range(12):
-            av = self.timer.read_attribute('channel_state'+str(k))
-            state = state or av.value
+            try:
+                av = self.timer.read_attribute('channel_state'+str(k))
+                state = state or av.value
+            except:
+                pass
         return state
 
     def show_about(self):
@@ -231,7 +238,6 @@ class MainWindow(QMainWindow):
             return False
 
     def timer_handler(self):
-        return
         t0 = time.time()
         t = time.strftime('%H:%M:%S')
         self.clock.setText('%s' % t)
@@ -245,7 +251,11 @@ class MainWindow(QMainWindow):
             self.pushButton_29.setEnabled(False)
             self.label_6.setVisible(False)
         # remained
-        self.remained = self.spinBox.value() - int(self.label_3.text())
+        try:
+            self.remained = self.spinBox.value() - int(self.label_3.text())
+        except:
+
+
         self.label_5.setText('%d s' % self.remained)
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
@@ -334,10 +344,6 @@ if __name__ == '__main__':
     app.aboutToQuit.connect(dmw.onQuit)
     # Show it
     dmw.show()
-    # Defile and start timer task
-    timer = QTimer()
-    timer.timeout.connect(dmw.timer_handler)
-    timer.start(TIMER_PERIOD)
     # Start the Qt main loop execution, exiting from this script
     # with the same return code of Qt application
     sys.exit(app.exec_())
