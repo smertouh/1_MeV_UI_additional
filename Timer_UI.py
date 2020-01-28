@@ -168,7 +168,6 @@ class MainWindow(QMainWindow):
                 state = state or av.value
             except:
                 self.logger.debug("Exception ", exc_info=True)
-        print(state)
         return state
 
     def show_about(self):
