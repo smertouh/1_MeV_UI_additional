@@ -237,6 +237,7 @@ class MainWindow(QMainWindow):
             return True
         except :
             self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
+            self.logger.log(logging.DEBUG, '', exc_info=True)
             print_exception_info()
             return False
 
