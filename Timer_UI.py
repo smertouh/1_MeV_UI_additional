@@ -157,8 +157,7 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop11', self.spinBox_33),  # ch
         )
         # additional decorations
-        self.label_4.setVisible(False)
-        self.label_5.setVisible(False)
+        self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
         self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
