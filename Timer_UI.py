@@ -117,7 +117,7 @@ class MainWindow(QMainWindow):
         self.wtwdgts = (
             # timer
             TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox),  # period
-            TangoPushButton('binp/nbi/timing/Start_single', self.pushButton),  # run
+            #TangoPushButton('binp/nbi/timing/Start_single', self.pushButton),  # run
             TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox),  # single/periodical
             TangoCheckBox('binp/nbi/timing/channel_enable0', self.checkBox_8),  # ch0
             TangoCheckBox('binp/nbi/timing/channel_enable1', self.checkBox_9),  # ch
@@ -160,7 +160,7 @@ class MainWindow(QMainWindow):
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
-        self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
+        #self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)
         # find timer device
@@ -173,15 +173,16 @@ class MainWindow(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
         self.timer.start(TIMER_PERIOD)
+        # start timer device
 
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
-            self.resize(QSize(self.stackedWidget.sizeHint().width()+9, self.stackedWidget.sizeHint().height()+54))
+            self.resize(self.stackedWidget.sizeHint())
         else:
             self.frame.setVisible(False)
             #self.resize(QSize(280, 240))
-            self.resize(QSize(self.stackedWidget.sizeHint().width()+16, self.stackedWidget.sizeHint().height()))
+            self.resize(self.stackedWidget.sizeHint())
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
@@ -199,19 +200,17 @@ class MainWindow(QMainWindow):
 
     def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:
+            # single
             if self.check_timer_state():
                 self.pulse_off()
-                return
-            # single
-            self.pushButton.tango_widget.pressed()
-            self.pushButton.tango_widget.released()
+            else:
+                self.timer_device.write_attribute('Start_single', 1)
+                self.timer_device.write_attribute('Start_single', 0)
         elif self.comboBox.currentIndex() == 1:
             # periodical
-            self.comboBox.setCurrentIndex(0)
-            if self.timer_device is None:
-                return
             if self.check_timer_state():
                 self.pulse_off()
+            self.comboBox.setCurrentIndex(0)
 
     def check_timer_state(self):
         if self.timer_device is None:
@@ -309,10 +308,12 @@ class MainWindow(QMainWindow):
         # pulse duration update
         if self.check_timer_state():
             self.pushButton_29.setEnabled(True)
-            self.pushButton.setText('Stop')
+            if self.comboBox.currentIndex() == 0:
+                self.pushButton.setText('Stop')
         else:
             self.pushButton_29.setEnabled(False)
-            self.pushButton.setText('Run')
+            if self.comboBox.currentIndex() == 0:
+                self.pushButton.setText('Run')
         # remained
         try:
             self.remained = self.spinBox.value() - int(self.label_3.text())
