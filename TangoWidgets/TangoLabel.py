@@ -6,6 +6,7 @@ Created on Jan 3, 2020
 '''
 from PyQt5.QtWidgets import QLabel
 from TangoWidgets.TangoWidget import TangoWidget
+import tango
 
 
 class TangoLabel(TangoWidget):
@@ -22,7 +23,9 @@ class TangoLabel(TangoWidget):
         if self.attr is None:
             super().read()
         if self.refresh or self.property_value is None:
-            self.property_value = self.dp.get_property(self.an, self.property)[self.property][0]
+            db = tango.Database()
+            self.property_value = db.get_device_attribute_property(self.dn, self.an)[self.an][self.property][0]
+            #self.property_value = self.dp.get_property(self.an, self.property)[self.property][0]
         return self.attr
 
     def set_widget_value(self):
