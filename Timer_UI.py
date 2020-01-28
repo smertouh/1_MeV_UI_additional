@@ -325,7 +325,7 @@ class MainWindow(QMainWindow):
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
-                self.wtwdgts[self.n].update(decorate_only=False)
+                self.wtwdgts[self.n].update(decorate_only=True)
             self.n += 1
             if self.n >= max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.n = 0
