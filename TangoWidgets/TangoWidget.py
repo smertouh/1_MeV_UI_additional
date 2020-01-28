@@ -204,7 +204,7 @@ class TangoWidget:
                     self.decorate_invalid()
         except:
             if self.connected:
-                self.logger.debug('Exception %s updating widget', sys.exc_info()[0])
+                self.logger.debug('Exception updating widget', exc_info=True)
                 self.disconnect_attribute_proxy()
             else:
                 if (time.time() - self.time) > self.RECONNECT_TIMEOUT:

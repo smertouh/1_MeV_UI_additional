@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
         self.rdwdgts = (
             # timer
             #TangoLED('binp/nbi/timing/Start_single', self.pushButton_6),  # shot is running
-            #TangoLabel('binp/nbi/timing/', self.label_5),  # remained
+            TangoLabel('binp/nbi/timing/channel_enable0', self.label_30, prop='label'),  # ch0
             TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
             TangoLabel('binp/nbi/adc0/Elapsed', self.label_6),  # pulse duration
         )
@@ -109,6 +109,9 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox, False),  # period
             TangoPushButton('binp/nbi/timing/Start_single', self.pushButton, False),  # run
             TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox, False),  # single/periodical
+            TangoCheckBox('binp/nbi/timing/channel_enable0', self.checkBox_8),  # ch0
+            TangoAbstractSpinBox('binp/nbi/timing/pulse_start0', self.spinBox_10),  # ch0
+            TangoAbstractSpinBox('binp/nbi/timing/pulse_stop0', self.spinBox_11),  # ch0
         )
         # additional decorations
         self.label_4.setVisible(False)

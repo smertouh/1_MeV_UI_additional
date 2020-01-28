@@ -22,7 +22,7 @@ class TangoLabel(TangoWidget):
         if self.attr is None:
             super().read()
         if self.refresh or self.property_value is None:
-            self.property_value = self.attr_proxy.get_property(self.property)[self.property][0]
+            self.property_value = self.dp.get_property(self.an, self.property)[self.property][0]
         return self.attr
 
     def set_widget_value(self):
