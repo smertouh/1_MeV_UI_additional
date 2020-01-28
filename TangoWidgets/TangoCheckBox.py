@@ -17,9 +17,8 @@ class TangoCheckBox(TangoWidget):
             self.widget.stateChanged.connect(self.callback)
 
     def set_widget_value(self):
-        self.value = self.attr.value
-        self.widget.setChecked(self.value)
-        return self.value
+        self.widget.setChecked(self.attr.value)
+        return self.attr.value
 
     def decorate_error(self):
         print('cberror')
@@ -28,7 +27,7 @@ class TangoCheckBox(TangoWidget):
 
     def decorate_invalid(self, text: str = None):
         print('cbinvalid')
-        self.widget.setStyleSheet('color: red')
+        self.widget.setStyleSheet('QCheckBox::indicator { color: red; }')
         self.widget.setEnabled(True)
 
     def decorate_valid(self):

@@ -16,9 +16,8 @@ class TangoRadioButton(TangoWidget):
         self.widget.toggled.connect(self.callback)
 
     def set_widget_value(self):
-        self.value = self.attr.value
         self.widget.setChecked(self.value)
-        return self.value
+        return self.attr.value
 
     def decorate_error(self):
         self.widget.setStyleSheet('color: gray')
@@ -41,7 +40,6 @@ class TangoRadioButton(TangoWidget):
                 self.logger.debug('Exception %s in callback', exc_info=True)
                 self.decorate_error()
         else:
-            if time.time() - self.time > TangoWidget.RECONNECT_TIMEOUT:
-                self.connect_attribute_proxy(self.attr_proxy)
-            else:
-                self.decorate_error()
+            if time.time() - self.time > self.RECONNECT_TIMEOUT:
+                self.connect_attribute_proxy()
+            self.decorate_error()
