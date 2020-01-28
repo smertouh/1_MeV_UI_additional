@@ -22,16 +22,26 @@ class TangoCheckBox(TangoWidget):
         return self.value
 
     def decorate_error(self):
+        print('cberror')
         self.widget.setStyleSheet('color: gray')
         self.widget.setEnabled(False)
 
     def decorate_invalid(self, text: str = None):
+        print('cbinvalid')
         self.widget.setStyleSheet('color: red')
         self.widget.setEnabled(True)
 
     def decorate_valid(self):
+        print('cbvalid')
         self.widget.setStyleSheet('color: black')
         self.widget.setEnabled(True)
+
+    def compare(self):
+        try:
+            return int(self.attr.value) == self.widget.isChecked()
+        except:
+            self.logger.debug('Exception in CheckboBox compare', exc_info=True)
+            return False
 
     def callback(self, value):
         if self.connected:

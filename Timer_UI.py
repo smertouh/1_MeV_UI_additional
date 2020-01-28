@@ -161,7 +161,7 @@ class MainWindow(QMainWindow):
         # Connect signals with slots
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
         self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
-        self.pushButton.clicked.connect(self.run_button_callback)  # run button
+        self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)
         # find timer device
         self.timer_device = None
@@ -177,10 +177,11 @@ class MainWindow(QMainWindow):
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
+            self.resize(self.tabWidget.sizeHint())
         else:
             self.frame.setVisible(False)
-            self.resize(QSize(400, 340))  # size
-            #self.resize(QSize(self.sizeHint().width(), self.frame_3.sizeHint().height()))
+            #self.resize(QSize(280, 240))
+            self.resize(self.tabWidget.sizeHint())
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
@@ -201,15 +202,23 @@ class MainWindow(QMainWindow):
             #self.pushButton.setCheckable(True)
             #self.pushButton.setChecked(True)
 
-    def run_button_callback(self, value):
+    def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:
-            self.pushButton.tango_widget.callback(True)
+            if self.check_timer_state():
+                for k in range(12):
+                    self.timer_device.write_attribute('channel_enable'+str(k), False)
+                return
+            # single
+            self.pushButton.tango_widget.pressed()
+            self.pushButton.tango_widget.released()
         elif self.comboBox.currentIndex() == 1:
+            # periodical
             self.comboBox.setCurrentIndex(0)
             if self.timer_device is None:
                 return
-            #for k in range(12):
-            #    self.timer.write_attribute('channel_state'+str(k), 0)
+            if self.check_timer_state():
+                for k in range(12):
+                    self.timer_device.write_attribute('channel_enable'+str(k), False)
 
     def check_timer_state(self):
         if self.timer_device is None:
