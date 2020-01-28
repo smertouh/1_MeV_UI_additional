@@ -177,8 +177,11 @@ class MainWindow(QMainWindow):
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
+            self.resize(self.tabWidget.sizeHint())
         else:
             self.frame.setVisible(False)
+            #self.resize(QSize(280, 240))
+            self.resize(self.tabWidget.sizeHint())
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
