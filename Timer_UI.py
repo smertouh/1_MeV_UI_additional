@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
         self.timer_device = None
         for d in TangoWidget.DEVICES:
             if d[0] == 'binp/nbi/timing':
-                self.timer = d[1]
+                self.timer_device = d[1]
                 break
         # Defile and start timer task
         self.timer = QTimer()
@@ -167,7 +167,7 @@ class MainWindow(QMainWindow):
                 av = self.timer_device.read_attribute('channel_state'+str(k))
                 state = state or av.value
             except:
-                logger.debug("Exception ", exc_info=True)
+                self.logger.debug("Exception ", exc_info=True)
         print(state)
         return state
 
