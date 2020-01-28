@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>368</width>
-    <height>679</height>
+    <width>326</width>
+    <height>647</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,13 +35,13 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
       <x>9</x>
       <y>9</y>
-      <width>313</width>
-      <height>617</height>
+      <width>308</width>
+      <height>580</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -60,22 +60,7 @@
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
-    <property name="tabShape">
-     <enum>QTabWidget::Rounded</enum>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="tabWidgetPage1">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <attribute name="title">
-      <string>Main</string>
-     </attribute>
+    <widget class="QWidget" name="stackedWidgetPage1" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <property name="spacing">
        <number>0</number>
@@ -586,7 +571,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>20</width>
+          <width>0</width>
           <height>40</height>
          </size>
         </property>
@@ -1696,16 +1681,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="tabWidgetPage2">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <attribute name="title">
-      <string notr="true">Config</string>
-     </attribute>
+    <widget class="QWidget" name="stackedWidgetPage2" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_7">
       <item>
        <widget class="QFrame" name="frame_10">
@@ -1725,20 +1701,17 @@
          <property name="sizeConstraint">
           <enum>QLayout::SetMinimumSize</enum>
          </property>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="checkBox_4">
+           <property name="text">
+            <string>Additional check</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QCheckBox" name="checkBox_3">
            <property name="text">
             <string>RF ready check</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLineEdit" name="lineEdit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
            </property>
           </widget>
          </item>
@@ -1749,10 +1722,13 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QCheckBox" name="checkBox_4">
-           <property name="text">
-            <string>Additional check</string>
+         <item row="3" column="0">
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
           </widget>
          </item>
@@ -1768,7 +1744,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>368</width>
+     <width>326</width>
      <height>23</height>
     </rect>
    </property>

@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
 
         # find all controls in config tab
         self.config_widgets = []
-        self.config_widgets = get_widgets(self.tabWidgetPage2)
+        self.config_widgets = get_widgets(self.stackedWidgetPage2)
 
         self.restore_settings(self.config_widgets)
 
@@ -177,11 +177,11 @@ class MainWindow(QMainWindow):
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
-            self.resize(self.tabWidget.sizeHint())
+            self.resize(QSize(self.stackedWidget.sizeHint().width(), self.stackedWidget.sizeHint().height()+54))
         else:
             self.frame.setVisible(False)
             #self.resize(QSize(280, 240))
-            self.resize(self.tabWidget.sizeHint())
+            self.resize(QSize(self.stackedWidget.sizeHint().width(), self.stackedWidget.sizeHint().height()))
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
