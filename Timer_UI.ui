@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>353</width>
-    <height>690</height>
+    <width>347</width>
+    <height>709</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1840,8 +1840,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>353</width>
-     <height>24</height>
+     <width>347</width>
+     <height>34</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -1900,6 +1900,9 @@
      <weight>75</weight>
      <bold>true</bold>
     </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
    </property>
   </widget>
   <action name="actionOpen">

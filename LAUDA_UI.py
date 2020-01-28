@@ -85,12 +85,6 @@ class MainWindow(QMainWindow):
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
         self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
-        # Connect menu actions
-        self.actionQuit.triggered.connect(qApp.quit)
-        self.actionAbout.triggered.connect(self.show_about)
-        # Clock at status bar
-        self.clock = QLabel(" ")
-        self.statusBar().addPermanentWidget(self.clock)
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
@@ -123,20 +117,6 @@ class MainWindow(QMainWindow):
             # reset
             self.pushButton_9.setChecked(True)
             self.pushButton_9.setChecked(False)
-
-    def get_widgets(self, obj, s=''):
-        lout = obj.layout()
-        for k in range(lout.count()):
-            wgt = lout.itemAt(k).widget()
-            #print(s, wgt)
-            if wgt is not None and wgt not in self.config_widgets:
-                self.config_widgets.append(wgt)
-            if isinstance(wgt, QtWidgets.QFrame):
-                self.get_widgets(wgt, s=s + '   ')
-
-    def show_about(self):
-        QMessageBox.information(self, 'About', APPLICATION_NAME + ' Version ' + APPLICATION_VERSION +
-            '\nUser interface program to control 1 MeV stand', QMessageBox.Ok)
 
     def log_level_changed(self, m):
         levels = [logging.NOTSET, logging.DEBUG, logging.INFO,
@@ -203,8 +183,6 @@ class MainWindow(QMainWindow):
 
     def timer_handler(self):
         t0 = time.time()
-        t = time.strftime('%H:%M:%S')
-        self.clock.setText('%s' % t)
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
         self.elapsed = 0.0
@@ -222,76 +200,6 @@ class MainWindow(QMainWindow):
                 self.elapsed = time.time() - self.elapsed
                 return
 
-
-def get_widgets(obj: QtWidgets.QWidget):
-    wgts = []
-    lout = obj.layout()
-    for k in range(lout.count()):
-        wgt = lout.itemAt(k).widget()
-        if wgt is not None and isinstance(wgt, QtWidgets.QWidget) and wgt not in wgts:
-            wgts.append(wgt)
-        if isinstance(wgt, QtWidgets.QFrame):
-            wgts1 = get_widgets(wgt)
-            for wgt1 in wgts1:
-                if wgt1 not in wgts:
-                    wgts.append(wgt1)
-    return wgts
-
-def cb_set_color(cb: QCheckBox, m, colors=('green', 'red')):
-    if isinstance(m, bool):
-        if m:
-            cb.setStyleSheet('QCheckBox::indicator { background: ' + colors[0] + ';}')
-        else:
-            cb.setStyleSheet('QCheckBox::indicator { background: ' + colors[1] + ';}')
-            # cb.setStyleSheet('QCheckBox::indicator { background: red;}')
-    if isinstance(m, str):
-        cb.setStyleSheet('QCheckBox::indicator { background: ' + m + ';}')
-
-def get_widget_state(obj, config, name=None):
-    try:
-        if name is None:
-            name = obj.objectName()
-        if isinstance(obj, QLineEdit):
-            config[name] = str(obj.text())
-        elif isinstance(obj, QComboBox):
-            config[name] = {'items': [str(obj.itemText(k)) for k in range(obj.count())],
-                            'index': obj.currentIndex()}
-        elif isinstance(obj, QtWidgets.QAbstractButton):
-            config[name] = obj.isChecked()
-        elif isinstance(obj, QPlainTextEdit) or isinstance(obj, QtWidgets.QTextEdit):
-            config[name] = str(obj.toPlainText())
-        elif isinstance(obj, QtWidgets.QSpinBox) or isinstance(obj, QtWidgets.QDoubleSpinBox):
-            config[name] = obj.value()
-    except:
-        return
-
-def set_widget_state(obj, config, name=None):
-    try:
-        if name is None:
-            name = obj.objectName()
-        if name not in config:
-            return
-        if isinstance(obj, QLineEdit):
-            obj.setText(config[name])
-        elif isinstance(obj, QComboBox):
-            obj.setUpdatesEnabled(False)
-            bs = obj.blockSignals(True)
-            obj.clear()
-            obj.addItems(config[name]['items'])
-            obj.blockSignals(bs)
-            obj.setUpdatesEnabled(True)
-            obj.setCurrentIndex(config[name]['index'])
-            # Force index change event in the case of index=0
-            if config[name]['index'] == 0:
-                obj.currentIndexChanged.emit(0)
-        elif isinstance(obj, QtWidgets.QAbstractButton):
-            obj.setChecked(config[name])
-        elif isinstance(obj, QPlainTextEdit) or isinstance(obj, QtWidgets.QTextEdit):
-            obj.setPlainText(config[name])
-        elif isinstance(obj, QtWidgets.QSpinBox) or isinstance(obj, QtWidgets.QDoubleSpinBox):
-            obj.setValue(config[name])
-    except:
-        return
 
 def print_exception_info(level=logging.DEBUG):
     logger.log(level, "Exception ", exc_info=True)
