@@ -116,9 +116,9 @@ class MainWindow(QMainWindow):
         # read write attributes TangoWidgets list
         self.wtwdgts = (
             # timer
-            TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox, False),  # period
-            TangoPushButton('binp/nbi/timing/Start_single', self.pushButton, False),  # run
-            TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox, False),  # single/periodical
+            TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox),  # period
+            TangoPushButton('binp/nbi/timing/Start_single', self.pushButton),  # run
+            TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox),  # single/periodical
             TangoCheckBox('binp/nbi/timing/channel_enable0', self.checkBox_8),  # ch0
             TangoCheckBox('binp/nbi/timing/channel_enable1', self.checkBox_9),  # ch
             TangoCheckBox('binp/nbi/timing/channel_enable2', self.checkBox_10),  # ch
@@ -177,11 +177,11 @@ class MainWindow(QMainWindow):
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
-            self.resize(QSize(self.stackedWidget.sizeHint().width(), self.stackedWidget.sizeHint().height()+54))
+            self.resize(QSize(self.stackedWidget.sizeHint().width()+9, self.stackedWidget.sizeHint().height()+54))
         else:
             self.frame.setVisible(False)
             #self.resize(QSize(280, 240))
-            self.resize(QSize(self.stackedWidget.sizeHint().width(), self.stackedWidget.sizeHint().height()))
+            self.resize(QSize(self.stackedWidget.sizeHint().width()+16, self.stackedWidget.sizeHint().height()))
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
@@ -190,23 +190,17 @@ class MainWindow(QMainWindow):
             self.label_5.setVisible(False)
             # run button
             self.pushButton.setText('Run')
-            #self.pushButton.setVisible(True)
-            #self.pushButton.setCheckable(False)
         elif value == 1:  # periodical
             # show remained
             self.label_4.setVisible(True)
             self.label_5.setVisible(True)
             # run button
-            #self.pushButton.setVisible(False)
             self.pushButton.setText('Stop')
-            #self.pushButton.setCheckable(True)
-            #self.pushButton.setChecked(True)
 
     def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:
             if self.check_timer_state():
-                for k in range(12):
-                    self.timer_device.write_attribute('channel_enable'+str(k), False)
+                self.pulse_off()
                 return
             # single
             self.pushButton.tango_widget.pressed()
@@ -217,8 +211,7 @@ class MainWindow(QMainWindow):
             if self.timer_device is None:
                 return
             if self.check_timer_state():
-                for k in range(12):
-                    self.timer_device.write_attribute('channel_enable'+str(k), False)
+                self.pulse_off()
 
     def check_timer_state(self):
         if self.timer_device is None:
@@ -231,6 +224,13 @@ class MainWindow(QMainWindow):
             except:
                 self.logger.debug("Exception ", exc_info=True)
         return state
+
+    def pulse_off(self):
+        for k in range(12):
+            try:
+                self.timer_device.write_attribute('channel_enable' + str(k), False)
+            except:
+                self.logger.debug("Exception ", exc_info=True)
 
     def show_about(self):
         QMessageBox.information(self, 'About', APPLICATION_NAME + ' Version ' + APPLICATION_VERSION +
@@ -309,28 +309,30 @@ class MainWindow(QMainWindow):
         # pulse duration update
         if self.check_timer_state():
             self.pushButton_29.setEnabled(True)
-            #self.label_6.setVisible(True)
+            self.pushButton.setText('Stop')
         else:
             self.pushButton_29.setEnabled(False)
-            #self.label_6.setVisible(False)
+            self.pushButton.setText('Run')
         # remained
         try:
             self.remained = self.spinBox.value() - int(self.label_3.text())
         except:
             self.remained = 0.0
         self.label_5.setText('%d s' % self.remained)
+        # main loop
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
-                self.wtwdgts[self.n].update(decorate_only=True)
+                self.wtwdgts[self.n].update(decorate_only=False)
             self.n += 1
             if self.n >= max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.n = 0
             count += 1
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - t0
+                #print(self.elapsed)
                 return
 
 

@@ -24,7 +24,12 @@ class TangoAbstractSpinBox(TangoWriteWidget):
         if math.isnan(self.attr.value):
             self.widget.setValue(0.0)
         else:
-            super().set_widget_value()
+            bs = self.widget.blockSignals(True)
+            try:
+                self.widget.setValue(self.attr.value * self.coeff)
+            except:
+                pass
+            self.widget.blockSignals(bs)
 
     def keyPressEvent(self, e):
         self.widget.last_keyPressEvent(e)

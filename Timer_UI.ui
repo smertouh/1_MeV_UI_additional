@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>326</width>
-    <height>647</height>
+    <width>333</width>
+    <height>652</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -40,8 +40,8 @@
      <rect>
       <x>9</x>
       <y>9</y>
-      <width>308</width>
-      <height>580</height>
+      <width>315</width>
+      <height>578</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -60,7 +60,7 @@
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
-    <widget class="QWidget" name="stackedWidgetPage1" native="true">
+    <widget class="QWidget" name="stackedWidgetPage1">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <property name="spacing">
        <number>0</number>
@@ -86,12 +86,15 @@
          </sizepolicy>
         </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>6</number>
+         </property>
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -181,6 +184,9 @@
            </property>
            <property name="keyboardTracking">
             <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <number>999</number>
            </property>
           </widget>
          </item>
@@ -571,7 +577,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>0</width>
+          <width>20</width>
           <height>40</height>
          </size>
         </property>
@@ -629,7 +635,7 @@
             <string/>
            </property>
            <property name="checked">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -1681,7 +1687,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="stackedWidgetPage2" native="true">
+    <widget class="QWidget" name="stackedWidgetPage2">
      <layout class="QVBoxLayout" name="verticalLayout_7">
       <item>
        <widget class="QFrame" name="frame_10">
@@ -1744,7 +1750,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>326</width>
+     <width>333</width>
      <height>23</height>
     </rect>
    </property>

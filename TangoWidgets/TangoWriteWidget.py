@@ -24,6 +24,9 @@ class TangoWriteWidget(TangoWidget):
         self.widget.setStyleSheet('color: black')
         #self.widget.setEnabled(True)
 
+    def update(self, decorate_only=True):
+        super().update(decorate_only)
+
     # compare widget displayed value and read attribute value
     def compare(self):
         if self.readonly:
