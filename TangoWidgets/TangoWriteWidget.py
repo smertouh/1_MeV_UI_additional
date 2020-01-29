@@ -13,8 +13,8 @@ class TangoWriteWidget(TangoWidget):
         super().__init__(name, widget, readonly)
 
     def decorate_error(self):
-        self.widget.setStyleSheet('color: gray')
-        #self.widget.setEnabled(False)
+        #self.widget.setStyleSheet('color: gray')
+        self.widget.setEnabled(False)
 
     def decorate_invalid(self, text: str = None):
         self.widget.setStyleSheet('color: red')
@@ -33,11 +33,14 @@ class TangoWriteWidget(TangoWidget):
             return True
         else:
             try:
-                #if (self.attr.value * self.coeff) == self.widget.value():
-                if abs(((self.attr.value * self.coeff) - self.widget.value())) <= (1e-3 * self.widget.value()):
-                        return True
-                else:
-                    #print(self.attr.value, self.widget.value())
+                if int(self.attr.value * self.coeff) != int(self.widget.value()):
+                    self.logger.debug('%s %s != %s' % (self.attr.name, int(self.attr.value * self.coeff), int(self.widget.value())))
                     return False
+                if abs(((self.attr.value * self.coeff) - self.widget.value())) > abs((1e-3 * self.widget.value())):
+                    self.logger.debug('%s %s != %s' % (self.attr.name, self.attr.value * self.coeff, self.widget.value()))
+                    return False
+                else:
+                    return True
             except:
+                self.logger.debug('Exception in compare %s ' % self.attr.name, exc_info=True)
                 return False

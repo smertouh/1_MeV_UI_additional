@@ -100,7 +100,7 @@ class MainWindow(QMainWindow):
         # writable attributes TangoWidgets list
         self.wtwdgts = (
             # lauda
-            TangoAbstractSpinBox('binp/nbi/lauda/1100', self.spinBox_4, False),  # SetPoint
+            TangoAbstractSpinBox('binp/nbi/lauda/6200', self.spinBox_4, False),  # SetPoint
             TangoPushButton('binp/nbi/lauda/6210_3', self.pushButton_4, False),  # Valve
             TangoPushButton('binp/nbi/lauda/6210_1', self.pushButton_3, False),  # Run
             TangoPushButton('binp/nbi/lauda/6210_0', self.pushButton_6, False),  # Enable
@@ -108,27 +108,38 @@ class MainWindow(QMainWindow):
         )
         TangoWidget.RECONNECT_TIMEOUT = 5.0
         # Connect signals with slots
-        # lauda
         self.pushButton_3.clicked.connect(self.lauda_pump_on_callback)
+        self.spinBox_4.valueChanged.connect(self.setpoint_valueChanged)
+        # lauda device
+        self.lauda = None
+        for d in TangoWidget.DEVICES:
+            if d[0] == 'binp/nbi/lauda':
+                self.lauda = d[1]
+                break
+        # Defile and start timer callback task
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timer_handler)
+        self.timer.start(TIMER_PERIOD)
+        # start timer device
+
+    def setpoint_valueChanged(self):
+        self.lauda.write_attribute('1100', self.spinBox.value())
 
     def lauda_pump_on_callback(self, value):
         if value:
             # enable
             self.pushButton_6.setChecked(True)
+            self.pushButton_6.tango_widget.clicked()
             # reset
-            self.pushButton_9.setChecked(True)
-            self.pushButton_9.setChecked(False)
-
-    def log_level_changed(self, m):
-        levels = [logging.NOTSET, logging.DEBUG, logging.INFO,
-                  logging.WARNING, logging.ERROR, logging.CRITICAL]
-        if m >= 0:
-            self.logger.setLevel(levels[m])
+            #self.pushButton_9.setChecked(True)
+            self.pushButton_9.tango_widget.pressed()
+            #self.pushButton_9.setChecked(False)
+            self.pushButton_9.tango_widget.released()
 
     def onQuit(self) :
         # Save global settings
         self.save_settings([])
-        timer.stop()
+        self.timer.stop()
         
     def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
         global CONFIG
@@ -216,10 +227,6 @@ if __name__ == '__main__':
     app.aboutToQuit.connect(dmw.onQuit)
     # Show it
     dmw.show()
-    # Defile and start timer task
-    timer = QTimer()
-    timer.timeout.connect(dmw.timer_handler)
-    timer.start(TIMER_PERIOD)
     # Start the Qt main loop execution, exiting from this script
     # with the same return code of Qt application
     sys.exit(app.exec_())
