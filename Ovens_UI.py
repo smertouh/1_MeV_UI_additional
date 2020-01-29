@@ -39,7 +39,7 @@ from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
 
 ORGANIZATION_NAME = 'BINP'
-APPLICATION_NAME = 'Magnets_UI'
+APPLICATION_NAME = 'Ovens_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
 APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
@@ -87,74 +87,45 @@ class MainWindow(QMainWindow):
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
-            # magnet 1
-            TangoLED('binp/nbi/magnet1/output_state', self.pushButton_38),
-            TangoLabel('binp/nbi/magnet1/voltage', self.label_149),
-            TangoLabel('binp/nbi/magnet1/current', self.label_151),
-            # magnet 2
-            TangoLED('binp/nbi/magnet2/output_state', self.pushButton_41),
-            TangoLabel('binp/nbi/magnet2/voltage', self.label_150),
-            TangoLabel('binp/nbi/magnet2/current', self.label_152),
-            # pg
-            TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_42),
-            TangoLabel('binp/nbi/pg_offset/voltage', self.label_140),
-            TangoLabel('binp/nbi/pg_offset/current', self.label_142),
-            # acceleration
-            TangoLabel('ET7000_server/test/pet9_7026/ai00', self.label_34),
-            # extraction
-            TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_36),
+            # top oven
+            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_49),
+            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_53),
+            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_54),
+            #TangoLabel('binp/nbi/magnet1/voltage', self.label_68),
+            #TangoLabel('binp/nbi/magnet1/current', self.label_68),
+            #TangoLabel('binp/nbi/magnet1/current', self.label_73),
+            #TangoLabel('binp/nbi/magnet1/current', self.label_75),
+            #TangoLabel('binp/nbi/magnet1/current', self.label_78),
+            #TangoLabel('binp/nbi/magnet1/current', self.label_80),
+            # bottom oven
+            #TangoLED('binp/nbi/', self.pushButton_55),
+            #TangoLED('binp/nbi/', self.pushButton_56),
+            #TangoLED('binp/nbi/', self.pushButton_57),
+            #TangoLabel('binp/nbi/', self.label_93),
+            #TangoLabel('binp/nbi/', self.label_88),
+            #TangoLabel('binp/nbi/', self.label_92),
+            #TangoLabel('binp/nbi/', self.label_96),
+            #TangoLabel('binp/nbi/', self.label_86),
+            #TangoLabel('binp/nbi/', self.label_97),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
-            # magnet 1
-            TangoRadioButton('binp/nbi/magnet1/output_state', self.radioButton_54, False),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_current', self.doubleSpinBox_55, False),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_voltage', self.doubleSpinBox_53, False),
-            # magnet 2
-            TangoRadioButton('binp/nbi/magnet2/output_state', self.radioButton_55, False),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_current', self.doubleSpinBox_56, False),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_voltage', self.doubleSpinBox_54, False),
-            # pg
-            TangoRadioButton('binp/nbi/pg_offset/output_state', self.radioButton_52, False),
-            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_current', self.doubleSpinBox_49, False),
-            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_voltage', self.doubleSpinBox_50, False),
-            # extraction
-            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao00', self.doubleSpinBox_5, False),
-            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao01', self.doubleSpinBox_8, False),
-            # acceleration
-            TangoAbstractSpinBox('ET7000_server/test/pet9_7026/ao00', self.doubleSpinBox_9, False),
-            TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10, False),
+            # top oven
+            #TangoCheckBox('binp/nbi/', self.checkBox_20),
+            #TangoCheckBox('binp/nbi/', self.checkBox_21),
+            #TangoCheckBox('binp/nbi/', self.checkBox_22),
+            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox),
+            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_2),
+            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_3),
+            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_4),
+            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_9),
+            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_10),
         )
         # Defile and start timer callback task
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
         # start timer
         self.timer.start(TIMER_PERIOD)
-        # Connect signals with slots
-        # acceleration
-        self.checkBox_3.stateChanged.connect(self.cb3_callback)
-        # extraction
-        self.checkBox_2.stateChanged.connect(self.cb2_callback)
-
-    def cb3_callback(self, value):
-        if value:
-            self.doubleSpinBox_9.setReadOnly(False)
-            self.doubleSpinBox_10.setReadOnly(False)
-        else:
-            self.doubleSpinBox_9.setValue(0.0)
-            self.doubleSpinBox_8.setReadOnly(True)
-            self.doubleSpinBox_10.setValue(0.0)
-            self.doubleSpinBox_10.setReadOnly(True)
-
-    def cb2_callback(self, value):
-        if value:
-            self.doubleSpinBox_5.setReadOnly(False)
-            self.doubleSpinBox_8.setReadOnly(False)
-        else:
-            self.doubleSpinBox_5.setValue(0.0)
-            self.doubleSpinBox_5.setReadOnly(True)
-            self.doubleSpinBox_8.setValue(0.0)
-            self.doubleSpinBox_8.setReadOnly(True)
 
     def onQuit(self) :
         # Save global settings
