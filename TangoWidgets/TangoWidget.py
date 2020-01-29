@@ -198,10 +198,13 @@ class TangoWidget:
             else:
                 if not decorate_only:
                     self.set_widget_value()
-                if self.attr.quality == tango._tango.AttrQuality.ATTR_VALID and self.compare():
-                    self.decorate_valid()
-                else:
+                if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
+                    self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
                     self.decorate_invalid()
+                elif not self.compare():
+                    self.decorate_invalid()
+                else:
+                    self.decorate_valid()
         except:
             if self.connected:
                 self.logger.debug('Exception updating widget', exc_info=True)

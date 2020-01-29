@@ -36,3 +36,21 @@ class TangoAbstractSpinBox(TangoWriteWidget):
         k = e.key()
         if k == QtCore.Qt.Key_Enter or k == QtCore.Qt.Key_Return:
             self.callback(self.widget.value())
+
+    # compare widget displayed value and read attribute value
+    def compare(self):
+        if self.readonly:
+            return True
+        else:
+            try:
+                if int(self.attr.value * self.coeff) != int(self.widget.value()):
+                    self.logger.debug('%s %s != %s' % (self.attr.name, int(self.attr.value * self.coeff), int(self.widget.value())))
+                    return False
+                if abs(((self.attr.value * self.coeff) - self.widget.value())) > abs((1e-3 * self.widget.value())):
+                    self.logger.debug('%s %s != %s' % (self.attr.name, self.attr.value * self.coeff, self.widget.value()))
+                    return False
+                else:
+                    return True
+            except:
+                self.logger.debug('Exception in compare % ' % self.attr.name, exc_info=True)
+                return False
