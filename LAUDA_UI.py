@@ -65,21 +65,16 @@ class MainWindow(QMainWindow):
         global logger
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
-
         # logging config
         self.logger = logger
         # members definition
         self.n = 0
-        self.refresh_flag = False
-        self.last_selection = -1
         self.elapsed = 0.0
-        self.elapsed_time = 0.0
-        self.pulse_duration = 0.0
-        self.pulse_start = time.time()
 
         # Load the UI
         uic.loadUi(UI_FILE, self)
-        # Default main window parameters
+
+        # main window parameters
         ##self.setMinimumSize(QSize(480, 640))        # min size
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
@@ -106,6 +101,7 @@ class MainWindow(QMainWindow):
             TangoPushButton('binp/nbi/lauda/6210_0', self.pushButton_6, False),  # Enable
             TangoPushButton('binp/nbi/lauda/6210_2', self.pushButton_9, False),  # Reset
         )
+        #
         TangoWidget.RECONNECT_TIMEOUT = 5.0
         # Connect signals with slots
         self.pushButton_3.clicked.connect(self.lauda_pump_on_callback)
@@ -119,26 +115,26 @@ class MainWindow(QMainWindow):
         # Defile and start timer callback task
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
+        # start timer
         self.timer.start(TIMER_PERIOD)
-        # start timer device
 
     def setpoint_valueChanged(self):
-        self.lauda.write_attribute('1100', self.spinBox.value())
+        self.lauda.write_attribute('1100', self.spinBox_4.value())
 
     def lauda_pump_on_callback(self, value):
         if value:
-            # enable
-            self.pushButton_6.setChecked(True)
-            self.pushButton_6.tango_widget.clicked()
             # reset
             #self.pushButton_9.setChecked(True)
             self.pushButton_9.tango_widget.pressed()
             #self.pushButton_9.setChecked(False)
             self.pushButton_9.tango_widget.released()
+            # enable
+            self.pushButton_6.setChecked(True)
+            self.pushButton_6.tango_widget.clicked()
 
     def onQuit(self) :
         # Save global settings
-        self.save_settings([])
+        self.save_settings()
         self.timer.stop()
         
     def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
