@@ -80,20 +80,10 @@ class MainWindow(QMainWindow):
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
         self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
-        # Connect menu actions
-        self.actionQuit.triggered.connect(qApp.quit)
-        self.actionAbout.triggered.connect(self.show_about)
-        # Clock at status bar
-        self.clock = QLabel(" ")
-        self.statusBar().addPermanentWidget(self.clock)
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
-        # find all controls in config tab
-        self.config_widgets = []
-        self.config_widgets = get_widgets(self.stackedWidgetPage2)
-
-        self.restore_settings(self.config_widgets)
+        self.restore_settings()
 
         # read only attributes TangoWidgets list
         self.rdwdgts = (
@@ -180,11 +170,12 @@ class MainWindow(QMainWindow):
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
-            self.resize(self.stackedWidget.sizeHint())
+            #self.resize(QSize(418, 751))
+            self.resize(QSize(self.gridLayout_2.sizeHint().width(), self.gridLayout_2.sizeHint().height()+self.gridLayout_3.sizeHint().height()))
         else:
             self.frame.setVisible(False)
-            #self.resize(QSize(280, 240))
-            self.resize(self.stackedWidget.sizeHint())
+            #self.resize(QSize(418, 124))
+            self.resize(self.gridLayout_2.sizeHint())
 
     def single_periodical_callback(self, value):
         if value == 0:  # single
@@ -233,19 +224,9 @@ class MainWindow(QMainWindow):
             except:
                 self.logger.debug("Exception ", exc_info=True)
 
-    def show_about(self):
-        QMessageBox.information(self, 'About', APPLICATION_NAME + ' Version ' + APPLICATION_VERSION +
-            '\nUser interface program to control 1 MeV stand', QMessageBox.Ok)
-
-    def log_level_changed(self, m):
-        levels = [logging.NOTSET, logging.DEBUG, logging.INFO,
-                  logging.WARNING, logging.ERROR, logging.CRITICAL]
-        if m >= 0:
-            self.logger.setLevel(levels[m])
-
     def onQuit(self) :
         # Save global settings
-        self.save_settings(self.config_widgets)
+        self.save_settings()
         self.timer.stop()
         
     def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
@@ -303,8 +284,6 @@ class MainWindow(QMainWindow):
 
     def timer_handler(self):
         t0 = time.time()
-        t = time.strftime('%H:%M:%S')
-        self.clock.setText('%s' % t)
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
         # pulse duration update
