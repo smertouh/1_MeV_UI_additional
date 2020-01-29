@@ -8,6 +8,7 @@ import sys
 import time
 from PyQt5.QtWidgets import QCheckBox
 from TangoWidgets.TangoWriteWidget import TangoWriteWidget
+from TangoWidgets.TangoWidget import TangoWidget
 
 
 class TangoCheckBox(TangoWriteWidget):
@@ -49,6 +50,6 @@ class TangoCheckBox(TangoWriteWidget):
                 self.logger.debug('Exception in CheckBox callback', exc_info=True)
                 self.decorate_error()
         else:
-            if time.time() - self.time > self.RECONNECT_TIMEOUT:
+            if time.time() - self.time > TangoWidget.RECONNECT_TIMEOUT:
                 self.connect_attribute_proxy()
             self.decorate_error()

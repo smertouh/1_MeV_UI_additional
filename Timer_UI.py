@@ -155,6 +155,8 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop9', self.spinBox_29),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop10', self.spinBox_31),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop11', self.spinBox_33),  # ch
+            TangoAbstractSpinBox('binp/nbi/adc0/Acq_start', self.spinBox_34),  # ch
+            TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),  # ch
         )
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())

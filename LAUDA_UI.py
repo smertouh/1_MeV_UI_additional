@@ -57,7 +57,7 @@ logger.addHandler(console_handler)
 
 # Global configuration dictionary
 CONFIG = {}
-TIMER_PERIOD = 500  # ms
+TIMER_PERIOD = 1500  # ms
 
 
 class MainWindow(QMainWindow):
@@ -106,6 +106,7 @@ class MainWindow(QMainWindow):
             TangoPushButton('binp/nbi/lauda/6210_0', self.pushButton_6, False),  # Enable
             TangoPushButton('binp/nbi/lauda/6210_2', self.pushButton_9, False),  # Reset
         )
+        TangoWidget.RECONNECT_TIMEOUT = 5.0
         # Connect signals with slots
         # lauda
         self.pushButton_3.clicked.connect(self.lauda_pump_on_callback)
@@ -138,7 +139,8 @@ class MainWindow(QMainWindow):
             CONFIG['main_window'] = {'size':(s.width(), s.height()), 'position':(p.x(), p.y())}
             #get_state(self.comboBox_1, 'comboBox_1')
             for w in widgets:
-                get_widget_state(w, CONFIG)
+                #get_widget_state(w, CONFIG)
+                pass
             with open(file_name, 'w') as configfile:
                 configfile.write(json.dumps(CONFIG, indent=4))
             self.logger.info('Configuration saved to %s' % file_name)
@@ -173,7 +175,8 @@ class MainWindow(QMainWindow):
             #set_state(self.plainTextEdit_1, 'plainTextEdit_1')
             #set_state(self.comboBox_1, 'comboBox_1')
             for w in widgets:
-                set_widget_state(w, CONFIG)
+                #set_widget_state(w, CONFIG)
+                pass
             self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
             return True
         except :

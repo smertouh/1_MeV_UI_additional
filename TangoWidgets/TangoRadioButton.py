@@ -40,6 +40,6 @@ class TangoRadioButton(TangoWidget):
                 self.logger.debug('Exception %s in callback', exc_info=True)
                 self.decorate_error()
         else:
-            if time.time() - self.time > self.RECONNECT_TIMEOUT:
+            if time.time() - self.time > TangoWidget.RECONNECT_TIMEOUT:
                 self.connect_attribute_proxy()
             self.decorate_error()

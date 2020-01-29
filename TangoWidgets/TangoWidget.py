@@ -207,7 +207,7 @@ class TangoWidget:
                 self.logger.debug('Exception updating widget', exc_info=True)
                 self.disconnect_attribute_proxy()
             else:
-                if (time.time() - self.time) > self.RECONNECT_TIMEOUT:
+                if (time.time() - self.time) > TangoWidget.RECONNECT_TIMEOUT:
                     self.connect_attribute_proxy()
             self.decorate_error()
         self.update_dt = time.time() - t0
