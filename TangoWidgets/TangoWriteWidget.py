@@ -33,7 +33,7 @@ class TangoWriteWidget(TangoWidget):
             return True
         else:
             try:
-                if int(self.attr.value * self.coeff) != int(self.widget.value()):
+                if abs(int(self.attr.value * self.coeff) - int(self.widget.value())) > 1:
                     self.logger.debug('%s %s != %s' % (self.attr.name, int(self.attr.value * self.coeff), int(self.widget.value())))
                     return False
                 if abs(((self.attr.value * self.coeff) - self.widget.value())) > abs((1e-3 * self.widget.value())):

@@ -39,7 +39,7 @@ from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
 
 ORGANIZATION_NAME = 'BINP'
-APPLICATION_NAME = 'Rf_System_UI'
+APPLICATION_NAME = 'RF_System_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
 APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
