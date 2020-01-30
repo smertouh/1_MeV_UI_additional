@@ -75,7 +75,6 @@ class MainWindow(QMainWindow):
         uic.loadUi(UI_FILE, self)
 
         # main window parameters
-        ##self.setMinimumSize(QSize(480, 640))        # min size
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
@@ -88,38 +87,42 @@ class MainWindow(QMainWindow):
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # top oven
-            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_49),
-            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_53),
-            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_54),
-            #TangoLabel('binp/nbi/magnet1/voltage', self.label_68),
-            #TangoLabel('binp/nbi/magnet1/current', self.label_68),
-            #TangoLabel('binp/nbi/magnet1/current', self.label_73),
-            #TangoLabel('binp/nbi/magnet1/current', self.label_75),
-            #TangoLabel('binp/nbi/magnet1/current', self.label_78),
-            #TangoLabel('binp/nbi/magnet1/current', self.label_80),
+            TangoLED('binp/nbi/adam5/do03', self.pushButton_49),
+            TangoLED('binp/nbi/adam5/do02', self.pushButton_53),
+            TangoLED('binp/nbi/adam5/do01', self.pushButton_54),
+            TangoLabel('binp/nbi/adam6/ai06', self.label_68),
+            TangoLabel('binp/nbi/adam6/ai05', self.label_68),
+            TangoLabel('binp/nbi/adam6/ai04', self.label_73),
+            TangoLabel('binp/nbi/adam6/ai03', self.label_75),
+            TangoLabel('binp/nbi/adam6/ai02', self.label_78),
+            TangoLabel('binp/nbi/adam6/ai01', self.label_80),
             # bottom oven
-            #TangoLED('binp/nbi/', self.pushButton_55),
-            #TangoLED('binp/nbi/', self.pushButton_56),
-            #TangoLED('binp/nbi/', self.pushButton_57),
-            #TangoLabel('binp/nbi/', self.label_93),
-            #TangoLabel('binp/nbi/', self.label_88),
-            #TangoLabel('binp/nbi/', self.label_92),
-            #TangoLabel('binp/nbi/', self.label_96),
-            #TangoLabel('binp/nbi/', self.label_86),
-            #TangoLabel('binp/nbi/', self.label_97),
+            TangoLED('binp/nbi/adam10/do03', self.pushButton_55),
+            TangoLED('binp/nbi/adam10/do02', self.pushButton_56),
+            TangoLED('binp/nbi/adam10/do01', self.pushButton_57),
+            TangoLabel('binp/nbi/adam11/ai06', self.label_93),
+            TangoLabel('binp/nbi/adam11/ai05', self.label_88),
+            TangoLabel('binp/nbi/adam11/ai04', self.label_92),
+            TangoLabel('binp/nbi/adam11/ai03', self.label_96),
+            TangoLabel('binp/nbi/adam11/ai02', self.label_86),
+            TangoLabel('binp/nbi/adam11/ai01', self.label_97),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
             # top oven
-            #TangoCheckBox('binp/nbi/', self.checkBox_20),
-            #TangoCheckBox('binp/nbi/', self.checkBox_21),
-            #TangoCheckBox('binp/nbi/', self.checkBox_22),
-            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox),
-            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_2),
-            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_3),
-            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_4),
-            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_9),
-            #TangoAbstractSpinBox('binp/nbi/', self.doubleSpinBox_10),
+            TangoCheckBox('binp/nbi/adam5/do03', self.checkBox_20),
+            TangoCheckBox('binp/nbi/adam5/do02', self.checkBox_21),
+            TangoCheckBox('binp/nbi/adam5/do01', self.checkBox_22),
+            TangoAbstractSpinBox('binp/nbi/adam7/ao03', self.doubleSpinBox),
+            TangoAbstractSpinBox('binp/nbi/adam7/ao02', self.doubleSpinBox_2),
+            TangoAbstractSpinBox('binp/nbi/adam7/ao01', self.doubleSpinBox_3),
+            # bottom oven
+            TangoCheckBox('binp/nbi/adam10/do03', self.checkBox_20),
+            TangoCheckBox('binp/nbi/adam10/do02', self.checkBox_21),
+            TangoCheckBox('binp/nbi/adam10/do01', self.checkBox_22),
+            TangoAbstractSpinBox('binp/nbi/adam12/ao03', self.doubleSpinBox),
+            TangoAbstractSpinBox('binp/nbi/adam12/ao02', self.doubleSpinBox_2),
+            TangoAbstractSpinBox('binp/nbi/adam12/ao01', self.doubleSpinBox_3),
         )
         # Defile and start timer callback task
         self.timer = QTimer()
