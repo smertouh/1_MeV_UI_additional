@@ -57,7 +57,7 @@ logger.addHandler(console_handler)
 
 # Global configuration dictionary
 CONFIG = {}
-TIMER_PERIOD = 500  # ms
+TIMER_PERIOD = 1000  # ms
 
 
 class MainWindow(QMainWindow):
