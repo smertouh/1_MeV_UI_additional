@@ -453,7 +453,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Top Oven</string>
+         <string>Protection</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -805,7 +805,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Bottom Oven</string>
+         <string>Vacuum</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>

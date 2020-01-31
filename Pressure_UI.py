@@ -86,43 +86,14 @@ class MainWindow(QMainWindow):
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
-            # top oven
             TangoLED('binp/nbi/adam5/do03', self.pushButton_49),
-            TangoLED('binp/nbi/adam5/do02', self.pushButton_53),
-            TangoLED('binp/nbi/adam5/do01', self.pushButton_54),
-            TangoLabel('binp/nbi/adam6/ai06', self.label_68),
-            TangoLabel('binp/nbi/adam6/ai05', self.label_68),
-            TangoLabel('binp/nbi/adam6/ai04', self.label_73),
-            TangoLabel('binp/nbi/adam6/ai03', self.label_75),
-            TangoLabel('binp/nbi/adam6/ai02', self.label_78),
             TangoLabel('binp/nbi/adam6/ai01', self.label_80),
-            # bottom oven
-            TangoLED('binp/nbi/adam10/do03', self.pushButton_55),
-            TangoLED('binp/nbi/adam10/do02', self.pushButton_56),
-            TangoLED('binp/nbi/adam10/do01', self.pushButton_57),
-            TangoLabel('binp/nbi/adam11/ai06', self.label_93),
-            TangoLabel('binp/nbi/adam11/ai05', self.label_88),
-            TangoLabel('binp/nbi/adam11/ai04', self.label_92),
-            TangoLabel('binp/nbi/adam11/ai03', self.label_96),
-            TangoLabel('binp/nbi/adam11/ai02', self.label_86),
-            TangoLabel('binp/nbi/adam11/ai01', self.label_97),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
             # top oven
             TangoCheckBox('binp/nbi/adam5/do03', self.checkBox_20),
-            TangoCheckBox('binp/nbi/adam5/do02', self.checkBox_21),
-            TangoCheckBox('binp/nbi/adam5/do01', self.checkBox_22),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao03', self.doubleSpinBox),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao02', self.doubleSpinBox_2),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao01', self.doubleSpinBox_3),
-            # bottom oven
-            TangoCheckBox('binp/nbi/adam10/do03', self.checkBox_20),
-            TangoCheckBox('binp/nbi/adam10/do02', self.checkBox_21),
-            TangoCheckBox('binp/nbi/adam10/do01', self.checkBox_22),
             TangoAbstractSpinBox('binp/nbi/adam12/ao03', self.doubleSpinBox),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao02', self.doubleSpinBox_2),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao01', self.doubleSpinBox_3),
         )
         # Defile and start timer callback task
         self.timer = QTimer()
@@ -152,7 +123,7 @@ class MainWindow(QMainWindow):
             return True
         except :
             self.logger.log(logging.WARNING, 'Configuration save error to %s' % file_name)
-            print_exception_info()
+            self.logger.log(logging.DEBUG, '', exc_info=True)
             return False
         
     def restore_settings(self, widgets=(), file_name=CONFIG_FILE) :
@@ -186,7 +157,7 @@ class MainWindow(QMainWindow):
             return True
         except :
             self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
-            print_exception_info()
+            self.logger.log(logging.DEBUG, '', exc_info=True)
             return False
 
     def timer_handler(self):
@@ -207,10 +178,6 @@ class MainWindow(QMainWindow):
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - self.elapsed
                 return
-
-
-def print_exception_info(level=logging.DEBUG):
-    logger.log(level, "Exception ", exc_info=True)
 
 
 if __name__ == '__main__':
