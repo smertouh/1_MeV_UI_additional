@@ -57,7 +57,7 @@ logger.addHandler(console_handler)
 
 # Global configuration dictionary
 CONFIG = {}
-TIMER_PERIOD = 500  # ms
+TIMER_PERIOD = 300  # ms
 
 
 class MainWindow(QMainWindow):
@@ -85,18 +85,29 @@ class MainWindow(QMainWindow):
 
         self.restore_settings()
 
+        # define devices in use
+        dn = 'binp/nbi/dac0'
+        self.dac_device = tango.DeviceProxy(dn)
+        TangoWidget.DEVICES.append((dn, self.dac_device))
+        dn = 'binp/nbi/adc0'
+        self.adc_device = tango.DeviceProxy(dn)
+        TangoWidget.DEVICES.append((dn, self.adc_device))
+        dn = 'binp/nbi/timing'
+        self.timer_device = tango.DeviceProxy(dn)
+        TangoWidget.DEVICES.append((dn, self.timer_device))
+
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # rf system
-            TangoLED('binp/nbi/timing/di63', self.pushButton_32),
+            #TangoLED('binp/nbi/timing/di63', self.pushButton_1),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
             # rf system
-            TangoAbstractSpinBox('binp/nbi/dac0/channel0', self.spinBox_3, False),
+            TangoAbstractSpinBox('binp/nbi/dac0/channel0', self.spinBox_1, False),
             TangoAbstractSpinBox('binp/nbi/dac0/channel1', self.spinBox_2, False),
-            TangoPushButton('binp/nbi/timing/do0', self.pushButton_7, False),
-            TangoPushButton('binp/nbi/timing/do1', self.pushButton_8, False),
+            TangoPushButton('binp/nbi/timing/do0', self.pushButton_3, False),
+            TangoPushButton('binp/nbi/timing/do1', self.pushButton_4, False),
             TangoPushButton('binp/nbi/timing/do2', self.pushButton_5, False),
         )
         # Defile and start timer callback task
@@ -171,6 +182,19 @@ class MainWindow(QMainWindow):
         self.elapsed = 0.0
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
+            try:
+                av = self.adc_device.read_attribute('chan16')
+                if av.quality != tango._tango.AttrQuality.ATTR_VALID:
+                    self.pushButton_1.setChecked(False)
+                else:
+                        av_config = self.adc_device.get_attribute_config_ex('chan16')[0]
+                        av_coeff = float(av_config.display_unit)
+                        if av.value*av_coeff > 9.0:
+                            self.pushButton_1.setChecked(True)
+                        else:
+                            self.pushButton_1.setChecked(False)
+            except:
+                self.pushButton_1.setChecked(False)
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
