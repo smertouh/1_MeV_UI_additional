@@ -16,7 +16,7 @@ import tango
 class TangoWidget:
     ERROR_TEXT = '****'
     RECONNECT_TIMEOUT = 3.0    # seconds
-    DEVICES = []
+    DEVICES = {}
 
     def __init__(self, name: str, widget: QWidget, readonly=True):
         #print('TangoWidgetinitEntry', name)
@@ -76,13 +76,11 @@ class TangoWidget:
                 self.dn = name[:n]
                 self.an = name[n+1:]
                 self.dp = None
-                for d in TangoWidget.DEVICES:
-                    if d[0] == self.dn:
-                        self.dp = d[1]
-                        break
-                if self.dp is None:
+                if self.dn in TangoWidget.DEVICES:
+                    self.dp = TangoWidget.DEVICES[self.dn]
+                else:
                     self.dp = tango.DeviceProxy(self.dn)
-                    TangoWidget.DEVICES.append((self.dn, self.dp))
+                    TangoWidget.DEVICES[self.dn] = self.dp
                 if not self.dp.is_attribute_polled(self.an):
                     self.logger.info('Recommended to swith polling on for %s', name)
                 self.attr = self.dp.read_attribute(self.an)

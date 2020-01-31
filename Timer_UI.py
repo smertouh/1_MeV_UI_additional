@@ -156,11 +156,10 @@ class MainWindow(QMainWindow):
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)
         # find timer device
-        self.timer_device = None
-        for d in TangoWidget.DEVICES:
-            if d[0] == 'binp/nbi/timing':
-                self.timer_device = d[1]
-                break
+        try:
+            self.timer_device = TangoWidget.DEVICES['binp/nbi/timing']
+        except:
+            self.timer_device = None
         # Defile and start timer callback task
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)

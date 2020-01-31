@@ -88,13 +88,13 @@ class MainWindow(QMainWindow):
         # define devices in use
         dn = 'binp/nbi/dac0'
         self.dac_device = tango.DeviceProxy(dn)
-        TangoWidget.DEVICES.append((dn, self.dac_device))
+        TangoWidget.DEVICES[dn] = self.dac_device
         dn = 'binp/nbi/adc0'
         self.adc_device = tango.DeviceProxy(dn)
-        TangoWidget.DEVICES.append((dn, self.adc_device))
+        TangoWidget.DEVICES[dn] = self.adc_device
         dn = 'binp/nbi/timing'
         self.timer_device = tango.DeviceProxy(dn)
-        TangoWidget.DEVICES.append((dn, self.timer_device))
+        TangoWidget.DEVICES[dn] = self.timer_device
 
         try:
             self.av = self.adc_device.read_attribute('chan16')

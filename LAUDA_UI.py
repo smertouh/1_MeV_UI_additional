@@ -107,11 +107,10 @@ class MainWindow(QMainWindow):
         self.pushButton_3.clicked.connect(self.lauda_pump_on_callback)
         self.spinBox_4.valueChanged.connect(self.setpoint_valueChanged)
         # lauda device
-        self.lauda = None
-        for d in TangoWidget.DEVICES:
-            if d[0] == 'binp/nbi/lauda':
-                self.lauda = d[1]
-                break
+        try:
+            self.lauda = TangoWidget.DEVICES['binp/nbi/lauda']
+        except:
+            self.lauda = None
         # Defile and start timer callback task
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
