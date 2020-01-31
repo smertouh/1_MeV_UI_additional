@@ -114,17 +114,23 @@ class TangoWidget:
             self.connected = False
             self.time = time.time()
 
-    def decorate_error(self):
+    def decorate_error(self, *args, **kwargs):
         if hasattr(self.widget, 'setText'):
             self.widget.setText(TangoWidget.ERROR_TEXT)
         self.widget.setStyleSheet('color: gray')
 
-    def decorate_invalid(self, text: str = None):
+    def decorate_invalid(self, text: str = None, *args, **kwargs):
         if hasattr(self.widget, 'setText') and text is not None:
             self.widget.setText(text)
         self.widget.setStyleSheet('color: red')
 
-    def decorate_valid(self):
+    def decorate_invalid_data_format(self, text: str = None, *args, **kwargs):
+        self.decorate_invalid(text, *args, **kwargs)
+
+    def decorate_invalid_quality(self, *args, **kwargs):
+        self.decorate_invalid(*args, **kwargs)
+
+    def decorate_valid(self, *args, **kwargs):
         self.widget.setStyleSheet('color: black')
 
     def read(self, force=False):
@@ -194,13 +200,13 @@ class TangoWidget:
             self.read()
             if self.attr.data_format != tango._tango.AttrDataFormat.SCALAR:
                 self.logger.debug('Non scalar attribute')
-                self.decorate_invalid('format!')
+                self.decorate_invalid_data_format()
             else:
                 if not decorate_only:
                     self.set_widget_value()
                 if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
                     self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
-                    self.decorate_invalid()
+                    self.decorate_invalid_quality()
                 elif not self.compare():
                     self.decorate_invalid()
                 else:
