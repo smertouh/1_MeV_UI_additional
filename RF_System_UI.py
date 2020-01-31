@@ -96,6 +96,25 @@ class MainWindow(QMainWindow):
         self.timer_device = tango.DeviceProxy(dn)
         TangoWidget.DEVICES.append((dn, self.timer_device))
 
+        try:
+            self.av = self.adc_device.read_attribute('chan16')
+            self.av_config = self.adc_device.get_attribute_config_ex('chan16')[0]
+            self.av_coeff = float(self.av_config.display_unit)
+        except:
+            self.av_coeff = 1.0
+        try:
+            self.cc = self.adc_device.read_attribute('chan22')
+            self.cc_config = self.adc_device.get_attribute_config_ex('chan22')[0]
+            self.cc_coeff = float(self.cc_config.display_unit)
+        except:
+            self.cc_coeff = 1.0
+        try:
+            self.ua = self.adc_device.read_attribute('chan1')
+            self.ua_config = self.adc_device.get_attribute_config_ex('chan1')[0]
+            self.ua_coeff = float(self.ua_config.display_unit)
+        except:
+            self.ua_coeff = 1.0
+
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # rf system
@@ -183,18 +202,30 @@ class MainWindow(QMainWindow):
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
             try:
-                av = self.adc_device.read_attribute('chan16')
-                if av.quality != tango._tango.AttrQuality.ATTR_VALID:
+                self.av = self.adc_device.read_attribute('chan16')
+                self.cc = self.adc_device.read_attribute('chan22')
+                if self.av.quality != tango._tango.AttrQuality.ATTR_VALID:
+                    self.pushButton_1.setChecked(False)
+                elif self.cc.quality != tango._tango.AttrQuality.ATTR_VALID:
                     self.pushButton_1.setChecked(False)
                 else:
-                        av_config = self.adc_device.get_attribute_config_ex('chan16')[0]
-                        av_coeff = float(av_config.display_unit)
-                        if av.value*av_coeff > 9.0:
-                            self.pushButton_1.setChecked(True)
-                        else:
-                            self.pushButton_1.setChecked(False)
+                    if self.av.value * self.av_coeff > 9.0 and self.cc.value * self.cc_coeff > 0.1:
+                        self.pushButton_1.setChecked(True)
+                    else:
+                        self.pushButton_1.setChecked(False)
             except:
                 self.pushButton_1.setChecked(False)
+            try:
+                self.ua = self.adc_device.read_attribute('chan1')
+                if self.ua.quality != tango._tango.AttrQuality.ATTR_VALID:
+                    self.pushButton_2.setChecked(False)
+                else:
+                    if self.ua.value * self.ua_coeff > 0.5:
+                        self.pushButton_2.setChecked(True)
+                    else:
+                        self.pushButton_2.setChecked(False)
+            except:
+                self.pushButton_2.setChecked(False)
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
