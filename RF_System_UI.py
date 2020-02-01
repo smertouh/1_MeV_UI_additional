@@ -7,7 +7,6 @@ Created on Jul 28, 2019
 
 import sys
 import json
-import logging
 import time
 
 from PyQt5 import QtWidgets
@@ -29,6 +28,7 @@ import PyQt5.QtGui as QtGui
 
 import tango
 
+from TangoWidgets.Utils import *
 from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
@@ -38,6 +38,7 @@ from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
 
+
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'RF_System_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
@@ -45,37 +46,21 @@ APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Configure logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-f_str = '%(asctime)s,%(msecs)d %(funcName)s(%(lineno)s) ' + \
-        '%(levelname)-7s %(message)s'
-log_formatter = logging.Formatter(f_str, datefmt='%H:%M:%S')
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(log_formatter)
-logger.addHandler(console_handler)
-
 # Global configuration dictionary
-CONFIG = {}
 TIMER_PERIOD = 300  # ms
 
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
-        global logger
-        # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = logger
+        self.logger = config_logger()
         # members definition
         self.n = 0
         self.elapsed = 0.0
-
         # Load the UI
         uic.loadUi(UI_FILE, self)
-
         # main window parameters
-        ##self.setMinimumSize(QSize(480, 640))        # min size
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
@@ -86,16 +71,19 @@ class MainWindow(QMainWindow):
         self.restore_settings()
 
         # define devices in use
-        dn = 'binp/nbi/dac0'
-        self.dac_device = tango.DeviceProxy(dn)
-        TangoWidget.DEVICES[dn] = self.dac_device
-        dn = 'binp/nbi/adc0'
-        self.adc_device = tango.DeviceProxy(dn)
-        TangoWidget.DEVICES[dn] = self.adc_device
-        dn = 'binp/nbi/timing'
-        self.timer_device = tango.DeviceProxy(dn)
-        TangoWidget.DEVICES[dn] = self.timer_device
-
+        try:
+            dn = 'binp/nbi/dac0'
+            self.dac_device = tango.DeviceProxy(dn)
+            TangoWidget.DEVICES[dn] = self.dac_device
+            dn = 'binp/nbi/adc0'
+            self.adc_device = tango.DeviceProxy(dn)
+            TangoWidget.DEVICES[dn] = self.adc_device
+            dn = 'binp/nbi/timing'
+            self.timer_device = tango.DeviceProxy(dn)
+            TangoWidget.DEVICES[dn] = self.timer_device
+        except:
+            pass
+        # define _coeff
         try:
             self.av = self.adc_device.read_attribute('chan16')
             self.av_config = self.adc_device.get_attribute_config_ex('chan16')[0]
@@ -141,58 +129,41 @@ class MainWindow(QMainWindow):
         self.timer.stop()
         
     def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
         try:
             # Save window size and position
             p = self.pos()
             s = self.size()
-            CONFIG['main_window'] = {'size':(s.width(), s.height()), 'position':(p.x(), p.y())}
-            #get_state(self.comboBox_1, 'comboBox_1')
+            self.config['main_window'] = {'size': (s.width(), s.height()), 'position': (p.x(), p.y())}
             for w in widgets:
-                #get_widget_state(w, CONFIG)
-                pass
+                get_widget_state(w, self.config)
             with open(file_name, 'w') as configfile:
-                configfile.write(json.dumps(CONFIG, indent=4))
+                configfile.write(json.dumps(self.config, indent=4))
             self.logger.info('Configuration saved to %s' % file_name)
             return True
-        except :
+        except:
             self.logger.log(logging.WARNING, 'Configuration save error to %s' % file_name)
-            print_exception_info()
+            self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
             return False
-        
+
     def restore_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
         try :
             with open(file_name, 'r') as configfile:
                 s = configfile.read()
-            CONFIG = json.loads(s)
+            self.config = json.loads(s)
             # Restore log level
-            if 'log_level' in CONFIG:
-                v = CONFIG['log_level']
-                self.logger.setLevel(v)
-                levels = [logging.NOTSET, logging.DEBUG, logging.INFO,
-                          logging.WARNING, logging.ERROR, logging.CRITICAL, logging.CRITICAL+10]
-                n = 1
-                for m in range(len(levels)):
-                    if v < levels[m]:
-                        n = m
-                        break
-                self.comboBox_1.setCurrentIndex(n-1)
+            if 'log_level' in self.config:
+                self.logger.setLevel(self.config['log_level'])
             # Restore window size and position
-            if 'main_window' in CONFIG:
-                self.resize(QSize(CONFIG['main_window']['size'][0], CONFIG['main_window']['size'][1]))
-                self.move(QPoint(CONFIG['main_window']['position'][0], CONFIG['main_window']['position'][1]))
-            #set_state(self.plainTextEdit_1, 'plainTextEdit_1')
-            #set_state(self.comboBox_1, 'comboBox_1')
+            if 'main_window' in self.config:
+                self.resize(QSize(self.config['main_window']['size'][0], self.config['main_window']['size'][1]))
+                self.move(QPoint(self.config['main_window']['position'][0], self.config['main_window']['position'][1]))
             for w in widgets:
-                #set_widget_state(w, CONFIG)
-                pass
+                set_widget_state(w, self.config)
             self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
-            return True
         except :
             self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
-            print_exception_info()
-            return False
+            self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
+        return self.config
 
     def timer_handler(self):
         t0 = time.time()
@@ -237,10 +208,6 @@ class MainWindow(QMainWindow):
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - self.elapsed
                 return
-
-
-def print_exception_info(level=logging.DEBUG):
-    logger.log(level, "Exception ", exc_info=True)
 
 
 if __name__ == '__main__':

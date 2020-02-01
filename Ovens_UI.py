@@ -7,20 +7,10 @@ Created on Jul 28, 2019
 
 import sys
 import json
-import logging
 import time
 
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import qApp
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QComboBox
-from PyQt5.QtWidgets import QCheckBox
-from PyQt5.QtWidgets import QPlainTextEdit
-from PyQt5.QtWidgets import QLineEdit
 from PyQt5 import uic
 from PyQt5.QtCore import QSize
 from PyQt5.QtCore import QPoint
@@ -29,7 +19,7 @@ import PyQt5.QtGui as QtGui
 
 import tango
 
-from TangoWidgets.TangoWidget import TangoWidget
+from TangoWidgets.Utils import *
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
@@ -45,16 +35,6 @@ APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Configure logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-f_str = '%(asctime)s,%(msecs)d %(funcName)s(%(lineno)s) ' + \
-        '%(levelname)-7s %(message)s'
-log_formatter = logging.Formatter(f_str, datefmt='%H:%M:%S')
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(log_formatter)
-logger.addHandler(console_handler)
-
 # Global configuration dictionary
 CONFIG = {}
 TIMER_PERIOD = 1000  # ms
@@ -66,7 +46,7 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = logger
+        self.logger = config_logger()
         # members definition
         self.n = 0
         self.elapsed = 0.0

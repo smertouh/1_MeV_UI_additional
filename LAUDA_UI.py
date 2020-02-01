@@ -29,6 +29,7 @@ import PyQt5.QtGui as QtGui
 
 import tango
 
+from TangoWidgets.Utils import *
 from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
@@ -45,16 +46,6 @@ APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Configure logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-f_str = '%(asctime)s,%(msecs)d %(funcName)s(%(lineno)s) ' + \
-        '%(levelname)-7s %(message)s'
-log_formatter = logging.Formatter(f_str, datefmt='%H:%M:%S')
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(log_formatter)
-logger.addHandler(console_handler)
-
 # Global configuration dictionary
 CONFIG = {}
 TIMER_PERIOD = 1500  # ms
@@ -66,7 +57,7 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = logger
+        self.logger = config_logger()
         # members definition
         self.n = 0
         self.elapsed = 0.0

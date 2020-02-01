@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>418</width>
-    <height>726</height>
+    <height>716</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -40,7 +40,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Emittance Plot Processing</string>
+   <string>1 MeV Timer UI</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -1489,6 +1489,9 @@
          </item>
          <item row="1" column="1">
           <widget class="QCheckBox" name="checkBox_8">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -1497,8 +1500,8 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>26</width>
+             <height>26</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -1514,14 +1517,11 @@
              <bold>false</bold>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
            <property name="text">
             <string/>
            </property>
            <property name="checked">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
           </widget>
          </item>
