@@ -76,6 +76,13 @@ class MainWindow(QMainWindow):
 
         self.restore_settings()
 
+        # timer device
+        try:
+            self.timer_device = tango.DeviceProxy('binp/nbi/timing')
+            TangoWidget.DEVICES['binp/nbi/timing'] = self.timer_device
+        except:
+            self.timer_device = None
+
         # read only attributes TangoWidgets list
         self.rdwdgts = (
             # timer
@@ -146,11 +153,6 @@ class MainWindow(QMainWindow):
         #self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)
-        # find timer device
-        try:
-            self.timer_device = TangoWidget.DEVICES['binp/nbi/timing']
-        except:
-            self.timer_device = None
         # Defile and start timer callback task
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)

@@ -61,44 +61,36 @@ class TangoWidget:
         if name is None:
             name = self.name
         try:
-            if isinstance(name, str):
-                n = name.rfind('/')
-                self.dn = name[:n]
-                self.an = name[n+1:]
-                self.dp = None
-                if self.dn in TangoWidget.DEVICES:
-                    self.dp = TangoWidget.DEVICES[self.dn]
-                else:
-                    self.dp = tango.DeviceProxy(self.dn)
-                    TangoWidget.DEVICES[self.dn] = self.dp
-                if not self.dp.is_attribute_polled(self.an):
-                    self.logger.info('Recommended to swith polling on for %s', name)
-                self.attr = self.dp.read_attribute(self.an)
-                self.config = self.dp.get_attribute_config_ex(self.an)[0]
-                self.format = self.config.format
-                try:
-                    self.coeff = float(self.config.display_unit)
-                except:
-                    self.coeff = 1.0
-                self.connected = True
-                self.time = time.time()
-                self.logger.info('Connected to Attribute %s', name)
+            n = name.rfind('/')
+            self.dn = name[:n]
+            self.an = name[n+1:]
+            self.dp = None
+            if self.dn in TangoWidget.DEVICES:
+                self.dp = TangoWidget.DEVICES[self.dn]
             else:
-                self.logger.warning('<str> required for attribute name')
-                self.name = str(name)
-                self.dp = None
-                self.attr = None
-                self.config = None
-                self.format = None
-                self.connected = False
-                self.time = time.time()
+                self.dp = tango.DeviceProxy(self.dn)
+                TangoWidget.DEVICES[self.dn] = self.dp
+            if not self.dp.is_attribute_polled(self.an):
+                self.logger.info('Recommended to swith polling on for %s', name)
+            self.attr = self.dp.read_attribute(self.an)
+            self.config = self.dp.get_attribute_config_ex(self.an)[0]
+            self.format = self.config.format
+            try:
+                self.coeff = float(self.config.display_unit)
+            except:
+                self.coeff = 1.0
+            self.connected = True
+            self.time = time.time()
+            self.logger.info('Connected to Attribute %s', name)
         except:
             self.logger.warning('Can not create attribute %s', name)
+            self.logger.debug('Exception', exc_info=True)
             self.name = str(name)
             self.dp = None
             self.attr = None
             self.config = None
             self.format = None
+            self.coeff = 1.0
             self.connected = False
             self.time = time.time()
 
@@ -113,6 +105,9 @@ class TangoWidget:
         self.widget.setStyleSheet('color: red')
 
     def decorate_invalid_data_format(self, text: str = None, *args, **kwargs):
+        self.decorate_invalid(text, *args, **kwargs)
+
+    def decorate_not_equal(self, text: str = None, *args, **kwargs):
         self.decorate_invalid(text, *args, **kwargs)
 
     def decorate_invalid_quality(self, *args, **kwargs):
@@ -195,10 +190,11 @@ class TangoWidget:
                 if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
                     self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
                     self.decorate_invalid_quality()
-                elif not self.compare():
-                    self.decorate_invalid()
                 else:
-                    self.decorate_valid()
+                    if not self.compare():
+                        self.decorate_not_equal()
+                    else:
+                        self.decorate_valid()
         except:
             if self.connected:
                 self.logger.debug('Exception updating widget', exc_info=True)

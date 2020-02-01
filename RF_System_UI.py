@@ -175,28 +175,24 @@ class MainWindow(QMainWindow):
             try:
                 self.av = self.adc_device.read_attribute('chan16')
                 self.cc = self.adc_device.read_attribute('chan22')
-                if self.av.quality != tango._tango.AttrQuality.ATTR_VALID:
-                    self.pushButton_1.setChecked(False)
-                elif self.cc.quality != tango._tango.AttrQuality.ATTR_VALID:
+                if self.av.quality != tango._tango.AttrQuality.ATTR_VALID or\
+                        self.av.value * self.av_coeff < 9.0 or\
+                        self.cc.quality != tango._tango.AttrQuality.ATTR_VALID or\
+                        self.cc.value * self.cc_coeff < 0.1:
                     self.pushButton_1.setChecked(False)
                 else:
-                    if self.av.value * self.av_coeff > 9.0 and self.cc.value * self.cc_coeff > 0.1:
-                        self.pushButton_1.setChecked(True)
-                    else:
-                        self.pushButton_1.setChecked(False)
+                    self.pushButton_1.setChecked(True)
             except:
                 self.pushButton_1.setChecked(False)
             try:
                 self.ua = self.adc_device.read_attribute('chan1')
-                if self.ua.quality != tango._tango.AttrQuality.ATTR_VALID:
-                    self.pushButton_2.setChecked(False)
+                if self.ua.quality != tango._tango.AttrQuality.ATTR_VALID or\
+                        self.ua.value * self.ua_coeff < 0.5:
+                    self.pushButton_2.setEnabled(False)
                 else:
-                    if self.ua.value * self.ua_coeff > 0.5:
-                        self.pushButton_2.setChecked(True)
-                    else:
-                        self.pushButton_2.setChecked(False)
+                    self.pushButton_2.setEnabled(True)
             except:
-                self.pushButton_2.setChecked(False)
+                self.pushButton_2.setEnabled(False)
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
