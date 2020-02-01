@@ -1482,6 +1482,11 @@
              <bold>false</bold>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QCheckBox::indicator:checked {
+  image:url(:/checkbox/TangoWidgets/images/checked_red.png);
+}</string>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -2487,7 +2492,9 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="aaa.qrc"/>
+ </resources>
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
