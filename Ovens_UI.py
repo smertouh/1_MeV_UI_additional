@@ -27,6 +27,7 @@ from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
+from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'Ovens_UI'
@@ -36,7 +37,6 @@ CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
 # Global configuration dictionary
-CONFIG = {}
 TIMER_PERIOD = 1000  # ms
 
 
@@ -46,14 +46,12 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = config_logger()
+        self.logger = config_logger(level=logging.DEBUG)
         # members definition
         self.n = 0
         self.elapsed = 0.0
-
         # Load the UI
         uic.loadUi(UI_FILE, self)
-
         # main window parameters
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
@@ -62,7 +60,7 @@ class MainWindow(QMainWindow):
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
-        self.restore_settings()
+        restore_settings(self, file_name=CONFIG_FILE)
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
@@ -71,11 +69,13 @@ class MainWindow(QMainWindow):
             TangoLED('binp/nbi/adam5/do02', self.pushButton_53),
             TangoLED('binp/nbi/adam5/do01', self.pushButton_54),
             TangoLabel('binp/nbi/adam6/ai06', self.label_68),
-            TangoLabel('binp/nbi/adam6/ai05', self.label_68),
+            TangoLabel('binp/nbi/adam6/ai05', self.label_69),
             TangoLabel('binp/nbi/adam6/ai04', self.label_73),
             TangoLabel('binp/nbi/adam6/ai03', self.label_75),
             TangoLabel('binp/nbi/adam6/ai02', self.label_78),
             TangoLabel('binp/nbi/adam6/ai01', self.label_80),
+            TangoLabel('ttube', self.label_107),
+            TangoLabel('toven', self.label_110),
             # bottom oven
             TangoLED('binp/nbi/adam10/do03', self.pushButton_55),
             TangoLED('binp/nbi/adam10/do02', self.pushButton_56),
@@ -86,6 +86,8 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/adam11/ai03', self.label_96),
             TangoLabel('binp/nbi/adam11/ai02', self.label_86),
             TangoLabel('binp/nbi/adam11/ai01', self.label_97),
+            TangoLabel('ttube', self.label_100),
+            TangoLabel('toven', self.label_101),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
@@ -94,15 +96,15 @@ class MainWindow(QMainWindow):
             TangoCheckBox('binp/nbi/adam5/do02', self.checkBox_21),
             TangoCheckBox('binp/nbi/adam5/do01', self.checkBox_22),
             TangoAbstractSpinBox('binp/nbi/adam7/ao03', self.doubleSpinBox),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao02', self.doubleSpinBox_2),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao01', self.doubleSpinBox_3),
+            TangoAbstractSpinBox('binp/nbi/adam7/ao02', self.doubleSpinBox_3),
+            TangoAbstractSpinBox('binp/nbi/adam7/ao01', self.doubleSpinBox_9),
             # bottom oven
-            TangoCheckBox('binp/nbi/adam10/do03', self.checkBox_20),
-            TangoCheckBox('binp/nbi/adam10/do02', self.checkBox_21),
-            TangoCheckBox('binp/nbi/adam10/do01', self.checkBox_22),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao03', self.doubleSpinBox),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao02', self.doubleSpinBox_2),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao01', self.doubleSpinBox_3),
+            TangoCheckBox('binp/nbi/adam10/do03', self.checkBox_23),
+            TangoCheckBox('binp/nbi/adam10/do02', self.checkBox_24),
+            TangoCheckBox('binp/nbi/adam10/do01', self.checkBox_25),
+            TangoAbstractSpinBox('binp/nbi/adam12/ao03', self.doubleSpinBox_11),
+            TangoAbstractSpinBox('binp/nbi/adam12/ao02', self.doubleSpinBox_13),
+            TangoAbstractSpinBox('binp/nbi/adam12/ao01', self.doubleSpinBox_14),
         )
         # Defile and start timer callback task
         self.timer = QTimer()
@@ -112,62 +114,8 @@ class MainWindow(QMainWindow):
 
     def onQuit(self) :
         # Save global settings
-        self.save_settings()
+        save_settings(self, file_name=CONFIG_FILE)
         self.timer.stop()
-        
-    def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
-        try:
-            # Save window size and position
-            p = self.pos()
-            s = self.size()
-            CONFIG['main_window'] = {'size':(s.width(), s.height()), 'position':(p.x(), p.y())}
-            #get_state(self.comboBox_1, 'comboBox_1')
-            for w in widgets:
-                #get_widget_state(w, CONFIG)
-                pass
-            with open(file_name, 'w') as configfile:
-                configfile.write(json.dumps(CONFIG, indent=4))
-            self.logger.info('Configuration saved to %s' % file_name)
-            return True
-        except :
-            self.logger.log(logging.WARNING, 'Configuration save error to %s' % file_name)
-            print_exception_info()
-            return False
-        
-    def restore_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
-        try :
-            with open(file_name, 'r') as configfile:
-                s = configfile.read()
-            CONFIG = json.loads(s)
-            # Restore log level
-            if 'log_level' in CONFIG:
-                v = CONFIG['log_level']
-                self.logger.setLevel(v)
-                levels = [logging.NOTSET, logging.DEBUG, logging.INFO,
-                          logging.WARNING, logging.ERROR, logging.CRITICAL, logging.CRITICAL+10]
-                n = 1
-                for m in range(len(levels)):
-                    if v < levels[m]:
-                        n = m
-                        break
-                self.comboBox_1.setCurrentIndex(n-1)
-            # Restore window size and position
-            if 'main_window' in CONFIG:
-                self.resize(QSize(CONFIG['main_window']['size'][0], CONFIG['main_window']['size'][1]))
-                self.move(QPoint(CONFIG['main_window']['position'][0], CONFIG['main_window']['position'][1]))
-            #set_state(self.plainTextEdit_1, 'plainTextEdit_1')
-            #set_state(self.comboBox_1, 'comboBox_1')
-            for w in widgets:
-                #set_widget_state(w, CONFIG)
-                pass
-            self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
-            return True
-        except :
-            self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
-            print_exception_info()
-            return False
 
     def timer_handler(self):
         t0 = time.time()
@@ -187,10 +135,7 @@ class MainWindow(QMainWindow):
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - self.elapsed
                 return
-
-
-def print_exception_info(level=logging.DEBUG):
-    logger.log(level, "Exception ", exc_info=True)
+            self.elapsed = time.time() - self.elapsed
 
 
 if __name__ == '__main__':
