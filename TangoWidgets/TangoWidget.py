@@ -19,7 +19,7 @@ class TangoWidget:
     RECONNECT_TIMEOUT = 3.0    # seconds
     DEVICES = {}
 
-    def __init__(self, name: str, widget: QWidget, readonly=True):
+    def __init__(self, name: str, widget: QWidget, readonly=True, level=logging.DEBUG):
         #print('TangoWidgetinitEntry', name)
         # defaults
         self.name = name
@@ -35,7 +35,7 @@ class TangoWidget:
         self.ex_count = 0
         self.time = time.time()
         # configure logging
-        self.logger = config_logger()
+        self.logger = config_logger(level=level)
         # create attribute proxy
         self.connect_attribute_proxy(name)
         # update view
@@ -229,7 +229,7 @@ class TangoWidget:
 
 
 class TangoAttribute:
-    def __init__(self, name: str):
+    def __init__(self, name: str, level=logging.DEBUG):
         # defaults
         self.name = str(name)
         self.dn = ''
@@ -241,7 +241,7 @@ class TangoAttribute:
         self.coeff = 1.0
         self.connected = False
         # configure logging
-        self.logger = config_logger()
+        self.logger = config_logger(level=level)
         try:
             n = name.rfind('/')
             self.dn = name[:n]
@@ -251,7 +251,7 @@ class TangoAttribute:
             self.logger.warning('Can not create attribute %s', self.name)
             self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
             self.connected = False
-            self.time = time.time()
+        self.time = time.time()
 
     def disconnect(self):
         if not self.connected:
@@ -265,20 +265,16 @@ class TangoAttribute:
 
     def connect(self):
         try:
-            try:
-                TangoWidget.DEVICES[self.dn].ping()
-            except:
+            if self.dn in TangoWidget.DEVICES and TangoWidget.DEVICES[self.dn] is not None:
+                self.dp = TangoWidget.DEVICES[self.dn]
+            else:
                 self.dp = tango.DeviceProxy(self.dn)
                 TangoWidget.DEVICES[self.dn] = self.dp
             if not self.dp.is_attribute_polled(self.an):
                 self.logger.info('Recommended to swith polling on for %s', self.name)
+            self.dp.ping()
             self.attr = self.dp.read_attribute(self.an)
-            self.config = self.dp.get_attribute_config_ex(self.an)[0]
-            self.format = self.config.format
-            try:
-                self.coeff = float(self.config.display_unit)
-            except:
-                self.coeff = 1.0
+            self.update_config()
             self.connected = True
             self.time = time.time()
             self.logger.info('Connected to Attribute %s', self.name)
@@ -287,6 +283,14 @@ class TangoAttribute:
             self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
             self.connected = False
             self.time = time.time()
+
+    def update_config(self):
+        self.config = self.dp.get_attribute_config_ex(self.an)[0]
+        self.format = self.config.format
+        try:
+            self.coeff = float(self.config.display_unit)
+        except:
+            self.coeff = 1.0
 
     def read(self, force=False):
         try:
