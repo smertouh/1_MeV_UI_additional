@@ -31,7 +31,6 @@ class TangoCheckBox(TangoWriteWidget):
         self.widget.setEnabled(False)
 
     def decorate_invalid(self, text: str = None):
-        print(self.name, '!=')
         self.widget.setStyleSheet('\
                 QCheckBox::indicator:checked {image:url(:/checked_red.png);}\
                 QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}')
