@@ -37,63 +37,94 @@ from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
+from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
-APPLICATION_NAME = 'Ovens_UI'
+APPLICATION_NAME = 'Pressure_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
 APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Configure logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-f_str = '%(asctime)s,%(msecs)d %(funcName)s(%(lineno)s) ' + \
-        '%(levelname)-7s %(message)s'
-log_formatter = logging.Formatter(f_str, datefmt='%H:%M:%S')
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(log_formatter)
-logger.addHandler(console_handler)
-
 # Global configuration dictionary
-CONFIG = {}
 TIMER_PERIOD = 500  # ms
 
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
-        global logger
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = logger
+        self.logger = config_logger(level=logging.DEBUG)
         # members definition
         self.n = 0
         self.elapsed = 0.0
-
         # Load the UI
         uic.loadUi(UI_FILE, self)
-
         # main window parameters
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
-        self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
+        self.setWindowIcon(QtGui.QIcon('icon_green.png')) # icon
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
-        self.restore_settings()
+        restore_settings(self, file_name=CONFIG_FILE)
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
-            TangoLED('binp/nbi/adam5/do03', self.pushButton_49),
-            TangoLabel('binp/nbi/adam6/ai01', self.label_80),
+            # TMP Pump
+            TangoLED('binp/', self.pushButton_65),
+            # Fore Pump
+            TangoLED('binp/', self.pushButton_67),
+            # Source Gate
+            TangoLED('binp/', self.pushButton_69),
+            # TMP Gate
+            TangoLED('binp/', self.pushButton_66),
+            # Fore Valve
+            TangoLED('binp/', self.pushButton_68),
+            # Cryo 1
+            TangoLED('binp/', self.pushButton_60),
+            # Cryo 2
+            TangoLED('binp/', self.pushButton_57),
+            # Cryo 3
+            TangoLED('binp/', self.pushButton_58),
+            # Cryo 4
+            TangoLED('binp/', self.pushButton_59),
+            # U1 Front
+            TangoLED('binp/', self.pushButton_61),
+            # U1 Current
+            TangoLED('binp/', self.pushButton_62),
+            # U2 Front
+            TangoLED('binp/', self.pushButton_63),
+            # U2 Current
+            TangoLED('binp/', self.pushButton_64),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
-            # top oven
-            TangoCheckBox('binp/nbi/adam5/do03', self.checkBox_20),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao03', self.doubleSpinBox),
+            # TMP Pump
+            TangoCheckBox('binp/', self.checkBox_27),
+            TangoCheckBox('binp/', self.checkBox_29),
+            # Fore Pump
+            TangoCheckBox('binp/', self.checkBox_31),
+            TangoCheckBox('binp/', self.checkBox_32),
+            # Source Gate
+            TangoCheckBox('binp/', self.checkBox_33),
+            TangoCheckBox('binp/', self.checkBox_34),
+            # TMP Gate
+            TangoCheckBox('binp/', self.checkBox_28),
+            TangoCheckBox('binp/', self.checkBox_30),
+            # Fore Valve
+            TangoCheckBox('binp/', self.checkBox_35),
+            TangoCheckBox('binp/', self.checkBox_36),
+            # Cryo 1
+            TangoCheckBox('binp/', self.checkBox_23),
+            # Cryo 2
+            TangoCheckBox('binp/', self.checkBox_24),
+            # Cryo 3
+            TangoCheckBox('binp/', self.checkBox_25),
+            # Cryo 4
+            TangoCheckBox('binp/', self.checkBox_26),
         )
         # Defile and start timer callback task
         self.timer = QTimer()
@@ -103,63 +134,9 @@ class MainWindow(QMainWindow):
 
     def onQuit(self) :
         # Save global settings
-        self.save_settings()
+        save_settings(self, file_name=CONFIG_FILE)
         self.timer.stop()
         
-    def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
-        try:
-            # Save window size and position
-            p = self.pos()
-            s = self.size()
-            CONFIG['main_window'] = {'size':(s.width(), s.height()), 'position':(p.x(), p.y())}
-            #get_state(self.comboBox_1, 'comboBox_1')
-            for w in widgets:
-                #get_widget_state(w, CONFIG)
-                pass
-            with open(file_name, 'w') as configfile:
-                configfile.write(json.dumps(CONFIG, indent=4))
-            self.logger.info('Configuration saved to %s' % file_name)
-            return True
-        except :
-            self.logger.log(logging.WARNING, 'Configuration save error to %s' % file_name)
-            self.logger.log(logging.DEBUG, '', exc_info=True)
-            return False
-        
-    def restore_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
-        try :
-            with open(file_name, 'r') as configfile:
-                s = configfile.read()
-            CONFIG = json.loads(s)
-            # Restore log level
-            if 'log_level' in CONFIG:
-                v = CONFIG['log_level']
-                self.logger.setLevel(v)
-                levels = [logging.NOTSET, logging.DEBUG, logging.INFO,
-                          logging.WARNING, logging.ERROR, logging.CRITICAL, logging.CRITICAL+10]
-                n = 1
-                for m in range(len(levels)):
-                    if v < levels[m]:
-                        n = m
-                        break
-                self.comboBox_1.setCurrentIndex(n-1)
-            # Restore window size and position
-            if 'main_window' in CONFIG:
-                self.resize(QSize(CONFIG['main_window']['size'][0], CONFIG['main_window']['size'][1]))
-                self.move(QPoint(CONFIG['main_window']['position'][0], CONFIG['main_window']['position'][1]))
-            #set_state(self.plainTextEdit_1, 'plainTextEdit_1')
-            #set_state(self.comboBox_1, 'comboBox_1')
-            for w in widgets:
-                #set_widget_state(w, CONFIG)
-                pass
-            self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
-            return True
-        except :
-            self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
-            self.logger.log(logging.DEBUG, '', exc_info=True)
-            return False
-
     def timer_handler(self):
         t0 = time.time()
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
