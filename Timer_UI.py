@@ -7,6 +7,7 @@ Created on Jul 28, 2019
 
 import sys
 import time
+import logging
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import uic
@@ -43,7 +44,7 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = config_logger()
+        self.logger = config_logger(level=logging.INFO)
         # members definition
         self.n = 0
         self.elapsed = 0.0
