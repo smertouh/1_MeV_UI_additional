@@ -37,6 +37,7 @@ from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
+from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'Magnets_UI'
@@ -45,18 +46,7 @@ APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Configure logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-f_str = '%(asctime)s,%(msecs)d %(funcName)s(%(lineno)s) ' + \
-        '%(levelname)-7s %(message)s'
-log_formatter = logging.Formatter(f_str, datefmt='%H:%M:%S')
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(log_formatter)
-logger.addHandler(console_handler)
-
 # Global configuration dictionary
-CONFIG = {}
 TIMER_PERIOD = 500  # ms
 
 
@@ -66,16 +56,13 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = logger
+        self.logger = config_logger()
         # members definition
         self.n = 0
         self.elapsed = 0.0
-
         # Load the UI
         uic.loadUi(UI_FILE, self)
-
         # main window parameters
-        ##self.setMinimumSize(QSize(480, 640))        # min size
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
@@ -83,7 +70,7 @@ class MainWindow(QMainWindow):
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
-        self.restore_settings()
+        restore_settings(self, file_name=CONFIG_FILE)
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
@@ -100,30 +87,30 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/pg_offset/voltage', self.label_140),
             TangoLabel('binp/nbi/pg_offset/current', self.label_142),
             # acceleration
-            TangoLabel('ET7000_server/test/pet9_7026/ai00', self.label_34),
+            TangoLabel('ET7000_server/test/pet9_7026/ai00', self.label_36),
             # extraction
-            TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_36),
+            TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_34),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
             # magnet 1
-            TangoRadioButton('binp/nbi/magnet1/output_state', self.radioButton_54, False),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_current', self.doubleSpinBox_55, False),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_voltage', self.doubleSpinBox_53, False),
+            TangoCheckBox('binp/nbi/magnet1/output_state', self.checkBox_54),
+            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_current', self.doubleSpinBox_55),
+            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_voltage', self.doubleSpinBox_53),
             # magnet 2
-            TangoRadioButton('binp/nbi/magnet2/output_state', self.radioButton_55, False),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_current', self.doubleSpinBox_56, False),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_voltage', self.doubleSpinBox_54, False),
+            TangoCheckBox('binp/nbi/magnet2/output_state', self.checkBox_55),
+            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_current', self.doubleSpinBox_56),
+            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_voltage', self.doubleSpinBox_54),
             # pg
-            TangoRadioButton('binp/nbi/pg_offset/output_state', self.radioButton_52, False),
-            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_current', self.doubleSpinBox_49, False),
-            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_voltage', self.doubleSpinBox_50, False),
+            TangoCheckBox('binp/nbi/pg_offset/output_state', self.checkBox_52),
+            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_current', self.doubleSpinBox_49),
+            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_voltage', self.doubleSpinBox_50),
             # extraction
-            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao00', self.doubleSpinBox_5, False),
-            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao01', self.doubleSpinBox_8, False),
+            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao00', self.doubleSpinBox_5),
+            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao01', self.doubleSpinBox_8),
             # acceleration
-            TangoAbstractSpinBox('ET7000_server/test/pet9_7026/ao00', self.doubleSpinBox_9, False),
-            TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10, False),
+            TangoAbstractSpinBox('ET7000_server/test/pet9_7026/ao00', self.doubleSpinBox_9),
+            TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10),
         )
         # Defile and start timer callback task
         self.timer = QTimer()
@@ -142,7 +129,7 @@ class MainWindow(QMainWindow):
             self.doubleSpinBox_10.setReadOnly(False)
         else:
             self.doubleSpinBox_9.setValue(0.0)
-            self.doubleSpinBox_8.setReadOnly(True)
+            self.doubleSpinBox_9.setReadOnly(True)
             self.doubleSpinBox_10.setValue(0.0)
             self.doubleSpinBox_10.setReadOnly(True)
 
@@ -158,63 +145,9 @@ class MainWindow(QMainWindow):
 
     def onQuit(self) :
         # Save global settings
-        self.save_settings()
+        save_settings(self, file_name=CONFIG_FILE)
         self.timer.stop()
         
-    def save_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
-        try:
-            # Save window size and position
-            p = self.pos()
-            s = self.size()
-            CONFIG['main_window'] = {'size':(s.width(), s.height()), 'position':(p.x(), p.y())}
-            #get_state(self.comboBox_1, 'comboBox_1')
-            for w in widgets:
-                #get_widget_state(w, CONFIG)
-                pass
-            with open(file_name, 'w') as configfile:
-                configfile.write(json.dumps(CONFIG, indent=4))
-            self.logger.info('Configuration saved to %s' % file_name)
-            return True
-        except :
-            self.logger.log(logging.WARNING, 'Configuration save error to %s' % file_name)
-            print_exception_info()
-            return False
-        
-    def restore_settings(self, widgets=(), file_name=CONFIG_FILE) :
-        global CONFIG
-        try :
-            with open(file_name, 'r') as configfile:
-                s = configfile.read()
-            CONFIG = json.loads(s)
-            # Restore log level
-            if 'log_level' in CONFIG:
-                v = CONFIG['log_level']
-                self.logger.setLevel(v)
-                levels = [logging.NOTSET, logging.DEBUG, logging.INFO,
-                          logging.WARNING, logging.ERROR, logging.CRITICAL, logging.CRITICAL+10]
-                n = 1
-                for m in range(len(levels)):
-                    if v < levels[m]:
-                        n = m
-                        break
-                self.comboBox_1.setCurrentIndex(n-1)
-            # Restore window size and position
-            if 'main_window' in CONFIG:
-                self.resize(QSize(CONFIG['main_window']['size'][0], CONFIG['main_window']['size'][1]))
-                self.move(QPoint(CONFIG['main_window']['position'][0], CONFIG['main_window']['position'][1]))
-            #set_state(self.plainTextEdit_1, 'plainTextEdit_1')
-            #set_state(self.comboBox_1, 'comboBox_1')
-            for w in widgets:
-                #set_widget_state(w, CONFIG)
-                pass
-            self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
-            return True
-        except :
-            self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
-            print_exception_info()
-            return False
-
     def timer_handler(self):
         t0 = time.time()
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
@@ -233,10 +166,7 @@ class MainWindow(QMainWindow):
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - self.elapsed
                 return
-
-
-def print_exception_info(level=logging.DEBUG):
-    logger.log(level, "Exception ", exc_info=True)
+            self.elapsed = time.time() - self.elapsed
 
 
 if __name__ == '__main__':

@@ -42,7 +42,6 @@ TIMER_PERIOD = 1000  # ms
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
-        global logger
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
