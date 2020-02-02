@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
-        restore_settings(self)
+        restore_settings(self, file_name=CONFIG_FILE)
 
         # define devices in use
         try:
@@ -125,7 +125,7 @@ class MainWindow(QMainWindow):
 
     def onQuit(self) :
         # Save global settings
-        save_settings(self)
+        save_settings(self, file_name=CONFIG_FILE)
         self.timer.stop()
         
     def timer_handler(self):
