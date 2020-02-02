@@ -13,7 +13,7 @@ from .Utils import *
 from TangoWidgets.TangoWriteWidget import TangoWriteWidget
 from TangoWidgets.TangoWidget import TangoWidget
 
-import resources
+from TangoWidgets.images import checkbox_resources
 
 class TangoCheckBox(TangoWriteWidget):
     def __init__(self, name, widget: QCheckBox, readonly=False):
@@ -31,8 +31,9 @@ class TangoCheckBox(TangoWriteWidget):
         self.widget.setEnabled(False)
 
     def decorate_invalid(self, text: str = None):
-        self.widget.setStyleSheet('QCheckBox::indicator:checked {\
-            image:url(:/checkbox/TangoWidgets/images/checked_red.png);}')
+        self.widget.setStyleSheet('clor: red;\
+                QCheckBox::indicator:checked {image:url(:/checked_red.png);\
+                QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}')
         #checkBox_set_bg_color(self.widget, 'red')
         self.widget.setEnabled(True)
 

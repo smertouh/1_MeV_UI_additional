@@ -24,7 +24,7 @@ from PyQt5.QtCore import QPoint
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-import resources
+from TangoWidgets.images import checkbox_resources
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
