@@ -496,30 +496,12 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
+       <property name="margin">
         <number>0</number>
        </property>
        <item>
         <layout class="QGridLayout" name="gridLayout_3">
-         <property name="leftMargin">
-          <number>12</number>
-         </property>
-         <property name="topMargin">
-          <number>12</number>
-         </property>
-         <property name="rightMargin">
-          <number>12</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>12</number>
          </property>
          <item row="9" column="1">
@@ -1481,6 +1463,11 @@
              <weight>50</weight>
              <bold>false</bold>
             </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QCheckBox::indicator:checked {image:url(:/checked_red.png);
+}
+QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}</string>
            </property>
            <property name="text">
             <string/>
@@ -2487,7 +2474,9 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="TangoWidgets/images/checkbox.qrc"/>
+ </resources>
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
