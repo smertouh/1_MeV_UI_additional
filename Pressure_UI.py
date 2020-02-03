@@ -136,7 +136,7 @@ class MainWindow(QMainWindow):
         # writable attributes TangoWidgets list
         self.wtwdgts = (
             # Interlock Valves Water
-            TangoCheckBox('ET7000_server/test/pet5_7060/di00', self.checkBox_37),
+            TangoPushButton('ET7000_server/test/pet5_7060/do00', self.pushButton_37),
             # TMP Pump
             TangoCheckBox('ET7000_server/test/pet6_7060/do04', self.checkBox_27),
             TangoCheckBox('ET7000_server/test/pet6_7060/do05', self.checkBox_29),
