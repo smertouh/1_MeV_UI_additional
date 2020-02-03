@@ -87,9 +87,9 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/pg_offset/voltage', self.label_140),
             TangoLabel('binp/nbi/pg_offset/current', self.label_142),
             # acceleration
-            TangoLabel('ET7000_server/test/pet9_7026/ao01', self.label_36),
+            TangoLabel('ET7000_server/test/pet9_7026/ai00', self.label_36),
             # extraction
-            TangoLabel('ET7000_server/test/pet4_7026/ao01', self.label_34),
+            TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_34),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
