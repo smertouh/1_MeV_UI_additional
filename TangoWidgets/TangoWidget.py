@@ -60,12 +60,13 @@ class TangoWidget:
         self.time = time.time()
         if name is None:
             name = self.name
+        self.name = str(name)
         try:
             n = name.rfind('/')
             self.dn = name[:n]
             self.an = name[n+1:]
             self.dp = None
-            if self.dn in TangoWidget.DEVICES:
+            if self.dn in TangoWidget.DEVICES and TangoWidget.DEVICES[self.dn] is not None:
                 self.dp = TangoWidget.DEVICES[self.dn]
             else:
                 self.dp = tango.DeviceProxy(self.dn)
@@ -202,7 +203,15 @@ class TangoWidget:
             else:
                 if (time.time() - self.time) > TangoWidget.RECONNECT_TIMEOUT:
                     self.connect_attribute_proxy()
-            self.decorate_error()
+                if self.connected:
+                    self.write(self.widget.value)
+                    if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
+                        self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
+                        self.decorate_invalid_quality()
+                    else:
+                        self.decorate_valid()
+                else:
+                    self.decorate_error()
         self.update_dt = time.time() - t0
         #print('update', self.attr_proxy, int(self.update_dt*1000.0), 'ms')
 

@@ -21,6 +21,9 @@ class TangoCheckBox(TangoWriteWidget):
         if not readonly:
             self.widget.stateChanged.connect(self.callback)
 
+    def update(self, decorate_only=False):
+        super().update(decorate_only)
+
     def set_widget_value(self):
         if self.readonly:
             return

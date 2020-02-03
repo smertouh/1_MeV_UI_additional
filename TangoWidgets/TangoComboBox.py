@@ -18,6 +18,9 @@ class TangoComboBox(TangoWriteWidget):
         super().__init__(name, widget)
         self.widget. currentIndexChanged.connect(self.callback)
 
+    def update(self, decorate_only=False):
+        super().update(decorate_only)
+
     def set_widget_value(self):
         #bs = self.widget.blockSignals(True)
         try:
