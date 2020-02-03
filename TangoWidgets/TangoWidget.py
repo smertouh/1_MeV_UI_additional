@@ -204,7 +204,10 @@ class TangoWidget:
                 if (time.time() - self.time) > TangoWidget.RECONNECT_TIMEOUT:
                     self.connect_attribute_proxy()
                 if self.connected:
-                    self.write(self.widget.value)
+                    if hasattr(self.widget, 'value'):
+                        self.write(self.widget.value())
+                    if hasattr(self.widget, 'getText'):
+                        self.write(self.widget.getText())
                     if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
                         self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
                         self.decorate_invalid_quality()

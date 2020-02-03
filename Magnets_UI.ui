@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>517</width>
+    <width>506</width>
     <height>277</height>
    </rect>
   </property>
@@ -889,7 +889,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="5" colspan="2">
+      <item row="0" column="6" colspan="2">
        <widget class="QLabel" name="label_70">
         <property name="font">
          <font>
@@ -1080,7 +1080,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
+      <item row="1" column="7">
        <widget class="QLabel" name="label_142">
         <property name="font">
          <font>
@@ -1103,7 +1103,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="5">
+      <item row="1" column="6">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_49">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -1147,7 +1147,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="5">
+      <item row="2" column="6">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_55">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -1191,7 +1191,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="6">
+      <item row="2" column="7">
        <widget class="QLabel" name="label_151">
         <property name="font">
          <font>
@@ -1371,7 +1371,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="5">
+      <item row="3" column="6">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_56">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -1415,7 +1415,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="6">
+      <item row="3" column="7">
        <widget class="QLabel" name="label_152">
         <property name="font">
          <font>
@@ -1557,6 +1557,13 @@
           <weight>50</weight>
           <bold>false</bold>
          </font>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5" rowspan="4">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
        </widget>
       </item>
