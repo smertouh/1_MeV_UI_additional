@@ -163,14 +163,16 @@ class TangoWidget:
     def set_widget_value(self):
         bs = self.widget.blockSignals(True)
         if hasattr(self.attr, 'value'):
-            if hasattr(self.widget, 'setText'):
+            if hasattr(self.widget, 'setValue'):
+                self.widget.setValue(self.attr.value * self.coeff)
+            elif hasattr(self.widget, 'setChecked'):
+                self.widget.setChecked(bool(self.attr.value))
+            elif hasattr(self.widget, 'setText'):
                 if self.format is not None:
                     text = self.format % (self.attr.value * self.coeff)
                 else:
                     text = str(self.attr.value)
                 self.widget.setText(text)
-            elif hasattr(self.widget, 'setValue'):
-                self.widget.setValue(self.attr.value * self.coeff)
         self.widget.blockSignals(bs)
 
     def update(self, decorate_only=False) -> None:
