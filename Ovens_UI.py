@@ -73,8 +73,8 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/adam6/ai03', self.label_75),
             TangoLabel('binp/nbi/adam6/ai02', self.label_78),
             TangoLabel('binp/nbi/adam6/ai01', self.label_80),
-            TangoLabel('ttube', self.label_107),
-            TangoLabel('toven', self.label_110),
+            TangoLabel('ET7000_server/test/pet2_7015/ai05', self.label_107),
+            TangoLabel('ET7000_server/test/pet2_7015/ai06', self.label_110),
             # bottom oven
             TangoLED('binp/nbi/adam10/do03', self.pushButton_55),
             TangoLED('binp/nbi/adam10/do02', self.pushButton_56),
@@ -85,8 +85,8 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/adam11/ai03', self.label_96),
             TangoLabel('binp/nbi/adam11/ai02', self.label_86),
             TangoLabel('binp/nbi/adam11/ai01', self.label_97),
-            TangoLabel('ttube', self.label_100),
-            TangoLabel('toven', self.label_101),
+            TangoLabel('ET7000_server/test/pet2_7015/ai01', self.label_100),
+            TangoLabel('ET7000_server/test/pet2_7015/ai00', self.label_101),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
