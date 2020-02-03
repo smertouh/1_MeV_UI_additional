@@ -73,24 +73,24 @@ class MainWindow(QMainWindow):
         restore_settings(self, file_name=CONFIG_FILE)        # define devices in use
         # additional devices
         try:
-            dn = 'binp/nbi/dac0'
+            dn = 'ET7000_server/test/pet7_7026'
             self.pressure_tank = tango.DeviceProxy(dn)
             TangoWidget.DEVICES[dn] = self.pressure_tank
-            dn = 'binp/nbi/dac0'
+            dn = 'ET7000_server/test/pet12_7018'
             self.pressure_magnet = tango.DeviceProxy(dn)
             TangoWidget.DEVICES[dn] = self.pressure_magnet
         except:
             pass
         # define _coeff s
         try:
-            self.pt = self.pressure_tank.read_attribute('chan16')
-            self.pt_config = self.pressure_tank.get_attribute_config_ex('chan16')[0]
+            self.pt = self.pressure_tank.read_attribute('ai05')
+            self.pt_config = self.pressure_tank.get_attribute_config_ex('ai05')[0]
             self.pt_coeff = float(self.av_config.display_unit)
         except:
             self.pt_coeff = 1.0
         try:
-            self.pm = self.pressure_magnet.read_attribute('chan22')
-            self.pm_config = self.pressure_magnet.get_attribute_config_ex('chan22')[0]
+            self.pm = self.pressure_magnet.read_attribute('ai09')
+            self.pm_config = self.pressure_magnet.get_attribute_config_ex('ai09')[0]
             self.pm_coeff = float(self.pm_config.display_unit)
         except:
             self.pm_coeff = 1.0
@@ -98,16 +98,20 @@ class MainWindow(QMainWindow):
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
+            # Interlock 15 kV
+            TangoLED('ET7000_server/test/pet5_7060/di00', self.pushButton_71),
             # TMP Pump
-            TangoLED('', self.pushButton_65),
+            TangoLED('ET7000_server/test/pet6_7060/di00', self.pushButton_65),
             # Fore Pump
-            TangoLED('', self.pushButton_67),
+            TangoLED('ET7000_server/test/pet5_7060/di04', self.pushButton_67),
+            # Fore Pump 2
+            TangoLED('ET7000_server/test/pet5_7060/di05', self.pushButton_70),
             # Source Gate
-            TangoLED('', self.pushButton_69),
+            TangoLED('ET7000_server/test/pet5_7060/di03', self.pushButton_69),
             # TMP Gate
-            TangoLED('', self.pushButton_66),
+            TangoLED('ET7000_server/test/pet5_7060/di02', self.pushButton_66),
             # Fore Valve
-            TangoLED('', self.pushButton_68),
+            TangoLED('ET7000_server/test/pet5_7060/di01', self.pushButton_68),
             # Cryo 1
             TangoLED('ET7000_server/test/pet8_7060/di00', self.pushButton_60),
             # Cryo 2
@@ -124,24 +128,30 @@ class MainWindow(QMainWindow):
             TangoLED('ET7000_server/test/pet6_7060/di05', self.pushButton_63),
             # U2 Current
             TangoLED('ET7000_server/test/pet6_7060/di04', self.pushButton_64),
+            # T Ceramics
+            TangoLabel('ET7000_server/test/pet2_7015/ai02', self.label_104),
+            # T Calorimeter
+            TangoLabel('ET7000_server/test/pet12_7018/ai03', self.label_106),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
+            # Interlock Valves Water
+            TangoCheckBox('ET7000_server/test/pet5_7060/di00', self.checkBox_37),
             # TMP Pump
-            TangoCheckBox('', self.checkBox_27),
-            TangoCheckBox('', self.checkBox_29),
+            TangoCheckBox('ET7000_server/test/pet6_7060/do04', self.checkBox_27),
+            TangoCheckBox('ET7000_server/test/pet6_7060/do05', self.checkBox_29),
             # Fore Pump
-            TangoCheckBox('', self.checkBox_31),
-            TangoCheckBox('', self.checkBox_32),
+            TangoCheckBox('ET7000_server/test/pet6_7060/do02', self.checkBox_31),
+            TangoCheckBox('ET7000_server/test/pet6_7060/do03', self.checkBox_32),
             # Source Gate
-            TangoCheckBox('', self.checkBox_33),
-            TangoCheckBox('', self.checkBox_34),
+            TangoCheckBox('ET7000_server/test/pet5_7060/do04', self.checkBox_33),
+            TangoCheckBox('ET7000_server/test/pet6_7060/do01', self.checkBox_34),
             # TMP Gate
-            TangoCheckBox('', self.checkBox_28),
-            TangoCheckBox('', self.checkBox_30),
+            TangoCheckBox('ET7000_server/test/pet5_7060/do03', self.checkBox_28),
+            TangoCheckBox('ET7000_server/test/pet6_7060/do00', self.checkBox_30),
             # Fore Valve
-            TangoCheckBox('', self.checkBox_35),
-            TangoCheckBox('', self.checkBox_36),
+            TangoCheckBox('ET7000_server/test/pet5_7060/do02', self.checkBox_35),
+            TangoCheckBox('ET7000_server/test/pet5_7060/do05', self.checkBox_36),
             # Cryo 1
             TangoCheckBox('ET7000_server/test/pet8_7060/do01', self.checkBox_23),
             # Cryo 2
@@ -151,7 +161,7 @@ class MainWindow(QMainWindow):
             # Cryo 4
             TangoCheckBox('ET7000_server/test/pet8_7060/do04', self.checkBox_26),
             # reset cryo
-            #TangoCheckBox('ET7000_server/test/pet8_7060/do00', self.checkBox_),
+            TangoCheckBox('ET7000_server/test/pet8_7060/do00', self.checkBox_38),
         )
         # Defile and start timer callback task
         self.timer = QTimer()
@@ -171,14 +181,14 @@ class MainWindow(QMainWindow):
         self.elapsed = 0.0
         # additional attributes
         try:
-            self.pt = self.pressure_tank.read_attribute('chan16')
-            pt = math.pow(10.0, (1.667 * self.pt*self.pt_coeff - 11.46))
+            self.pt = self.pressure_tank.read_attribute('ai05')
+            pt = math.pow(10.0, (1.667 * self.pt.value*self.pt_coeff - 11.46))
             self.label_93.setText('%7.2e' % pt)
         except:
             self.label_93.setText('*******')
         try:
-            self.pm = self.pressure_magnet.read_attribute('chan16')
-            pm = math.pow(10.0, (1.667 * self.pm*self.pm_coeff - 11.46))
+            self.pm = self.pressure_magnet.read_attribute('ai09')
+            pm = math.pow(10.0, (1.667 * self.pm.value*self.pm_coeff - 11.46))
             self.label_88.setText('%7.2e' % pm)
         except:
             self.label_88.setText('*******')
