@@ -13,16 +13,16 @@ class TangoWriteWidget(TangoWidget):
         super().__init__(name, widget, readonly)
 
     def decorate_error(self):
-        #self.widget.setStyleSheet('color: gray')
+        self.widget.setStyleSheet('color: gray')
         self.widget.setEnabled(False)
 
     def decorate_invalid(self, text: str = None):
         self.widget.setStyleSheet('color: red')
-        #self.widget.setEnabled(True)
+        self.widget.setEnabled(True)
 
     def decorate_valid(self):
         self.widget.setStyleSheet('color: black')
-        #self.widget.setEnabled(True)
+        self.widget.setEnabled(True)
 
     def update(self, decorate_only=True):
         super().update(decorate_only)
