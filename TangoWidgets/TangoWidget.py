@@ -49,7 +49,6 @@ class TangoWidget:
         if self.ex_count > 3:
             self.time = time.time()
             self.connected = False
-            self.attr_proxy = None
             self.attr = None
             self.config = None
             self.format = None
@@ -118,21 +117,15 @@ class TangoWidget:
         self.widget.setStyleSheet('color: black')
 
     def read(self, force=False):
+        if not self.connected:
+            raise ConnectionError('Attribute disconnected')
         try:
             if not force and self.dp.is_attribute_polled(self.an):
-            #if not force and self.attr_proxy.is_polled():
-                try:
-                    attrib = self.dp.attribute_history(self.an, 1)[0]
-                    #attrib = self.attr_proxy.history(1)[0]
-                    if attrib.time.tv_sec > self.attr.time.tv_sec or \
-                            (attrib.time.tv_sec == self.attr.time.tv_sec and attrib.time.tv_usec > self.attr.time.tv_usec):
-                        self.attr = attrib
-                except Exception as ex:
-                    self.attr = None
-                    self.disconnect_attribute_proxy()
-                    raise ex
+                attrib = self.dp.attribute_history(self.an, 1)[0]
+                if attrib.time.tv_sec > self.attr.time.tv_sec or \
+                        (attrib.time.tv_sec == self.attr.time.tv_sec and attrib.time.tv_usec > self.attr.time.tv_usec):
+                    self.attr = attrib
             else:
-                #self.attr = self.attr_proxy.read()
                 self.attr = self.dp.read_attribute(self.an)
         except Exception as ex:
             self.attr = None
@@ -144,8 +137,11 @@ class TangoWidget:
     def write(self, value):
         if self.readonly:
             return
-        self.dp.write_attribute(self.an, value/self.coeff)
-        #self.attr_proxy.write(value/self.coeff)
+        try:
+            self.dp.write_attribute(self.an, value/self.coeff)
+        except Exception as ex:
+            self.disconnect_attribute_proxy()
+            raise ex
 
     def write_read(self, value):
         if self.readonly:
@@ -159,7 +155,6 @@ class TangoWidget:
             self.disconnect_attribute_proxy()
             raise ex
         self.ex_count = 0
-        return self.attr
 
     # compare widget displayed value and read attribute value
     def compare(self):

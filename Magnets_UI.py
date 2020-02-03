@@ -166,7 +166,7 @@ class MainWindow(QMainWindow):
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - self.elapsed
                 return
-            self.elapsed = time.time() - self.elapsed
+        self.elapsed = time.time() - self.elapsed
 
 
 if __name__ == '__main__':
