@@ -6,16 +6,23 @@ Created on Jan 3, 2020
 '''
 import sys
 import time
+
 from PyQt5.QtWidgets import QCheckBox
+
+from .Utils import *
 from TangoWidgets.TangoWriteWidget import TangoWriteWidget
 from TangoWidgets.TangoWidget import TangoWidget
 
+from TangoWidgets.images import checkbox_resources
 
 class TangoCheckBox(TangoWriteWidget):
     def __init__(self, name, widget: QCheckBox, readonly=False):
         super().__init__(name, widget, readonly=readonly)
         if not readonly:
             self.widget.stateChanged.connect(self.callback)
+
+    def update(self, decorate_only=False):
+        super().update(decorate_only)
 
     def set_widget_value(self):
         if self.readonly:
@@ -27,11 +34,15 @@ class TangoCheckBox(TangoWriteWidget):
         self.widget.setEnabled(False)
 
     def decorate_invalid(self, text: str = None):
-        self.widget.setStyleSheet('color: red')
+        self.widget.setStyleSheet('\
+                QCheckBox::indicator:checked {image:url(:/checked_red.png);}\
+                QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}')
+        #checkBox_set_bg_color(self.widget, 'red')
         self.widget.setEnabled(True)
 
     def decorate_valid(self):
-        self.widget.setStyleSheet('color: black')
+        self.widget.setStyleSheet('')
+        #checkBox_set_bg_color(self.widget, 'black')
         self.widget.setEnabled(True)
 
     def compare(self):

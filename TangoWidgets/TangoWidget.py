@@ -7,18 +7,19 @@ Created on Jan 1, 2020
 
 import sys
 import time
-import logging
 
 from PyQt5.QtWidgets import QWidget
 import tango
+
+from .Utils import *
 
 
 class TangoWidget:
     ERROR_TEXT = '****'
     RECONNECT_TIMEOUT = 3.0    # seconds
-    DEVICES = []
+    DEVICES = {}
 
-    def __init__(self, name: str, widget: QWidget, readonly=True):
+    def __init__(self, name: str, widget: QWidget, readonly=True, level=logging.DEBUG):
         #print('TangoWidgetinitEntry', name)
         # defaults
         self.name = name
@@ -34,21 +35,10 @@ class TangoWidget:
         self.ex_count = 0
         self.time = time.time()
         # configure logging
-        self.logger = logging.getLogger(__name__)
-        if not self.logger.hasHandlers():
-            self.logger.propagate = False
-            self.logger.setLevel(logging.DEBUG)
-            f_str = '%(asctime)s,%(msecs)d %(funcName)s(%(lineno)s) ' + \
-                    '%(levelname)-7s %(message)s'
-            log_formatter = logging.Formatter(f_str, datefmt='%H:%M:%S')
-            console_handler = logging.StreamHandler()
-            console_handler.setFormatter(log_formatter)
-            self.logger.addHandler(console_handler)
+        self.logger = config_logger(level=level)
         # create attribute proxy
-        #print('TangoWidgetinit_1', name)
         self.connect_attribute_proxy(name)
         # update view
-        #print('TangoWidgetinit_2', name)
         self.update(decorate_only=False)
         #print('TangoWidgetinitExit', name)
 
@@ -70,61 +60,61 @@ class TangoWidget:
         self.time = time.time()
         if name is None:
             name = self.name
+        self.name = str(name)
         try:
-            if isinstance(name, str):
-                n = name.rfind('/')
-                self.dn = name[:n]
-                self.an = name[n+1:]
-                self.dp = None
-                for d in TangoWidget.DEVICES:
-                    if d[0] == self.dn:
-                        self.dp = d[1]
-                        break
-                if self.dp is None:
-                    self.dp = tango.DeviceProxy(self.dn)
-                    TangoWidget.DEVICES.append((self.dn, self.dp))
-                if not self.dp.is_attribute_polled(self.an):
-                    self.logger.info('Recommended to swith polling on for %s', name)
-                self.attr = self.dp.read_attribute(self.an)
-                self.config = self.dp.get_attribute_config_ex(self.an)[0]
-                self.format = self.config.format
-                try:
-                    self.coeff = float(self.config.display_unit)
-                except:
-                    self.coeff = 1.0
-                self.connected = True
-                self.time = time.time()
-                self.logger.info('Connected to Attribute %s', name)
+            n = name.rfind('/')
+            self.dn = name[:n]
+            self.an = name[n+1:]
+            self.dp = None
+            if self.dn in TangoWidget.DEVICES and TangoWidget.DEVICES[self.dn] is not None:
+                self.dp = TangoWidget.DEVICES[self.dn]
             else:
-                self.logger.warning('<str> required for attribute name')
-                self.name = str(name)
-                self.dp = None
-                self.attr = None
-                self.config = None
-                self.format = None
-                self.connected = False
-                self.time = time.time()
+                self.dp = tango.DeviceProxy(self.dn)
+                TangoWidget.DEVICES[self.dn] = self.dp
+            if not self.dp.is_attribute_polled(self.an):
+                self.logger.info('Recommended to swith polling on for %s', name)
+            self.attr = self.dp.read_attribute(self.an)
+            self.config = self.dp.get_attribute_config_ex(self.an)[0]
+            self.format = self.config.format
+            try:
+                self.coeff = float(self.config.display_unit)
+            except:
+                self.coeff = 1.0
+            self.connected = True
+            self.time = time.time()
+            self.logger.info('Connected to Attribute %s', name)
         except:
             self.logger.warning('Can not create attribute %s', name)
+            self.logger.debug('Exception', exc_info=True)
             self.name = str(name)
             self.dp = None
             self.attr = None
             self.config = None
             self.format = None
+            self.coeff = 1.0
             self.connected = False
             self.time = time.time()
 
-    def decorate_error(self):
+    def decorate_error(self, *args, **kwargs):
         if hasattr(self.widget, 'setText'):
             self.widget.setText(TangoWidget.ERROR_TEXT)
         self.widget.setStyleSheet('color: gray')
 
-    def decorate_invalid(self, text: str = None):
+    def decorate_invalid(self, text: str = None, *args, **kwargs):
         if hasattr(self.widget, 'setText') and text is not None:
             self.widget.setText(text)
         self.widget.setStyleSheet('color: red')
 
-    def decorate_valid(self):
+    def decorate_invalid_data_format(self, text: str = None, *args, **kwargs):
+        self.decorate_invalid(text, *args, **kwargs)
+
+    def decorate_not_equal(self, text: str = None, *args, **kwargs):
+        self.decorate_invalid(text, *args, **kwargs)
+
+    def decorate_invalid_quality(self, *args, **kwargs):
+        self.decorate_invalid(*args, **kwargs)
+
+    def decorate_valid(self, *args, **kwargs):
         self.widget.setStyleSheet('color: black')
 
     def read(self, force=False):
@@ -194,17 +184,18 @@ class TangoWidget:
             self.read()
             if self.attr.data_format != tango._tango.AttrDataFormat.SCALAR:
                 self.logger.debug('Non scalar attribute')
-                self.decorate_invalid('format!')
+                self.decorate_invalid_data_format()
             else:
                 if not decorate_only:
                     self.set_widget_value()
                 if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
                     self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
-                    self.decorate_invalid()
-                elif not self.compare():
-                    self.decorate_invalid()
+                    self.decorate_invalid_quality()
                 else:
-                    self.decorate_valid()
+                    if not self.compare():
+                        self.decorate_not_equal()
+                    else:
+                        self.decorate_valid()
         except:
             if self.connected:
                 self.logger.debug('Exception updating widget', exc_info=True)
@@ -212,7 +203,15 @@ class TangoWidget:
             else:
                 if (time.time() - self.time) > TangoWidget.RECONNECT_TIMEOUT:
                     self.connect_attribute_proxy()
-            self.decorate_error()
+                if self.connected:
+                    self.write(self.widget.value)
+                    if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
+                        self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
+                        self.decorate_invalid_quality()
+                    else:
+                        self.decorate_valid()
+                else:
+                    self.decorate_error()
         self.update_dt = time.time() - t0
         #print('update', self.attr_proxy, int(self.update_dt*1000.0), 'ms')
 
@@ -236,3 +235,93 @@ class TangoWidget:
         else:
             self.connect_attribute_proxy()
             self.decorate_error()
+
+
+class TangoAttribute:
+    def __init__(self, name: str, level=logging.DEBUG):
+        # defaults
+        self.name = str(name)
+        self.dn = ''
+        self.an = ''
+        self.dp = None
+        self.attr = None
+        self.config = None
+        self.format = None
+        self.coeff = 1.0
+        self.connected = False
+        # configure logging
+        self.logger = config_logger(level=level)
+        try:
+            n = name.rfind('/')
+            self.dn = name[:n]
+            self.an = name[n+1:]
+            self.connect()
+        except:
+            self.logger.warning('Can not create attribute %s', self.name)
+            self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
+            self.connected = False
+        self.time = time.time()
+
+    def disconnect(self):
+        if not self.connected:
+            return
+        self.ex_count += 1
+        if self.ex_count > 3:
+            self.connected = False
+            self.ex_count = 0
+            self.time = time.time()
+            self.logger.debug('Attribute %s disconnected', self.name)
+
+    def connect(self):
+        try:
+            if self.dn in TangoWidget.DEVICES and TangoWidget.DEVICES[self.dn] is not None:
+                self.dp = TangoWidget.DEVICES[self.dn]
+            else:
+                self.dp = tango.DeviceProxy(self.dn)
+                TangoWidget.DEVICES[self.dn] = self.dp
+            if not self.dp.is_attribute_polled(self.an):
+                self.logger.info('Recommended to swith polling on for %s', self.name)
+            self.dp.ping()
+            self.attr = self.dp.read_attribute(self.an)
+            self.update_config()
+            self.connected = True
+            self.time = time.time()
+            self.logger.info('Connected to Attribute %s', self.name)
+        except:
+            self.logger.warning('Can not create attribute %s', self.name)
+            self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
+            self.connected = False
+            self.time = time.time()
+
+    def update_config(self):
+        self.config = self.dp.get_attribute_config_ex(self.an)[0]
+        self.format = self.config.format
+        try:
+            self.coeff = float(self.config.display_unit)
+        except:
+            self.coeff = 1.0
+
+    def read(self, force=False):
+        try:
+            if not force and self.dp.is_attribute_polled(self.an):
+                attrib = self.dp.attribute_history(self.an, 1)[0]
+                if attrib.time.tv_sec > self.attr.time.tv_sec or \
+                        (attrib.time.tv_sec == self.attr.time.tv_sec and attrib.time.tv_usec > self.attr.time.tv_usec):
+                    self.attr = attrib
+            else:
+                self.attr = self.dp.read_attribute(self.an)
+        except Exception as ex:
+            self.attr = None
+            self.disconnect()
+            raise ex
+        self.ex_count = 0
+        return self.attr
+
+    def write(self, value):
+        #if self.readonly:
+        #    return
+        self.dp.write_attribute(self.an, value/self.coeff)
+
+
+
+

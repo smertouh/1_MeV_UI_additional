@@ -207,11 +207,7 @@ class MainWindow(QMainWindow):
         self.pushButton.clicked.disconnect(self.pushButton.tango_widget.clicked)  # run button
         self.pushButton.clicked.connect(self.timer_run_callback)  # run button
         # find timer device
-        self.timer = None
-        for d in TangoWidget.DEVICES:
-            if d[0] == 'binp/nbi/timing':
-                self.timer = d[1]
-                break
+        self.timer = TangoWidget.DEVICES['binp/nbi/timing']
 
     def cb6_callback(self, value):
         if value:

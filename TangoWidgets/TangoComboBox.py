@@ -6,7 +6,9 @@ Created on Jan 3, 2020
 '''
 import sys
 import time
+
 from PyQt5.QtWidgets import QComboBox
+
 from TangoWidgets.TangoWriteWidget import TangoWriteWidget
 from TangoWidgets.TangoWidget import TangoWidget
 
@@ -15,6 +17,9 @@ class TangoComboBox(TangoWriteWidget):
     def __init__(self, name, widget: QComboBox, readonly=False):
         super().__init__(name, widget)
         self.widget. currentIndexChanged.connect(self.callback)
+
+    def update(self, decorate_only=False):
+        super().update(decorate_only)
 
     def set_widget_value(self):
         #bs = self.widget.blockSignals(True)
