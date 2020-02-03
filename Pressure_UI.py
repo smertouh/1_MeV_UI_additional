@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # Interlock 15 kV
-            TangoLED('ET7000_server/test/pet5_7060/di00', self.pushButton_71),
+            TangoLED('ET7000_server/test/pet6_7060/di01', self.pushButton_71),
             # TMP Pump
             TangoLED('ET7000_server/test/pet6_7060/di00', self.pushButton_65),
             # Fore Pump

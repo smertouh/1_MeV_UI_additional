@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
-    <height>422</height>
+    <width>571</width>
+    <height>430</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1145,8 +1145,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>leds/images48/ledred.png</normaloff>
-          <normalon>leds/images48/ledgreen.png</normalon>leds/images48/ledred.png</iconset>
+          <normaloff>leds/images48/ledblack.png</normaloff>
+          <normalon>leds/images48/ledred.png</normalon>leds/images48/ledblack.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1264,8 +1264,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>leds/images48/ledred.png</normaloff>
-          <normalon>leds/images48/ledgreen.png</normalon>leds/images48/ledred.png</iconset>
+          <normaloff>leds/images48/ledblack.png</normaloff>
+          <normalon>leds/images48/ledred.png</normalon>leds/images48/ledblack.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1345,8 +1345,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>leds/images48/ledred.png</normaloff>
-          <normalon>leds/images48/ledgreen.png</normalon>leds/images48/ledred.png</iconset>
+          <normaloff>leds/images48/ledblack.png</normaloff>
+          <normalon>leds/images48/ledred.png</normalon>leds/images48/ledblack.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1426,8 +1426,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>leds/images48/ledred.png</normaloff>
-          <normalon>leds/images48/ledgreen.png</normalon>leds/images48/ledred.png</iconset>
+          <normaloff>leds/images48/ledblack.png</normaloff>
+          <normalon>leds/images48/ledred.png</normalon>leds/images48/ledblack.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1507,8 +1507,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>leds/images48/ledred.png</normaloff>
-          <normalon>leds/images48/ledgreen.png</normalon>leds/images48/ledred.png</iconset>
+          <normaloff>leds/images48/ledblack.png</normaloff>
+          <normalon>leds/images48/ledred.png</normalon>leds/images48/ledblack.png</iconset>
         </property>
         <property name="iconSize">
          <size>
