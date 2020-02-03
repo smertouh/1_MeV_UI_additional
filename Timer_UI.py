@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
         self.rdwdgts = (
             # timer
             TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
-            #TangoLabel('binp/nbi/adc0/Elapsed', self.label_6),  # pulse duration
             TangoLabel('binp/nbi/timing/channel_enable0', self.label_30, prop='label'),  # ch0
             TangoLabel('binp/nbi/timing/channel_enable1', self.label_31, prop='label'),  # ch1
             TangoLabel('binp/nbi/timing/channel_enable2', self.label_34, prop='label'),  # ch2
@@ -89,7 +88,6 @@ class MainWindow(QMainWindow):
         self.wtwdgts = (
             # timer
             TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox),  # period
-            #TangoPushButton('binp/nbi/timing/Start_single', self.pushButton),  # run
             TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox),  # single/periodical
             TangoCheckBox('binp/nbi/timing/channel_enable0', self.checkBox_8),  # ch0
             TangoCheckBox('binp/nbi/timing/channel_enable1', self.checkBox_9),  # ch
@@ -229,7 +227,7 @@ class MainWindow(QMainWindow):
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
-                self.wtwdgts[self.n].update(decorate_only=True)
+                self.wtwdgts[self.n].update()
             self.n += 1
             if self.n >= max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.n = 0
