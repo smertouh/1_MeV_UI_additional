@@ -9,6 +9,7 @@ import sys
 import json
 import logging
 import time
+import math
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget
@@ -69,7 +70,31 @@ class MainWindow(QMainWindow):
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
-        restore_settings(self, file_name=CONFIG_FILE)
+        restore_settings(self, file_name=CONFIG_FILE)        # define devices in use
+        # additional devices
+        try:
+            dn = 'binp/nbi/dac0'
+            self.pressure_tank = tango.DeviceProxy(dn)
+            TangoWidget.DEVICES[dn] = self.pressure_tank
+            dn = 'binp/nbi/dac0'
+            self.pressure_magnet = tango.DeviceProxy(dn)
+            TangoWidget.DEVICES[dn] = self.pressure_magnet
+        except:
+            pass
+        # define _coeff s
+        try:
+            self.pt = self.pressure_tank.read_attribute('chan16')
+            self.pt_config = self.pressure_tank.get_attribute_config_ex('chan16')[0]
+            self.pt_coeff = float(self.av_config.display_unit)
+        except:
+            self.pt_coeff = 1.0
+        try:
+            self.pm = self.pressure_magnet.read_attribute('chan22')
+            self.pm_config = self.pressure_magnet.get_attribute_config_ex('chan22')[0]
+            self.pm_coeff = float(self.pm_config.display_unit)
+        except:
+            self.pm_coeff = 1.0
+
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
@@ -142,6 +167,20 @@ class MainWindow(QMainWindow):
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
         self.elapsed = 0.0
+        # additional attributes
+        try:
+            self.pt = self.pressure_tank.read_attribute('chan16')
+            pt = math.pow(10.0, (1.667 * self.pt*self.pt_coeff - 11.46))
+            self.label_93.setText('%7.2e' % pt)
+        except:
+            self.label_93.setText('*******')
+        try:
+            self.pm = self.pressure_magnet.read_attribute('chan16')
+            pm = math.pow(10.0, (1.667 * self.pm*self.pm_coeff - 11.46))
+            self.label_88.setText('%7.2e' % pm)
+        except:
+            self.label_88.setText('*******')
+        # main loop
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
