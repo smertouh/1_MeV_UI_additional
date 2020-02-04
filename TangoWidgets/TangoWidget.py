@@ -67,10 +67,11 @@ class TangoWidget:
             self.dp = None
             if self.dn in TangoWidget.DEVICES and TangoWidget.DEVICES[self.dn] is not None:
                 try:
-                    TangoWidget.DEVICES[self.dn].ping()
+                    pt = TangoWidget.DEVICES[self.dn].ping()
                     self.dp = TangoWidget.DEVICES[self.dn]
-                    self.logger.debug('Used DeviceProxy %s for %s' % (self.dp, name))
+                    self.logger.debug('Used DeviceProxy %s for %s %d [s]' % (self.dp, name, pt))
                 except:
+                    self.logger.debug('Exception in connect attribute %s' % name, exc_info=True)
                     self.dp = None
             if self.dp is None:
                 self.dp = tango.DeviceProxy(self.dn)
@@ -90,7 +91,7 @@ class TangoWidget:
             self.logger.info('Connected to Attribute %s', name)
         except:
             self.logger.warning('Can not create attribute %s', name)
-            self.logger.debug('Exception in connect attribute', exc_info=True)
+            self.logger.debug('Exception in connect attribute %s' % name, exc_info=True)
             self.name = str(name)
             self.dp = None
             self.attr = None
@@ -134,9 +135,10 @@ class TangoWidget:
             else:
                 self.attr = self.dp.read_attribute(self.an)
         except Exception as ex:
+            #self.logger.debug('Exception in read', exc_info=True)
             self.attr = None
             self.disconnect_attribute_proxy()
-            raise ex
+            raise
         self.ex_count = 0
         return self.attr
 
