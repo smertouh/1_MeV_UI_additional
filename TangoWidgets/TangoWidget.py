@@ -88,7 +88,7 @@ class TangoWidget:
             self.logger.info('Connected to Attribute %s', name)
         except:
             self.logger.warning('Can not create attribute %s', name)
-            self.logger.debug('Exception', exc_info=True)
+            self.logger.debug('Exception in connect attribute', exc_info=True)
             self.name = str(name)
             self.dp = None
             self.attr = None
