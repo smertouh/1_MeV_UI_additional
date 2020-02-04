@@ -69,12 +69,12 @@ class TangoWidget:
                 try:
                     TangoWidget.DEVICES[self.dn].ping()
                     self.dp = TangoWidget.DEVICES[self.dn]
-                    self.logger.debug('Used DeviceProxy %s for %s', (self.dp, name))
+                    self.logger.debug('Used DeviceProxy %s for %s' % (self.dp, name))
                 except:
                     self.dp = None
             if self.dp is None:
                 self.dp = tango.DeviceProxy(self.dn)
-                self.logger.debug('Created DeviceProxy %s for %s', (self.dp, name))
+                self.logger.debug('Created DeviceProxy %s for %s' % (self.dp, name))
                 TangoWidget.DEVICES[self.dn] = self.dp
             if not self.dp.is_attribute_polled(self.an):
                 self.logger.info('Recommended to switch polling on for %s', name)
