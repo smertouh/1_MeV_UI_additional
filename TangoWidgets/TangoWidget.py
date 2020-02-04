@@ -66,8 +66,12 @@ class TangoWidget:
             self.an = name[n+1:]
             self.dp = None
             if self.dn in TangoWidget.DEVICES and TangoWidget.DEVICES[self.dn] is not None:
-                self.dp = TangoWidget.DEVICES[self.dn]
-            else:
+                try:
+                    TangoWidget.DEVICES[self.dn].ping()
+                    self.dp = TangoWidget.DEVICES[self.dn]
+                except:
+                    self.dp = None
+            if self.dp is None:
                 self.dp = tango.DeviceProxy(self.dn)
                 TangoWidget.DEVICES[self.dn] = self.dp
             if not self.dp.is_attribute_polled(self.an):
