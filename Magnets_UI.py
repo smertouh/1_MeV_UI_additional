@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
-        self.setWindowIcon(QtGui.QIcon('icons_red_xHd_icon.ico')) # icon
+        нself.setWindowIcon(QtGui.QIcon('icons_red_xHd_icon.ico')) # icon
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
