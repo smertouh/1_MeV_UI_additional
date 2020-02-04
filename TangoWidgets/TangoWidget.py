@@ -203,7 +203,9 @@ class TangoWidget:
                 if self.connected:
                     if hasattr(self.widget, 'value'):
                         self.write(self.widget.value())
-                    if hasattr(self.widget, 'getText'):
+                    elif hasattr(self.widget, 'getChecked'):
+                        self.write(self.widget.getChecked())
+                    elif hasattr(self.widget, 'getText'):
                         self.write(self.widget.getText())
                     if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
                         self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
