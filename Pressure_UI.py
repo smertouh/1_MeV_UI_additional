@@ -48,7 +48,7 @@ CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
 # Global configuration dictionary
-TIMER_PERIOD = 500  # ms
+TIMER_PERIOD = 300  # ms
 
 
 class MainWindow(QMainWindow):
@@ -173,25 +173,28 @@ class MainWindow(QMainWindow):
         # Save global settings
         save_settings(self, file_name=CONFIG_FILE)
         self.timer.stop()
-        
-    def timer_handler(self):
-        t0 = time.time()
-        if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
-            return
-        self.elapsed = 0.0
-        # additional attributes
+
+    def process_additional_widgets(self):
         try:
             self.pt = self.pressure_tank.read_attribute('ai05')
             pt = math.pow(10.0, (1.667 * self.pt.value*self.pt_coeff - 11.46))
-            self.label_93.setText('%7.2e' % pt)
+            self.label_93.setText('%8.2e' % pt)
         except:
-            self.label_93.setText('*******')
+            self.label_93.setText('********')
         try:
             self.pm = self.pressure_magnet.read_attribute('ai09')
             pm = math.pow(10.0, (1.667 * self.pm.value*self.pm_coeff - 11.46))
-            self.label_88.setText('%7.2e' % pm)
+            self.label_88.setText('%8.2e' % pm)
         except:
-            self.label_88.setText('*******')
+            self.label_88.setText('********')
+
+    def timer_handler(self):
+        t0 = time.time()
+        self.elapsed = 0.0
+        self.process_additional_widgets()
+        if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
+            self.elapsed = time.time() - self.elapsed
+            return
         # main loop
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
@@ -206,6 +209,8 @@ class MainWindow(QMainWindow):
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - self.elapsed
                 return
+        self.elapsed = time.time() - self.elapsed
+        logging.debug('Loop takes %5.0f ms %d %d'% (self.elapsed*1000.0, count, self.n))
 
 
 if __name__ == '__main__':
