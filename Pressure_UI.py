@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
             dn = 'ET7000_server/test/pet7_7026'
             self.pressure_tank = tango.DeviceProxy(dn)
             TangoWidget.DEVICES[dn] = self.pressure_tank
-            dn = 'ET7000_server/test/pet12_7018'
+            dn = 'ET7000_server/test/1'
             self.pressure_magnet = tango.DeviceProxy(dn)
             TangoWidget.DEVICES[dn] = self.pressure_magnet
         except:
