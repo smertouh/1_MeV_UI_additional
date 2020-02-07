@@ -138,10 +138,12 @@ class MainWindow(QMainWindow):
             try:
                 self.av = self.adc_device.read_attribute('chan16')
                 self.cc = self.adc_device.read_attribute('chan22')
+                pr = self.timer_device.read_attribute('di60')
                 if self.av.quality != tango._tango.AttrQuality.ATTR_VALID or\
-                        self.av.value * self.av_coeff < 9.0 or\
+                        self.av.value * self.av_coeff < 8.0 or\
                         self.cc.quality != tango._tango.AttrQuality.ATTR_VALID or\
-                        self.cc.value * self.cc_coeff < 0.1:
+                        self.cc.value * self.cc_coeff < 0.1 or\
+                        not pr:
                     self.pushButton_1.setChecked(False)
                 else:
                     self.pushButton_1.setChecked(True)
