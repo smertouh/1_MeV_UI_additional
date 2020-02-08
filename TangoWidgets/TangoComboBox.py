@@ -30,9 +30,6 @@ class TangoComboBox(TangoWriteWidget):
         #self.widget.blockSignals(bs)
         return self.attr.value
 
-    def decorate_error(self):
-        self.widget.setStyleSheet('color: gray')
-
     def compare(self):
         try:
             return int(self.attr.value) == self.widget.currentIndex()

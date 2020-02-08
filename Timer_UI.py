@@ -221,12 +221,14 @@ class MainWindow(QMainWindow):
         # pulse duration update
         if self.check_timer_state():
             self.pushButton_29.setEnabled(True)
+            self.pushButton.setStyleSheet('color: red')
             if self.comboBox.currentIndex() == 0:
                 self.pushButton.setText('Stop')
         else:
             self.pushButton_29.setEnabled(False)
+            self.pushButton.setStyleSheet('')
             if self.comboBox.currentIndex() == 0:
-                self.pushButton.setText('Run')
+                self.pushButton.setText('Shoot')
         # remained
         try:
             self.remained = self.spinBox.value() - int(self.label_3.text())
