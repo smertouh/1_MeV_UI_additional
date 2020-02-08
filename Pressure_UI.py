@@ -94,8 +94,6 @@ class MainWindow(QMainWindow):
             self.pm_coeff = float(self.pm_config.display_unit)
         except:
             self.pm_coeff = 1.0
-
-
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # Interlock 15 kV
