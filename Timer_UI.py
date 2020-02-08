@@ -8,6 +8,7 @@ Created on Jul 28, 2019
 import sys
 import time
 import logging
+import os.path
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import uic
@@ -139,6 +140,7 @@ class MainWindow(QMainWindow):
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)
+        self.pushButton_2.clicked.connect(self.execute_button_clicked)
         # Defile and start timer callback task
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
@@ -152,6 +154,19 @@ class MainWindow(QMainWindow):
         value = (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
                 (not (self.checkBox_21.isChecked() and self.pushButton_31.isChecked()))
         return value
+
+    def execute_button_clicked(self):
+        try:
+            #ind = self.comboBox2.currentIndex()
+            #file_name = self.comboBox2.currentItem()
+            file_name = os.path.join('scripts', self.comboBox_2.currentText()+'.py')
+            with open(file_name, 'r') as scriptfile:
+                s = scriptfile.read()
+                result = exec(s)
+                self.logger.debug('Sript %s executed', file_name)
+        except:
+            self.logger.warning('Error action execution')
+            self.logger.debug('', exc_info=True)
 
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
