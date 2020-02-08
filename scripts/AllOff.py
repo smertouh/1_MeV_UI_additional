@@ -1,4 +1,4 @@
-print('AllOff')
+#print('AllOff')
 self.checkBox_8.setChecked(False)
 self.checkBox_9.setChecked(False)
 self.checkBox_10.setChecked(False)
