@@ -66,7 +66,6 @@ class MainWindow(QMainWindow):
             TangoWidget.DEVICES['binp/nbi/timing'] = self.timer_device
         except:
             self.timer_device = None
-
         # read only attributes TangoWidgets list
         self.rdwdgts = (
             # timer
@@ -136,6 +135,7 @@ class MainWindow(QMainWindow):
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots
+        self.comboBox.currentIndexChanged.disconnect(self.comboBox.tango_widget.callback)  # single/periodical combo
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)
@@ -147,6 +147,11 @@ class MainWindow(QMainWindow):
         # resize main window
         self.resize(QSize(self.gridLayout_2.sizeHint().width(),
                           self.gridLayout_2.sizeHint().height() + self.gridLayout_3.sizeHint().height()))
+
+    def check_protection_interlock(self):
+        value = (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
+                (not (self.checkBox_21.isChecked() and self.pushButton_31.isChecked()))
+        return value
 
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
@@ -166,19 +171,25 @@ class MainWindow(QMainWindow):
             self.label_5.setVisible(False)
             # run button
             self.pushButton.setText('Shoot')
+            self.comboBox.tango_widget.callback(value)
         elif value == 1:  # periodical
             # show remained
             self.label_4.setVisible(True)
             self.label_5.setVisible(True)
             # run button
             self.pushButton.setText('Stop')
+            # check protection interlock
+            if self.check_protection_interlock():
+                self.logger.error('Shot is rejected')
+                self.comboBox.setCurrentIndex(0)
+                return
+            self.comboBox.tango_widget.callback(value)
 
     def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:   # single
             # check protection interlock
-            if (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
-                    (not (self.checkBox_21.isChecked() and self.pushButton_31.isChecked())):
-                self.logger.debug('Shot is rejected')
+            if self.check_protection_interlock():
+                self.logger.error('Shot is rejected')
                 return
             if self.check_timer_state():
                 self.pulse_off()

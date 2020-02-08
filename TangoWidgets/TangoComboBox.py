@@ -16,7 +16,10 @@ from TangoWidgets.TangoWidget import TangoWidget
 class TangoComboBox(TangoWriteWidget):
     def __init__(self, name, widget: QComboBox, readonly=False):
         super().__init__(name, widget)
-        self.widget. currentIndexChanged.connect(self.callback)
+        self.widget.currentIndexChanged.connect(self.callback)
+
+    def decorate_error(self):
+        self.widget.setStyleSheet('color: red')
 
     def update(self, decorate_only=False):
         super().update(decorate_only)
