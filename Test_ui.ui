@@ -40,7 +40,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>1 MeV Timer UI</string>
+   <string>1 MeV Test UI</string>
   </property>
   <property name="windowIcon">
    <iconset>

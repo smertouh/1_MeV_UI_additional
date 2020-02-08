@@ -83,6 +83,11 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/timing/channel_enable9', self.label_42, prop='label'),  # ch
             TangoLabel('binp/nbi/timing/channel_enable10', self.label_43, prop='label'),  # ch10
             TangoLabel('binp/nbi/timing/channel_enable11', self.label_44, prop='label'),  # ch11
+            # pg
+            TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_31),
+            # lauda
+            #TangoLED('binp/nbi/lauda/6230_7', self.pushButton_34),  # Pump On
+            TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
         )
         # read write attributes TangoWidgets list
         self.wtwdgts = (
@@ -137,14 +142,18 @@ class MainWindow(QMainWindow):
         # Defile and start timer callback task
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
-        self.timer.start(TIMER_PERIOD)
         # start timer device
+        self.timer.start(TIMER_PERIOD)
+        # resize main window
+        self.resize(QSize(self.gridLayout_2.sizeHint().width(),
+                          self.gridLayout_2.sizeHint().height() + self.gridLayout_3.sizeHint().height()))
 
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
             #self.resize(QSize(418, 751))
-            self.resize(QSize(self.gridLayout_2.sizeHint().width(), self.gridLayout_2.sizeHint().height()+self.gridLayout_3.sizeHint().height()))
+            self.resize(QSize(self.gridLayout_2.sizeHint().width(),
+                              self.gridLayout_2.sizeHint().height()+self.gridLayout_3.sizeHint().height()))
         else:
             self.frame.setVisible(False)
             #self.resize(QSize(418, 124))
@@ -156,7 +165,7 @@ class MainWindow(QMainWindow):
             self.label_4.setVisible(False)
             self.label_5.setVisible(False)
             # run button
-            self.pushButton.setText('Run')
+            self.pushButton.setText('Shoot')
         elif value == 1:  # periodical
             # show remained
             self.label_4.setVisible(True)
@@ -165,15 +174,18 @@ class MainWindow(QMainWindow):
             self.pushButton.setText('Stop')
 
     def run_button_clicked(self, value):
-        if self.comboBox.currentIndex() == 0:
-            # single
+        if self.comboBox.currentIndex() == 0:   # single
+            # check protection interlock
+            if (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
+                    (not (self.checkBox_21.isChecked() and self.pushButton_31.isChecked())):
+                self.logger.debug('Shot is rejected')
+                return
             if self.check_timer_state():
                 self.pulse_off()
             else:
                 self.timer_device.write_attribute('Start_single', 1)
                 self.timer_device.write_attribute('Start_single', 0)
-        elif self.comboBox.currentIndex() == 1:
-            # periodical
+        elif self.comboBox.currentIndex() == 1:  # periodical
             if self.check_timer_state():
                 self.pulse_off()
             self.comboBox.setCurrentIndex(0)
