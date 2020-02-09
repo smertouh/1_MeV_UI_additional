@@ -129,8 +129,9 @@ class TangoWidget:
         try:
             if not force and self.dp.is_attribute_polled(self.an):
                 attrib = self.dp.attribute_history(self.an, 1)[0]
-                if attrib.time.tv_sec > self.attr.time.tv_sec or \
-                        (attrib.time.tv_sec == self.attr.time.tv_sec and attrib.time.tv_usec > self.attr.time.tv_usec):
+                t1 = attrib.time.tv_sec + (1.0e-6 * attrib.time.tv_usec)
+                t2 = self.attr.time.tv_sec + (1.0e-6 * self.attr.time.tv_usec)
+                if t1 > t2:
                     self.attr = attrib
             else:
                 self.attr = self.dp.read_attribute(self.an)
