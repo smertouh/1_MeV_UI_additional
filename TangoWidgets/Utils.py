@@ -1,5 +1,7 @@
 import logging
 import json
+import os
+
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QMainWindow
@@ -135,4 +137,11 @@ def save_settings(self, widgets=(), file_name='config.json'):
         self.logger.log(logging.WARNING, 'Configuration save error to %s' % file_name)
         self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
         return False
+
+def read_folder(folder, mask='.py'):
+    # read al files in the folder
+    all_files = os.listdir(folder)
+    # filter files
+    filtered_files = [f for f in all_files if f.endswith(mask)]
+    return filtered_files
 

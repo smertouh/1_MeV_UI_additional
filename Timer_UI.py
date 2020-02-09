@@ -149,6 +149,14 @@ class MainWindow(QMainWindow):
         # resize main window
         self.resize(QSize(self.gridLayout_2.sizeHint().width(),
                           self.gridLayout_2.sizeHint().height() + self.gridLayout_3.sizeHint().height()))
+        # populate comboBOx_2
+        scripts = read_folder('scripts')
+        truncated = [s.replace('.py', '') for s in scripts]
+        for i in range(self.comboBox_2.count()):
+            self.comboBox_2.removeItem(0)
+        self.comboBox_2.insertItems(0, truncated)
+        if 'SetDefault' in truncated:
+            self.comboBox_2.setCurrentIndex(truncated.index('SetDefault'))
 
     def check_protection_interlock(self):
         value = (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
@@ -164,7 +172,9 @@ class MainWindow(QMainWindow):
                 s = scriptfile.read()
                 result = exec(s)
                 self.logger.debug('Sript %s executed', file_name)
+                self.comboBox_2.setStyleSheet('')
         except:
+            self.comboBox_2.setStyleSheet('color: red')
             self.logger.warning('Error action execution')
             self.logger.debug('', exc_info=True)
 
