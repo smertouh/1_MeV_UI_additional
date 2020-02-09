@@ -95,6 +95,9 @@
           <bold>false</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border: 3px solid red </string>
+        </property>
         <property name="text">
          <string>Shoot</string>
         </property>

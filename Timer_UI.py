@@ -159,7 +159,12 @@ class MainWindow(QMainWindow):
 
     def check_protection_interlock(self):
         value = (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
-                (not (self.checkBox_21.isChecked() and self.pushButton_31.isChecked()))
+                (not (self.checkBox_21.isChecked() and self.pushButton_31.isChecked())) or \
+                (not (self.checkBox_22.isChecked() and self.pushButton_32.isChecked()))
+        # if value:
+        #     self.pushButton.setStyleSheet('')
+        # else:
+        #     self.pushButton.setStyleSheet('border: 3px solid red')
         return value
 
     def execute_button_clicked(self):
@@ -197,27 +202,27 @@ class MainWindow(QMainWindow):
             self.pushButton.setText('Shoot')
             self.comboBox.tango_widget.callback(value)
         elif value == 1:  # periodical
-            # show remained
-            self.label_4.setVisible(True)
-            self.label_5.setVisible(True)
-            # run button
-            self.pushButton.setText('Stop')
             # check protection interlock
             if self.check_protection_interlock():
                 self.logger.error('Shot is rejected')
                 self.comboBox.setCurrentIndex(0)
                 return
+            # show remained
+            self.label_4.setVisible(True)
+            self.label_5.setVisible(True)
+            # run button
+            self.pushButton.setText('Stop')
             self.comboBox.tango_widget.callback(value)
 
     def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:   # single
-            # check protection interlock
-            if self.check_protection_interlock():
-                self.logger.error('Shot is rejected')
-                return
             if self.check_timer_state():
                 self.pulse_off()
             else:
+                # check protection interlock
+                if self.check_protection_interlock():
+                    self.logger.error('Shot is rejected')
+                    return
                 self.timer_device.write_attribute('Start_single', 1)
                 self.timer_device.write_attribute('Start_single', 0)
         elif self.comboBox.currentIndex() == 1:  # periodical
@@ -253,13 +258,14 @@ class MainWindow(QMainWindow):
         t0 = time.time()
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
-        # pulse duration update
-        if self.check_timer_state():
+        # durind pulse
+        if self.check_timer_state():   # pulse is on
+            # pulse ON LED
             self.pushButton_29.setEnabled(True)
-            self.pushButton.setStyleSheet('color: red')
-            if self.comboBox.currentIndex() == 0:
-                self.pushButton.setText('Stop')
-        else:
+            self.pushButton.setStyleSheet('color: red; font: bold')
+            self.pushButton.setText('Stop')
+        else:   #pulse is off
+            # pulse ON LED
             self.pushButton_29.setEnabled(False)
             self.pushButton.setStyleSheet('')
             if self.comboBox.currentIndex() == 0:
@@ -270,7 +276,7 @@ class MainWindow(QMainWindow):
         except:
             self.remained = 0.0
         self.label_5.setText('%d s' % self.remained)
-        # main loop
+        # main loop updating widgets
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
