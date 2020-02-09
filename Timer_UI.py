@@ -56,11 +56,10 @@ class MainWindow(QMainWindow):
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
         self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
-
+        #
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
-
+        #
         restore_settings(self, file_name=CONFIG_FILE)
-
         # timer device
         try:
             self.timer_device = tango.DeviceProxy('binp/nbi/timing')
@@ -156,6 +155,17 @@ class MainWindow(QMainWindow):
         self.comboBox_2.insertItems(0, truncated)
         if 'SetDefault' in truncated:
             self.comboBox_2.setCurrentIndex(truncated.index('SetDefault'))
+        # lock timer for exclusive use of this app
+        if self.timer_device is not None:
+            if self.timer_device.is_locked():
+                self.logger.warning('Timer device is already locked')
+                self.pushButton.setEnabled(False)
+                self.comboBox.setEnabled(False)
+            else:
+                if self.timer_device.lock(100000.0):
+                    self.logger.debug('Timer device locked sucessfully')
+                else:
+                    self.logger.error('Can not lock timer device')
 
     def check_protection_interlock(self):
         value = (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
