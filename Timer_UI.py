@@ -156,21 +156,21 @@ class MainWindow(QMainWindow):
         if 'SetDefault' in truncated:
             self.comboBox_2.setCurrentIndex(truncated.index('SetDefault'))
         # lock timer for exclusive use of this app
-        if self.timer_device is not None:
-            if self.timer_device.is_locked():
-                self.logger.warning('Timer device is already locked')
-                self.pushButton.setEnabled(False)
-                self.comboBox.setEnabled(False)
-            else:
-                if self.timer_device.lock(100000.0):
-                    self.logger.debug('Timer device locked sucessfully')
-                else:
-                    self.logger.error('Can not lock timer device')
+        # if self.timer_device is not None:
+        #     if self.timer_device.is_locked():
+        #         self.logger.warning('Timer device is already locked')
+        #         self.pushButton.setEnabled(False)
+        #         self.comboBox.setEnabled(False)
+        #     else:
+        #         if self.timer_device.lock(100000):
+        #             self.logger.debug('Timer device locked sucessfully')
+        #         else:
+        #             self.logger.error('Can not lock timer device')
 
     def check_protection_interlock(self):
-        value = (not (self.checkBox_20.isChecked() and self.pushButton_30.isChecked())) or \
-                (not (self.checkBox_21.isChecked() and self.pushButton_31.isChecked())) or \
-                (not (self.checkBox_22.isChecked() and self.pushButton_32.isChecked()))
+        value = ((not self.checkBox_20.isChecked()) or self.pushButton_30.isChecked()) and \
+                ((not self.checkBox_21.isChecked()) or self.pushButton_31.isChecked()) and \
+                ((not self.checkBox_22.isChecked()) or self.pushButton_32.isChecked())
         # if value:
         #     self.pushButton.setStyleSheet('')
         # else:
@@ -230,7 +230,7 @@ class MainWindow(QMainWindow):
                 self.pulse_off()
             else:
                 # check protection interlock
-                if self.check_protection_interlock():
+                if not self.check_protection_interlock():
                     self.logger.error('Shot is rejected')
                     return
                 self.timer_device.write_attribute('Start_single', 1)

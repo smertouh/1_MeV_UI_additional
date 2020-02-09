@@ -17,7 +17,7 @@ self.spinBox_19.setValue(7050)  #stop
 self.checkBox_13.setChecked(True)  #chan5
 self.spinBox_20.setValue(1500)  #start
 self.spinBox_21.setValue(7100)  #stop
-self.checkBox_14.setChecked(False)  #chan6
+self.checkBox_14.setChecked(True)  #chan6
 self.spinBox_22.setValue(1970)  #start
 self.spinBox_23.setValue(1990)  #stop
 self.checkBox_15.setChecked(False)  #chan7
@@ -25,7 +25,7 @@ self.checkBox_15.setChecked(False)  #chan7
 #self.spinBox_25.setValue(2400)  #stop
 self.checkBox_16.setChecked(True)  #chan8
 self.spinBox_26.setValue(0)  #start
-self.spinBox_27.setValue(12200)  #stop
+self.spinBox_27.setValue(7200)  #stop
 self.checkBox_17.setChecked(True)  #chan9
 self.spinBox_28.setValue(0)  #start
 self.spinBox_29.setValue(500)  #stop
@@ -35,6 +35,6 @@ self.spinBox_31.setValue(7000)  #stop
 self.checkBox_19.setChecked(True)  #chan11
 self.spinBox_32.setValue(1000)  #start
 self.spinBox_33.setValue(7100)  #stop
-#self.spinBox_34.setValue(0)  #ADC start
-#self.spinBox_35.setValue(1000)  #ADC stop
+self.spinBox_34.setValue(20)  #ADC start
+self.spinBox_35.setValue(8200)  #ADC stop
 

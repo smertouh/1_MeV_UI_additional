@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
+    <width>432</width>
     <height>975</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
+    <width>0</width>
     <height>200</height>
    </size>
   </property>
@@ -490,11 +490,11 @@
       </item>
       <item row="2" column="0" colspan="5">
        <layout class="QGridLayout" name="gridLayout">
-        <property name="topMargin">
-         <number>0</number>
-        </property>
         <property name="verticalSpacing">
          <number>4</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
         </property>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButton_30">
@@ -926,30 +926,12 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
+       <property name="margin">
         <number>0</number>
        </property>
        <item>
         <layout class="QGridLayout" name="gridLayout_3">
-         <property name="leftMargin">
-          <number>12</number>
-         </property>
-         <property name="topMargin">
-          <number>12</number>
-         </property>
-         <property name="rightMargin">
-          <number>12</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>12</number>
          </property>
          <item row="9" column="1">
