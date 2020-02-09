@@ -147,8 +147,7 @@ class MainWindow(QMainWindow):
         # start timer device
         self.timer.start(TIMER_PERIOD)
         # resize main window
-        self.resize(QSize(self.gridLayout_2.sizeHint().width(),
-                          self.gridLayout_2.sizeHint().height() + self.gridLayout_3.sizeHint().height()))
+        self.show_more_button_clicked()
         # populate comboBOx_2
         scripts = read_folder('scripts')
         truncated = [s.replace('.py', '') for s in scripts]
