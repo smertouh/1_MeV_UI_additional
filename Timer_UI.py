@@ -214,7 +214,7 @@ class MainWindow(QMainWindow):
             self.comboBox.tango_widget.callback(value)
         elif value == 1:  # periodical
             # check protection interlock
-            if self.check_protection_interlock():
+            if not self.check_protection_interlock():
                 self.logger.error('Shot is rejected')
                 self.comboBox.setCurrentIndex(0)
                 return
