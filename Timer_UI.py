@@ -37,6 +37,7 @@ UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
 # Global configuration dictionary
 TIMER_PERIOD = 300  # ms
+timer_state_channels = ['channel_state'+str(k) for k in range(12)]
 
 
 class MainWindow(QMainWindow):
@@ -226,7 +227,7 @@ class MainWindow(QMainWindow):
 
     def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:   # single
-            if self.check_timer_state():
+            if self.check_timer_state(self.timer_device):
                 self.pulse_off()
             else:
                 # check protection interlock
@@ -236,20 +237,34 @@ class MainWindow(QMainWindow):
                 self.timer_device.write_attribute('Start_single', 1)
                 self.timer_device.write_attribute('Start_single', 0)
         elif self.comboBox.currentIndex() == 1:  # periodical
-            if self.check_timer_state():
+            if self.check_timer_state(self.timer_device):
                 self.pulse_off()
             self.comboBox.setCurrentIndex(0)
 
-    def check_timer_state(self):
-        if self.timer_device is None:
-            return
+    # def check_timer_state(self):
+    #     if self.timer_device is None:
+    #         return
+    #     state = False
+    #     for k in range(12):
+    #         try:
+    #             av = self.timer_device.read_attribute('channel_state'+str(k))
+    #             state = state or av.value
+    #         except:
+    #             self.logger.debug("Exception ", exc_info=True)
+    #     return state
+
+    @staticmethod
+    def check_timer_state(timer_device):
+        if timer_device is None:
+            return False
         state = False
-        for k in range(12):
-            try:
-                av = self.timer_device.read_attribute('channel_state'+str(k))
-                state = state or av.value
-            except:
-                self.logger.debug("Exception ", exc_info=True)
+        avs = []
+        try:
+            avs = timer_device.read_attributes(timer_state_channels)
+        except:
+            pass
+        for av in avs:
+            state = state or av.value
         return state
 
     def pulse_off(self):
@@ -268,8 +283,8 @@ class MainWindow(QMainWindow):
         t0 = time.time()
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
-        # durind pulse
-        if self.check_timer_state():   # pulse is on
+        # during pulse
+        if self.check_timer_state(self.timer_device):   # pulse is on
             # pulse ON LED
             self.pushButton_29.setEnabled(True)
             self.pushButton.setStyleSheet('color: red; font: bold')
