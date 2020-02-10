@@ -90,7 +90,7 @@ class TangoWidget:
                 self.logger.info('Recommended to switch polling on for %s', name)
             self.logger.info('Connected to Attribute %s', name)
         except:
-            self.logger.warning('Can not create attribute %s', name)
+            self.logger.warning('Can not connect attribute %s', name)
             self.logger.debug('Exception in connect attribute %s' % name, exc_info=True)
             self.name = str(name)
             self.dp = None
