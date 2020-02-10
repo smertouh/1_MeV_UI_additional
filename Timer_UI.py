@@ -217,6 +217,7 @@ class MainWindow(QMainWindow):
             if not self.check_protection_interlock():
                 self.logger.error('Shot is rejected')
                 self.comboBox.setCurrentIndex(0)
+                self.comboBox.setStyleSheet('border: 3px solid red')
                 return
             # show remained
             self.label_4.setVisible(True)
@@ -233,6 +234,7 @@ class MainWindow(QMainWindow):
                 # check protection interlock
                 if not self.check_protection_interlock():
                     self.logger.error('Shot is rejected')
+                    self.pushButton.setStyleSheet('border: 3px solid red')
                     return
                 self.timer_device.write_attribute('Start_single', 1)
                 self.timer_device.write_attribute('Start_single', 0)
