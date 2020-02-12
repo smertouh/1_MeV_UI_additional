@@ -77,8 +77,6 @@ class TangoWidget:
                 self.dp = tango.DeviceProxy(self.dn)
                 self.logger.debug('Created DeviceProxy %s for %s' % (self.dp, name))
                 TangoWidget.DEVICES[self.dn] = self.dp
-            if not self.dp.is_attribute_polled(self.an):
-                self.logger.info('Recommended to switch polling on for %s', name)
             self.attr = self.dp.read_attribute(self.an)
             self.config = self.dp.get_attribute_config_ex(self.an)[0]
             self.format = self.config.format
@@ -88,9 +86,11 @@ class TangoWidget:
                 self.coeff = 1.0
             self.connected = True
             self.time = time.time()
+            if not self.dp.is_attribute_polled(self.an):
+                self.logger.info('Recommended to switch polling on for %s', name)
             self.logger.info('Connected to Attribute %s', name)
         except:
-            self.logger.warning('Can not create attribute %s', name)
+            self.logger.warning('Can not connect attribute %s', name)
             self.logger.debug('Exception in connect attribute %s' % name, exc_info=True)
             self.name = str(name)
             self.dp = None
