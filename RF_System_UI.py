@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
                         self.av.value * self.av_coeff < 8.0 or\
                         self.cc.quality != tango._tango.AttrQuality.ATTR_VALID or\
                         self.cc.value * self.cc_coeff < 0.1 or\
-                        not pr:
+                        not pr.value:
                     self.pushButton_1.setChecked(False)
                 else:
                     self.pushButton_1.setChecked(True)
