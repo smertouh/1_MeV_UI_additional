@@ -170,6 +170,9 @@ class TangoWidget:
         return True
 
     def set_widget_value(self):
+        if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
+            # dont set value from invalid attribute
+            return
         bs = self.widget.blockSignals(True)
         if hasattr(self.attr, 'value'):
             if hasattr(self.widget, 'setValue'):

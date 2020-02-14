@@ -10,6 +10,8 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QAbstractSpinBox
 from TangoWidgets.TangoWriteWidget import TangoWriteWidget
 
+import tango
+
 
 class TangoAbstractSpinBox(TangoWriteWidget):
     def __init__(self, name, widget: QAbstractSpinBox, readonly=False):
@@ -21,15 +23,18 @@ class TangoAbstractSpinBox(TangoWriteWidget):
             self.widget.keyPressEvent = self.keyPressEvent
 
     def set_widget_value(self):
-        if math.isnan(self.attr.value):
-            self.widget.setValue(0.0)
-        else:
-            bs = self.widget.blockSignals(True)
-            try:
+        if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
+            # dont set value from invalid attribute
+            return
+        bs = self.widget.blockSignals(True)
+        try:
+            if math.isnan(self.attr.value):
+                self.widget.setValue(0.0)
+            else:
                 self.widget.setValue(self.attr.value * self.coeff)
-            except:
-                self.logger.debug('Exception in set_widget_value %s ' % self.attr.name, exc_info=True)
-            self.widget.blockSignals(bs)
+        except:
+            self.logger.debug('Exception in set_widget_value %s ' % self.attr.name, exc_info=True)
+        self.widget.blockSignals(bs)
 
     def keyPressEvent(self, e):
         self.widget.last_keyPressEvent(e)
