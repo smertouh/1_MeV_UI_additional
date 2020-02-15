@@ -52,10 +52,10 @@ class MainWindow(QMainWindow):
         # Load the UI
         uic.loadUi(UI_FILE, self)
         # Default main window parameters
-        self.resize(QSize(480, 640))                # size
-        self.move(QPoint(50, 50))                   # position
-        self.setWindowTitle(APPLICATION_NAME)       # title
-        self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
+        self.resize(QSize(480, 640))                 # size
+        self.move(QPoint(50, 50))                    # position
+        self.setWindowTitle(APPLICATION_NAME)        # title
+        self.setWindowIcon(QtGui.QIcon('icon.png'))  # icon
         #
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
         #
@@ -290,7 +290,7 @@ class MainWindow(QMainWindow):
             self.pushButton_29.setEnabled(True)
             self.pushButton.setStyleSheet('color: red; font: bold')
             self.pushButton.setText('Stop')
-        else:   #pulse is off
+        else:   # pulse is off
             # pulse ON LED
             self.pushButton_29.setEnabled(False)
             self.pushButton.setStyleSheet('')
