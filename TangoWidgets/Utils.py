@@ -42,6 +42,16 @@ def get_all_widgets(obj: QtWidgets.QWidget):
                     wgts.append(wgt1)
     return wgts
 
+def get_widgets(obj):
+    wgts = {}
+    for att in dir(obj):
+        attr = getattr(obj, att)
+        #print(att, attr)
+        if attr is not None and isinstance(attr, QtWidgets.QWidget) and attr not in wgts:
+            wgts[att] = attr
+            print('widget:', att, attr)
+    return wgts
+
 def checkBox_set_bg_color(cb: QCheckBox, m, colors=('green', 'red', 'white')):
     if isinstance(m, bool):
         if m:
@@ -101,7 +111,7 @@ def set_widget_state(obj, config, name=None):
 
 def restore_settings(self, widgets=(), file_name='config.json'):
     self.config = {}
-    try :
+    try:
         with open(file_name, 'r') as configfile:
             s = configfile.read()
         self.config = json.loads(s)
@@ -116,7 +126,7 @@ def restore_settings(self, widgets=(), file_name='config.json'):
         for w in widgets:
             set_widget_state(w, self.config)
         self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
-    except :
+    except:
         self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
         self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
     return self.config

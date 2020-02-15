@@ -59,6 +59,7 @@ class MainWindow(QMainWindow):
         #
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
         #
+        #all_widgets = get_widgets(self)
         restore_settings(self, file_name=CONFIG_FILE)
         # timer device
         try:
@@ -179,8 +180,6 @@ class MainWindow(QMainWindow):
 
     def execute_button_clicked(self):
         try:
-            #ind = self.comboBox2.currentIndex()
-            #file_name = self.comboBox2.currentItem()
             file_name = os.path.join('scripts', self.comboBox_2.currentText()+'.py')
             with open(file_name, 'r') as scriptfile:
                 s = scriptfile.read()
@@ -241,18 +240,6 @@ class MainWindow(QMainWindow):
             if self.check_timer_state(self.timer_device):
                 self.pulse_off()
             self.comboBox.setCurrentIndex(0)
-
-    # def check_timer_state(self):
-    #     if self.timer_device is None:
-    #         return
-    #     state = False
-    #     for k in range(12):
-    #         try:
-    #             av = self.timer_device.read_attribute('channel_state'+str(k))
-    #             state = state or av.value
-    #         except:
-    #             self.logger.debug("Exception ", exc_info=True)
-    #     return state
 
     @staticmethod
     def check_timer_state(timer_device):
