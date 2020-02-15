@@ -42,7 +42,6 @@ timer_state_channels = ['channel_state'+str(k) for k in range(12)]
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
-        global logger
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
@@ -164,7 +163,7 @@ class MainWindow(QMainWindow):
         #         self.comboBox.setEnabled(False)
         #     else:
         #         if self.timer_device.lock(100000):
-        #             self.logger.debug('Timer device locked sucessfully')
+        #             self.logger.debug('Timer device locked successfully')
         #         else:
         #             self.logger.error('Can not lock timer device')
 
