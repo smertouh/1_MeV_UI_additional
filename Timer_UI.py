@@ -186,7 +186,7 @@ class MainWindow(QMainWindow):
             with open(file_name, 'r') as scriptfile:
                 s = scriptfile.read()
                 result = exec(s)
-                self.logger.debug('Sript %s executed', file_name)
+                self.logger.debug('Script %s executed', file_name)
                 self.comboBox_2.setStyleSheet('')
         except:
             self.comboBox_2.setStyleSheet('color: red')
