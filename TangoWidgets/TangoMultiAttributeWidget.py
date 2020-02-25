@@ -1,6 +1,6 @@
 # coding: utf-8
 '''
-Created on Jan 1, 2020
+Created on Feb 25, 2020
 
 @author: sanin
 '''
@@ -12,35 +12,15 @@ from PyQt5.QtWidgets import QWidget
 import tango
 
 from .Utils import *
+from .TangoWidget import TangoWidget
 
 
-class TangoWidget:
-    ERROR_TEXT = '****'
-    RECONNECT_TIMEOUT = 3.0    # seconds
-    DEVICES = {}
-
-    def __init__(self, name: str, widget: QWidget, readonly=True, level=logging.DEBUG):
-        #print('TangoWidgetinitEntry', name)
+class TangoMultiAttributeWidget(TangoWidget):
+    def __init__(self, name: str, widget: QWidget, readonly=True, level=logging.DEBUG, attributes=[]):
         # defaults
-        self.name = name
-        self.widget = widget
-        self.widget.tango_widget = self
-        self.readonly = readonly
-        self.attr = None
-        self.config = None
-        self.format = None
-        self.coeff = 1.0
-        self.connected = False
-        self.update_dt = 0.0
-        self.ex_count = 0
-        # configure logging
-        self.logger = config_logger(level=level)
-        # create attribute proxy
-        self.dn = ''
-        self.an = ''
-        self.dp = None
-        self.time = time.time()
-        self.connect_attribute_proxy(name)
+        self.attributes = attributes
+        super().__init__(name, widget, readonly, level)
+##        self.connect_attribute_proxy(name)
         # update view
         self.update(decorate_only=False)
         #print('TangoWidgetinitExit', name)
@@ -62,7 +42,18 @@ class TangoWidget:
                 self.coeff = 1.0
             self.connected = True
             self.time = time.time()
+            if not self.dp.is_attribute_polled(self.an):
+                self.logger.info('Recommended to switch polling on for %s', name)
             self.logger.info('Attribute %s has been connected', name)
+            # connect other attributes from list
+            self.devices = [self.dn]
+            self.attibs = [self.attr]
+            for at in self.attributes:
+                devn, attrn = self.split_attribute_name(at)
+                devp = self.create_device_proxy(devn)
+                self.devices.append(devp)
+                self.attibs.append(devp.read_attribute(attrn))
+                pass
         except:
             self.logger.warning('Can not connect attribute %s', name)
             self.logger.debug('Exception connecting attribute %s' % name, exc_info=True)
@@ -75,44 +66,9 @@ class TangoWidget:
             self.connected = False
             self.time = time.time()
 
-    def split_attribute_name(self, name):
-        device = ''
-        attrib = ''
-        splitted = name.split('/')
-        if len(splitted) < 4:
-            raise IndexError('Incorrect attribute name format')
-        n = name.rfind('/')
-        if n >= 0:
-            attrib = name[n+1:]
-            device = name[:n]
-        else:
-            device = name
-        return device, attrib
 
-    def create_device_proxy(self, device_name):
-        dp = None
-        if device_name in TangoWidget.DEVICES and TangoWidget.DEVICES[device_name] is not None:
-            try:
-                pt = TangoWidget.DEVICES[device_name].ping()
-                dp = TangoWidget.DEVICES[device_name]
-                self.logger.debug('Used DeviceProxy %s for %s %d [s]' % (dp, device_name, pt))
-            except:
-                self.logger.debug('Exception creating device %s' % device_name, exc_info=True)
-                dp = None
-        if dp is None:
-            dp = tango.DeviceProxy(self.dn)
-            self.logger.debug('Created DeviceProxy %s for %s' % (dp, device_name))
-            TangoWidget.DEVICES[device_name] = dp
-        return dp
 
-    def set_attribute_properties(self):
-        self.config = self.dp.get_attribute_config_ex(self.an)[0]
-        self.format = self.config.format
-        try:
-            self.coeff = float(self.config.display_unit)
-        except:
-            self.coeff = 1.0
-        self.connected = True
+
 
     def disconnect_attribute_proxy(self):
         if not self.connected:
@@ -126,6 +82,7 @@ class TangoWidget:
             self.format = None
             self.ex_count = 0
             self.logger.debug('Attribute %s disconnected', self.name)
+
 
     def decorate_error(self, *args, **kwargs):
         if hasattr(self.widget, 'setText'):
