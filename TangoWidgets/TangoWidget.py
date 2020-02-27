@@ -51,7 +51,7 @@ class TangoWidget:
             name = self.name
         self.name = str(name)
         try:
-            self.dn, self.an = self.split_attribute_name(name)
+            self.dn, self.an = split_attribute_name(name)
             self.dp = self.create_device_proxy(self.dn)
             self.attr = self.dp.read_attribute(self.an)
             self.config = self.dp.get_attribute_config_ex(self.an)[0]
@@ -74,20 +74,6 @@ class TangoWidget:
             self.coeff = 1.0
             self.connected = False
             self.time = time.time()
-
-    def split_attribute_name(self, name):
-        device = ''
-        attrib = ''
-        splitted = name.split('/')
-        if len(splitted) < 4:
-            raise IndexError('Incorrect attribute name format')
-        n = name.rfind('/')
-        if n >= 0:
-            attrib = name[n+1:]
-            device = name[:n]
-        else:
-            device = name
-        return device, attrib
 
     def create_device_proxy(self, device_name):
         dp = None
@@ -112,7 +98,6 @@ class TangoWidget:
             self.coeff = float(self.config.display_unit)
         except:
             self.coeff = 1.0
-        self.connected = True
 
     def disconnect_attribute_proxy(self):
         if not self.connected:

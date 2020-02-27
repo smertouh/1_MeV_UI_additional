@@ -155,3 +155,19 @@ def read_folder(folder, mask='.py'):
     filtered_files = [f for f in all_files if f.endswith(mask)]
     return filtered_files
 
+def split_attribute_name(full_name):
+    #splitted = full_name.split('/')
+    #if len(splitted) < 4:
+    #    raise IndexError('Incorrect attribute name format')
+    n = full_name.rfind('/')
+    if n >= 0:
+        # device/attrib pattern used
+        attrib = full_name[n + 1:]
+        device = full_name[:n]
+    else:
+        # alias used
+        device = ''
+        attrib = full_name
+    return device, attrib
+
+
