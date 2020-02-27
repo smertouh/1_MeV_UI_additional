@@ -26,7 +26,6 @@ class TangoWidget:
         self.name = name
         self.widget = widget
         self.widget.tango_widget = self
-        self.readonly = readonly
         # create attribute proxy
         self.attribute = TangoAttribute(name, level=level, readonly=readonly)
         # update view
@@ -86,11 +85,11 @@ class TangoWidget:
                 self.logger.debug('%s Non scalar attribute' % self.name)
                 self.decorate_invalid_data_format()
             else:
-                if not decorate_only:
-                    self.set_widget_value()
                 if not self.attribute.is_valid():
                     self.logger.debug('%s invalid' % self.name)
                     self.decorate_invalid_quality()
+                if not decorate_only:
+                    self.set_widget_value()
                 else:
                     if not self.compare():
                         self.decorate_not_equal()

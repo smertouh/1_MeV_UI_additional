@@ -15,7 +15,7 @@ from .Utils import *
 from .TangoWidget import TangoWidget
 
 class TangoAttribute:
-    reconnect_timeout = 5.0
+    #reconnect_timeout = 5.0
 
     def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
         # defaults
@@ -31,6 +31,7 @@ class TangoAttribute:
         self.readonly = readonly
         # configure logging
         self.logger = config_logger(level=level)
+        self.reconnect_timeout = TangoWidget.RECONNECT_TIMEOUT
         # connect attribute
         self.connect()
         self.time = time.time()
@@ -91,7 +92,7 @@ class TangoAttribute:
         return self.config.writable == tango.AttrWriteType.READ
 
     def is_valid(self):
-        return self.read_result.quality == tango._tango.AttrQuality.ATTR_VALID
+        return self.connected and self.read_result.quality == tango._tango.AttrQuality.ATTR_VALID
 
     def is_boolean(self):
         stat = self.config.data_format == tango.AttrDataFormat.SCALAR and\
