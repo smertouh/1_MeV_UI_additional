@@ -15,9 +15,10 @@ from .Utils import *
 from .TangoWidget import TangoWidget
 
 class TangoAttribute:
-    def __init__(self, name: str, level=logging.DEBUG):
+    def __init__(self, name: str, level=logging.DEBUG, use_history=True):
         # defaults
         self.full_name = str(name)
+        self.use_history = use_history
         self.device_name, self.attribute_name = split_attribute_name(self.full_name)
         self.device_proxy = None
         self.attribute = None
@@ -26,6 +27,7 @@ class TangoAttribute:
         self.coeff = 1.0
         self.connected = False
         self.readonly = False
+        self.ex_count = 0
         # configure logging
         self.logger = config_logger(level=level)
         # connect attribute
@@ -96,7 +98,7 @@ class TangoAttribute:
             self.logger.debug(msg)
             raise ConnectionError(msg)
         try:
-            if not force and self.device_proxy.is_attribute_polled(self.attribute_name):
+            if self.use_history and not force and self.device_proxy.is_attribute_polled(self.attribute_name):
                 at = self.device_proxy.attribute_history(self.attribute_name, 1)[0]
                 if at.time.totime() > self.attribute.totime():
                     self.attribute = at
@@ -121,6 +123,7 @@ class TangoAttribute:
             else:
                 wvalue = value / self.coeff
             self.device_proxy.write_attribute(self.attribute_name, wvalue)
+            self.ex_count = 0
         except:
             msg = 'Attribute %s write error.' % self.full_name
             self.logger.info(msg)
