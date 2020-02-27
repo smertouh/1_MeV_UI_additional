@@ -25,64 +25,6 @@ class TangoMultiAttributeWidget(TangoWidget):
         self.update(decorate_only=False)
         #print('TangoWidgetinitExit', name)
 
-    def connect_attribute_proxy(self, name: str = None):
-        self.time = time.time()
-        if name is None:
-            name = self.name
-        self.name = str(name)
-        try:
-            self.dn, self.an = self.split_attribute_name(name)
-            self.dp = self.create_device_proxy(self.dn)
-            self.attr = self.dp.read_attribute(self.an)
-            self.config = self.dp.get_attribute_config_ex(self.an)[0]
-            self.format = self.config.format
-            try:
-                self.coeff = float(self.config.display_unit)
-            except:
-                self.coeff = 1.0
-            self.connected = True
-            self.time = time.time()
-            if not self.dp.is_attribute_polled(self.an):
-                self.logger.info('Recommended to switch polling on for %s', name)
-            self.logger.info('Attribute %s has been connected', name)
-            # connect other attributes from list
-            self.devices = [self.dn]
-            self.attibs = [self.attr]
-            for at in self.attributes:
-                devn, attrn = self.split_attribute_name(at)
-                devp = self.create_device_proxy(devn)
-                self.devices.append(devp)
-                self.attibs.append(devp.read_attribute(attrn))
-                pass
-        except:
-            self.logger.warning('Can not connect attribute %s', name)
-            self.logger.debug('Exception connecting attribute %s' % name, exc_info=True)
-            self.name = str(name)
-            self.dp = None
-            self.attr = None
-            self.config = None
-            self.format = None
-            self.coeff = 1.0
-            self.connected = False
-            self.time = time.time()
-
-
-
-
-
-    def disconnect_attribute_proxy(self):
-        if not self.connected:
-            return
-        self.ex_count += 1
-        if self.ex_count > 3:
-            self.time = time.time()
-            self.connected = False
-            self.attr = None
-            self.config = None
-            self.format = None
-            self.ex_count = 0
-            self.logger.debug('Attribute %s disconnected', self.name)
-
 
     def decorate_error(self, *args, **kwargs):
         if hasattr(self.widget, 'setText'):

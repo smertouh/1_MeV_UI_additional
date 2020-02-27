@@ -17,18 +17,18 @@ from .TangoWidget import TangoWidget
 class TangoAttribute:
     reconnect_timeout = 5.0
 
-    def __init__(self, name: str, level=logging.DEBUG, use_history=True):
+    def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
         # defaults
         self.full_name = str(name)
         self.use_history = use_history
         self.device_name, self.attribute_name = split_attribute_name(self.full_name)
         self.device_proxy = None
-        self.attribute = None
+        self.read_result = None
         self.config = None
         self.format = None
         self.coeff = 1.0
         self.connected = False
-        self.readonly = False
+        self.readonly = readonly
         # configure logging
         self.logger = config_logger(level=level)
         # connect attribute
@@ -39,7 +39,7 @@ class TangoAttribute:
         try:
             self.device_proxy = self.create_device_proxy()
             self.set_config()
-            self.attribute = self.device_proxy.read_attribute(self.attribute_name)
+            self.read_result = self.device_proxy.read_attribute(self.attribute_name)
             self.connected = True
             self.time = time.time()
             self.logger.info('Attribute %s has been connected' % self.full_name)
@@ -90,10 +90,16 @@ class TangoAttribute:
     def is_readonly(self):
         return self.config.writable == tango.AttrWriteType.READ
 
+    def is_valid(self):
+        return self.read_result.quality == tango._tango.AttrQuality.ATTR_VALID
+
     def is_boolean(self):
         stat = self.config.data_format == tango.AttrDataFormat.SCALAR and\
             self.config.data_type == bool
         return stat
+
+    def is_scalar(self):
+        return self.config.data_format == tango._tango.AttrDataFormat.SCALAR
 
     def read(self, force=False):
         self.reconnect()
@@ -104,22 +110,18 @@ class TangoAttribute:
         try:
             if self.use_history and not force and self.device_proxy.is_attribute_polled(self.attribute_name):
                 at = self.device_proxy.attribute_history(self.attribute_name, 1)[0]
-                if at.time.totime() > self.attribute.totime():
-                    self.attribute = at
+                if at.time.totime() > self.read_result.totime():
+                    self.read_result = at
             else:
-                self.attribute = self.device_proxy.read_attribute(self.attribute_name)
+                self.read_result = self.device_proxy.read_attribute(self.attribute_name)
         except:
             msg = 'Attribute %s read error.' % self.full_name
             self.logger.info(msg)
             self.logger.debug('Exception:', exc_info=True)
-            self.attribute = None
+            self.read_result = None
             self.disconnect()
             raise
-        if self.is_boolean():
-            rvalue = self.attribute.value
-        else:
-            rvalue = self.attribute.value * self.coeff
-        return rvalue
+        return self.value()
 
     def write(self, value):
         if self.readonly:
@@ -140,7 +142,20 @@ class TangoAttribute:
             msg = 'Attribute %s write error.' % self.full_name
             self.logger.info(msg)
             self.logger.debug('Exception:', exc_info=True)
-            self.attribute = None
+            self.read_result = None
             self.disconnect()
             raise
 
+    def value(self):
+        if self.is_boolean():
+            rvalue = self.read_result.value
+        else:
+            rvalue = self.read_result.value * self.coeff
+        return rvalue
+
+    def text(self):
+        try:
+            txt = self.format % self.value()
+        except:
+            txt = str(self.read_result.value)
+        return txt
