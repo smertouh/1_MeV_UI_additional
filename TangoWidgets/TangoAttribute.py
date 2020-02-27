@@ -15,6 +15,8 @@ from .Utils import *
 from .TangoWidget import TangoWidget
 
 class TangoAttribute:
+    reconnect_timeout = 5.0
+
     def __init__(self, name: str, level=logging.DEBUG, use_history=True):
         # defaults
         self.full_name = str(name)
@@ -27,7 +29,6 @@ class TangoAttribute:
         self.coeff = 1.0
         self.connected = False
         self.readonly = False
-        self.ex_count = 0
         # configure logging
         self.logger = config_logger(level=level)
         # connect attribute
@@ -45,18 +46,20 @@ class TangoAttribute:
         except:
             self.logger.warning('Can not connect attribute %s' % self.full_name)
             self.logger.debug('Exception connecting attribute %s' % self.full_name, exc_info=True)
-            self.connected = False
-            self.time = time.time()
+            self.disconnect()
 
     def disconnect(self):
         if not self.connected:
             return
-        self.ex_count += 1
-        if self.ex_count > 3:
-            self.connected = False
-            self.ex_count = 0
-            self.time = time.time()
-            self.logger.debug('Attribute %s has been disconnected.', self.full_name)
+        self.connected = False
+        self.time = time.time()
+        self.logger.debug('Attribute %s has been disconnected.', self.full_name)
+
+    def reconnect(self):
+        if self.connected:
+            return
+        if time.time() - self.time > self.reconnect_timeout:
+            self.connect()
 
     def create_device_proxy(self):
         dp = None
@@ -93,6 +96,7 @@ class TangoAttribute:
         return stat
 
     def read(self, force=False):
+        self.reconnect()
         if not self.connected:
             msg = 'Attribute %s is disconnected.' % self.full_name
             self.logger.debug(msg)
@@ -111,12 +115,20 @@ class TangoAttribute:
             self.attribute = None
             self.disconnect()
             raise
-        self.ex_count = 0
-        return self.attribute
+        if self.is_boolean():
+            rvalue = self.attribute.value
+        else:
+            rvalue = self.attribute.value * self.coeff
+        return rvalue
 
     def write(self, value):
         if self.readonly:
             return
+        self.reconnect()
+        if not self.connected:
+            msg = 'Attribute %s is disconnected.' % self.full_name
+            self.logger.debug(msg)
+            raise ConnectionError(msg)
         try:
             if self.is_boolean():
                 wvalue = value
