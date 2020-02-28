@@ -57,14 +57,14 @@ class TangoWidget:
         return self.attribute.read()
 
     def write(self, value):
-        return self.attribute.write()
+        return self.attribute.write(value)
 
     # compare widget displayed value and read attribute value
     def compare(self):
         return True
 
     def set_widget_value(self):
-        if not self.attribute.is_valid():
+        if not (self.attribute.is_scalar() and self.attribute.is_valid()):
             # dont set value from invalid attribute
             return
         bs = self.widget.blockSignals(True)
@@ -81,61 +81,65 @@ class TangoWidget:
         t0 = time.time()
         try:
             self.read()
-            if not self.attribute.is_scalar():
-                self.logger.debug('%s Non scalar attribute' % self.name)
-                self.decorate_invalid_data_format()
-            else:
-                if not self.attribute.is_valid():
-                    self.logger.debug('%s invalid' % self.name)
-                    self.decorate_invalid_quality()
-                if not decorate_only:
-                    self.set_widget_value()
-                else:
-                    if not self.compare():
-                        self.decorate_not_equal()
-                    else:
-                        self.decorate_valid()
+            if not decorate_only:
+                self.set_widget_value()
+            self.decorate()
         except:
-            if self.connected:
-                self.logger.debug('Exception updating widget', exc_info=True)
-                self.disconnect_attribute_proxy()
-            else:
-                if (time.time() - self.time) > TangoWidget.RECONNECT_TIMEOUT:
-                    self.connect_attribute_proxy()
-                if self.connected:
-                    if hasattr(self.widget, 'value'):
-                        self.write(self.widget.value())
-                    elif hasattr(self.widget, 'getChecked'):
-                        self.write(self.widget.getChecked())
-                    elif hasattr(self.widget, 'getText'):
-                        self.write(self.widget.getText())
-                    if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
-                        self.logger.debug('%s %s' % (self.attr.quality, self.attr.name))
-                        self.decorate_invalid_quality()
-                    else:
-                        self.decorate_valid()
-                else:
-                    self.decorate_error()
+            self.logger.warning('Exception updating widget')
+            self.logger.debug('Exception Info:', exc_info=True)
+            self.set_attribute_value()
+            self.decorate()
         self.update_dt = time.time() - t0
         #print('update', self.attr_proxy, int(self.update_dt*1000.0), 'ms')
 
+    def decorate(self):
+        if not self.attribute.connected:
+            self.logger.debug('%s erreor' % self.name)
+            self.decorate_error()
+        elif not self.attribute.is_scalar():
+            self.logger.debug('%s non scalar' % self.name)
+            self.decorate_invalid_data_format()
+        elif not self.attribute.is_valid():
+            self.logger.debug('%s invalid' % self.name)
+            self.decorate_invalid_quality()
+        else:
+            if not self.compare():
+                self.logger.debug('%s not equal' % self.name)
+                self.decorate_not_equal()
+            else:
+                self.decorate_valid()
+
+    def set_attribute_value(self):
+        if not self.attribute.is_valid():
+            return
+        if self.attribute.is_readonly():
+            return
+        v = self.get_widget_value()
+        if v is None:
+            return
+        if isinstance(v, bool) and (not self.attribute.is_boolean()):
+            return
+        self.write(v)
+
+    def get_widget_value(self):
+        result = None
+        if hasattr(self.widget, 'value'):
+            result = self.widget.value()
+        elif hasattr(self.widget, 'getChecked'):
+            result = self.widget.getChecked()
+        elif hasattr(self.widget, 'getText'):
+            result = self.widget.getText()
+        return result
+
     def callback(self, value):
         #self.logger.debug('Callback entry')
-        if self.readonly:
+        if self.attribute.is_readonly():
             return
-        if self.connected:
-            try:
-                #self.write_read(value)
-                self.write(value)
-                self.read(True)
-                #print('wr', self.attr.value, value)
-                if self.attr.quality == tango._tango.AttrQuality.ATTR_VALID:
-                    self.decorate_valid()
-                else:
-                    self.decorate_invalid()
-            except:
-                self.logger.debug('Exception %s in callback', sys.exc_info()[0])
-                self.decorate_error()
-        else:
-            self.connect_attribute_proxy()
-            self.decorate_error()
+        try:
+            self.write(value)
+            self.read(True)
+            self.decorate()
+        except:
+            self.logger.warning('Exception in callback')
+            self.logger.debug('Exception Info:', exc_info=True)
+            self.decorate()
