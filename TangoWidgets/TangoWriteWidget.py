@@ -16,7 +16,7 @@ class TangoWriteWidget(TangoWidget):
         self.widget.setStyleSheet('color: gray')
         self.widget.setEnabled(False)
 
-    def decorate_invalid(self, text: str = None):
+    def decorate_invalid(self, text: str = None, *args, **kwargs):
         #self.widget.setStyleSheet('color: red; selection-color: red')
         self.widget.setStyleSheet('color: red')
         self.widget.setEnabled(True)
@@ -30,18 +30,18 @@ class TangoWriteWidget(TangoWidget):
 
     # compare widget displayed value and read attribute value
     def compare(self):
-        if self.readonly:
+        if self.attribute.is_readonly():
             return True
         else:
             try:
-                if abs(int(self.attr.value * self.coeff) - int(self.widget.value())) > 1:
-                    self.logger.debug('%s %s != %s' % (self.attr.name, int(self.attr.value * self.coeff), int(self.widget.value())))
+                if abs(int(self.attribute.value()) - int(self.widget.value())) > 1:
+                    self.logger.debug('%s %s != %s' % (self.attribute.full_name, int(self.attribute.value()), int(self.widget.value())))
                     return False
-                if abs(((self.attr.value * self.coeff) - self.widget.value())) > abs((1e-3 * self.widget.value())):
-                    self.logger.debug('%s %s != %s' % (self.attr.name, self.attr.value * self.coeff, self.widget.value()))
+                if abs((self.attribute.value() - self.widget.value())) > abs((1e-3 * self.widget.value())):
+                    self.logger.debug('%s %s != %s' % (self.attribute.full_name, self.attribute.value(), self.widget.value()))
                     return False
                 else:
                     return True
             except:
-                self.logger.debug('Exception in compare %s ' % self.attr.name, exc_info=True)
+                self.logger.debug('Exception in compare %s ' % self.attribute.full_name, exc_info=True)
                 return False
