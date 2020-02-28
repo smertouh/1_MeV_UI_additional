@@ -134,11 +134,10 @@ class TangoAttribute:
             raise ConnectionError(msg)
         try:
             if self.is_boolean():
-                wvalue = value
+                wvalue = bool(value)
             else:
                 wvalue = value / self.coeff
             self.device_proxy.write_attribute(self.attribute_name, wvalue)
-            self.ex_count = 0
         except:
             msg = 'Attribute %s write error.' % self.full_name
             self.logger.info(msg)

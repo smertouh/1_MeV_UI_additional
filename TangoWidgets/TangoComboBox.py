@@ -1,9 +1,9 @@
 # coding: utf-8
-'''
+"""
 Created on Jan 3, 2020
 
 @author: sanin
-'''
+"""
 import sys
 import time
 
@@ -27,28 +27,27 @@ class TangoComboBox(TangoWriteWidget):
     def set_widget_value(self):
         #bs = self.widget.blockSignals(True)
         try:
-            self.widget.setCurrentIndex(int(self.attr.value))
+            self.widget.setCurrentIndex(int(self.attribute.value()))
         except:
             pass
         #self.widget.blockSignals(bs)
-        return self.attr.value
+        return self.attribute.value()
 
     def compare(self):
         try:
-            return int(self.attr.value) == self.widget.currentIndex()
+            return int(self.attribute.value()) == self.widget.currentIndex()
         except:
             self.logger.debug('Exception in ComboBox compare', exc_info=True)
             return False
 
     def callback(self, value):
-        if self.connected:
+        if self.attribute.connected:
             try:
-                self.dp.write_attribute(self.an, int(value))
+                self.attribute.write(int(value))
                 self.decorate_valid()
             except:
                 self.logger.debug('Exception %s in callback', sys.exc_info()[0])
                 self.decorate_error()
         else:
-            if time.time() - self.time > TangoWidget.RECONNECT_TIMEOUT:
-                self.connect_attribute_proxy()
+            self.attribute.reconnect()
             self.decorate_error()
