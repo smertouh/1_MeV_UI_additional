@@ -23,17 +23,18 @@ class TangoAbstractSpinBox(TangoWriteWidget):
             self.widget.keyPressEvent = self.keyPressEvent
 
     def set_widget_value(self):
-        if self.attr.quality != tango._tango.AttrQuality.ATTR_VALID:
+        if not self.attribute.is_valid():
             # dont set value from invalid attribute
             return
         bs = self.widget.blockSignals(True)
         try:
-            if math.isnan(self.attr.value):
+            if math.isnan(self.attribute.value()):
                 self.widget.setValue(0.0)
             else:
-                self.widget.setValue(self.attr.value * self.coeff)
+                self.widget.setValue(self.attribute.value())
         except:
-            self.logger.debug('Exception in set_widget_value %s ' % self.attr.name, exc_info=True)
+            self.logger.warning('Exception set widget value for %s' % self.attribute.full_name)
+            self.logger.debug('Exception Info:', exc_info=True)
         self.widget.blockSignals(bs)
 
     def keyPressEvent(self, e):

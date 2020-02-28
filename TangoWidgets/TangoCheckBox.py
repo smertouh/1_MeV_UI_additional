@@ -25,9 +25,9 @@ class TangoCheckBox(TangoWriteWidget):
         super().update(decorate_only)
 
     def set_widget_value(self):
-        if self.readonly:
+        if self.attribute.is_readonly():
             return
-        self.widget.setChecked(self.attr.value)
+        self.widget.setChecked(bool(self.attribute.value()))
 
     def decorate_error(self):
         self.widget.setStyleSheet('color: gray')
@@ -47,13 +47,13 @@ class TangoCheckBox(TangoWriteWidget):
 
     def compare(self):
         try:
-            return int(self.attr.value) == self.widget.isChecked()
+            return int(self.attribute.value()) == self.widget.isChecked()
         except:
             self.logger.debug('Exception in CheckBox compare', exc_info=True)
             return False
 
     def callback(self, value):
-        if self.connected:
+        if self.attribute.connected:
             try:
                 self.dp.write_attribute(self.an, bool(value))
                 self.decorate_valid()
