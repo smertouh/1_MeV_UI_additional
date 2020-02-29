@@ -15,7 +15,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtCore import QPoint
 
 #import tango.server.Device
-from tango.server import Device
+import tango.server
 
 def config_logger(name: str=__name__, level: int=logging.DEBUG, add_tango=False):
     logger = logging.getLogger(name)
@@ -35,13 +35,13 @@ def config_logger(name: str=__name__, level: int=logging.DEBUG, add_tango=False)
                 try:
                     msg = self.format(record)
                     if self.level >= logging.CRITICAL:
-                        Device.fatal_stream(msg)
+                        tango.server.Device.fatal_stream(msg)
                     elif self.level >= logging.ERROR:
-                        Device.error_stream(msg)
+                        tango.server.Device.error_stream(msg)
                     elif self.level >= logging.WARNING:
-                        Device.warn_stream(msg)
+                        tango.server.Device.warn_stream(msg)
                     elif self.level >= logging.INFO:
-                        Device.info_stream(msg)
+                        tango.server.Device.info_stream(msg)
                     elif self.level >= logging.DEBUG:
                         tango.server.Device.debug_stream(msg)
                 except Exception:
