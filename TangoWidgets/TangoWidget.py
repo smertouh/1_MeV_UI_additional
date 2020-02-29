@@ -1,9 +1,9 @@
 # coding: utf-8
-'''
+"""
 Created on Jan 1, 2020
 
 @author: sanin
-'''
+"""
 
 import sys
 import time
@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QWidget
 import tango
 
 from .Utils import *
-from.TangoAttribute import TangoAttribute
+from .TangoAttribute import TangoAttribute
 
 
 class TangoWidget:

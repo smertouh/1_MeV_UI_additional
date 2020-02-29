@@ -1,9 +1,9 @@
 # coding: utf-8
-'''
+"""
 Created on Feb 4, 2020
 
 @author: sanin
-'''
+"""
 
 import sys
 import time
@@ -12,10 +12,10 @@ from PyQt5.QtWidgets import QWidget
 import tango
 
 from .Utils import *
-from .TangoWidget import TangoWidget
+#from .TangoWidget import TangoWidget
 
 class TangoAttribute:
-    #reconnect_timeout = 5.0
+    reconnect_timeout = 5.0
 
     def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
         # defaults
@@ -31,7 +31,7 @@ class TangoAttribute:
         self.readonly = readonly
         # configure logging
         self.logger = config_logger(level=level)
-        self.reconnect_timeout = TangoWidget.RECONNECT_TIMEOUT
+        #self.reconnect_timeout = TangoWidget.RECONNECT_TIMEOUT
         # connect attribute
         self.connect()
         self.time = time.time()
