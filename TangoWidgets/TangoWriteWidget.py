@@ -16,7 +16,7 @@ class TangoWriteWidget(TangoWidget):
         self.widget.setStyleSheet('color: gray')
         self.widget.setEnabled(False)
 
-    def decorate_invalid(self, text: str = None):
+    def decorate_invalid(self, text: str = None, *args, **kwargs):
         #self.widget.setStyleSheet('color: red; selection-color: red')
         self.widget.setStyleSheet('color: red')
         self.widget.setEnabled(True)
@@ -37,7 +37,7 @@ class TangoWriteWidget(TangoWidget):
                 if abs(int(self.attribute.value()) - int(self.widget.value())) > 1:
                     self.logger.debug('%s %s != %s' % (self.attribute.full_name, int(self.attribute.value()), int(self.widget.value())))
                     return False
-                if abs(self.attribute.value() - self.widget.value()) > abs((1e-3 * self.widget.value())):
+                if abs((self.attribute.value() - self.widget.value())) > abs((1e-3 * self.widget.value())):
                     self.logger.debug('%s %s != %s' % (self.attribute.full_name, self.attribute.value(), self.widget.value()))
                     return False
                 else:

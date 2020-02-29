@@ -18,18 +18,18 @@ class TangoLED(TangoWidget):
             self.widget.clicked.connect(self.callback)
             #self.widget.toggled.connect(self.callback2)
         except:
-            pass
-            #print('TangoLEDexeption', name)
-        #print('TangoLEDinitexit', name)
+            msg = '%s creation error.' % name
+            self.logger.info(msg)
+            self.logger.debug('Exception:', exc_info=True)
 
     def set_widget_value(self):
-        self.widget.setChecked(bool(self.attr.value))
-        return self.attr.value
+        self.widget.setChecked(bool(self.attribute.value()))
+        return self.attribute.value()
 
     def decorate_error(self):
         self.widget.setDisabled(True)
 
-    def decorate_invalid(self, text: str = None):
+    def decorate_invalid(self, text: str = None, *args, **kwargs):
         self.widget.setDisabled(True)
 
     def decorate_valid(self):
