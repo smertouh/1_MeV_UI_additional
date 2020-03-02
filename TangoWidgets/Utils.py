@@ -1,6 +1,7 @@
 import logging
 import json
 import os
+import time
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget
@@ -17,7 +18,7 @@ from PyQt5.QtCore import QPoint
 import tango
 import tango.server
 
-def config_logger(name: str=__name__, level: int=logging.DEBUG):
+def config_logger(name: str=__name__, level: int=logging.DEBUG, tango_logging=False):
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
         logger.propagate = False
@@ -28,7 +29,7 @@ def config_logger(name: str=__name__, level: int=logging.DEBUG):
         console_handler.setFormatter(log_formatter)
         logger.addHandler(console_handler)
         # add tango logger
-        if add_tango:
+        if tango_logging:
             tango_handler = logging.Handler()
             tango_handler.setFormatter(log_formatter)
             def tango_handler_emit(self, record):
