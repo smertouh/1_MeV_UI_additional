@@ -1,9 +1,9 @@
 # coding: utf-8
-'''
+"""
 Created on Jan 17, 2020
 
 @author: sanin
-'''
+"""
 from PyQt5.QtWidgets import QWidget
 from TangoWidgets.TangoWidget import TangoWidget
 
@@ -43,5 +43,5 @@ class TangoWriteWidget(TangoWidget):
                 else:
                     return True
             except:
-                self.logger.debug('Exception in compare %s ' % self.attribute.full_name, exc_info=True)
+                self.logger.debug('%s Exception in compare' % self.attribute.full_name, exc_info=True)
                 return False

@@ -1,9 +1,9 @@
 # coding: utf-8
-'''
+"""
 Created on Jul 28, 2019
 
 @author: sanin
-'''
+"""
 
 import sys
 import time
@@ -17,7 +17,6 @@ import PyQt5.QtGui as QtGui
 
 import tango
 
-from TangoWidgets.Utils import *
 from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
