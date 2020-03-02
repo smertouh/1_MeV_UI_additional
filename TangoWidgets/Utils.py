@@ -14,6 +14,8 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtCore import QSize
 from PyQt5.QtCore import QPoint
 
+import tango
+
 
 def config_logger(name: str=__name__, level: int=logging.DEBUG):
     logger = logging.getLogger(name)
@@ -169,5 +171,25 @@ def split_attribute_name(full_name):
         device = ''
         attrib = full_name
     return device, attrib
+
+def time_ms():
+    t = time.time()
+    return time.strftime('%H:%M:%S')+(',%3d' % int((t-int(t))*1000.0))
+
+
+def get_tango_device_attribute_property(device_name: str, attr_name: str, prop_name: str):
+    try:
+        database = get_tango_device_attribute_property.database
+    except AttributeError:
+        database = tango.Database()
+        get_tango_device_attribute_property.database = database
+    all_attr_prop = database.get_device_attribute_property(device_name, attr_name)
+    all_prop = all_attr_prop[attr_name]
+    if prop_name in all_prop:
+        prop = all_prop[prop_name][0]
+    else:
+        prop = ''
+    return prop
+
 
 
