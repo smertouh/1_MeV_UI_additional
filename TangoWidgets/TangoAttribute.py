@@ -15,6 +15,7 @@ from .Utils import *
 #from .TangoWidget import TangoWidget
 
 class TangoAttribute:
+    devices = {}
     reconnect_timeout = 5.0
 
     def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
@@ -64,19 +65,19 @@ class TangoAttribute:
 
     def create_device_proxy(self):
         dp = None
-        if self.device_name in TangoWidget.DEVICES and TangoWidget.DEVICES[self.device_name] is not None:
+        if self.device_name in TangoAttribute.devices and TangoAttribute.devices[self.device_name] is not None:
             try:
-                pt = TangoWidget.DEVICES[self.device_name].ping()
-                dp = TangoWidget.DEVICES[self.device_name]
+                pt = TangoAttribute.devices[self.device_name].ping()
+                dp = TangoAttribute.devices[self.device_name]
                 self.logger.info('Device %s for %s exists, ping=%d [s].' % (dp, self.device_name, pt))
             except:
                 self.logger.warning('Exception connecting to %s.' % self.device_name, exc_info=True)
                 dp = None
-                TangoWidget.DEVICES[self.device_name] = dp
+                TangoAttribute.devices[self.device_name] = dp
         if dp is None:
             dp = tango.DeviceProxy(self.device_name)
             self.logger.info('Device %s for %s has been created.' % (dp, self.device_name))
-            TangoWidget.DEVICES[self.device_name] = dp
+            TangoAttribute.devices[self.device_name] = dp
         return dp
 
     def set_config(self):

@@ -13,40 +13,18 @@ import tango
 
 from .Utils import *
 from .TangoWidget import TangoWidget
+from .TangoAttribute import TangoAttribute
 
 
 class TangoMultiAttributeWidget(TangoWidget):
     def __init__(self, name: str, widget: QWidget, readonly=True, level=logging.DEBUG, attributes=[]):
-        # defaults
         self.attributes = attributes
         super().__init__(name, widget, readonly, level)
-##        self.connect_attribute_proxy(name)
-        # update view
+        self.tango_attributes = {self.attribute.full_name: self.attribute}
+        for attr in attributes:
+            if attr not in self.tango_attributes:
+                self.tango_attributes[attr] = TangoAttribute(attr, level=level, readonly=readonly)
         self.update(decorate_only=False)
-        #print('TangoWidgetinitExit', name)
-
-
-    def decorate_error(self, *args, **kwargs):
-        if hasattr(self.widget, 'setText'):
-            self.widget.setText(TangoWidget.ERROR_TEXT)
-        self.widget.setStyleSheet('color: gray')
-
-    def decorate_invalid(self, text: str = None, *args, **kwargs):
-        if hasattr(self.widget, 'setText') and text is not None:
-            self.widget.setText(text)
-        self.widget.setStyleSheet('color: red')
-
-    def decorate_invalid_data_format(self, text: str = None, *args, **kwargs):
-        self.decorate_invalid(text, *args, **kwargs)
-
-    def decorate_not_equal(self, text: str = None, *args, **kwargs):
-        self.decorate_invalid(text, *args, **kwargs)
-
-    def decorate_invalid_quality(self, *args, **kwargs):
-        self.decorate_invalid(*args, **kwargs)
-
-    def decorate_valid(self, *args, **kwargs):
-        self.widget.setStyleSheet('color: black')
 
     def read(self, force=False):
         if not self.connected:

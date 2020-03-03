@@ -32,21 +32,21 @@ def config_logger(name: str=__name__, level: int=logging.DEBUG, tango_logging=Fa
         if tango_logging:
             tango_handler = logging.Handler()
             tango_handler.setFormatter(log_formatter)
-            def tango_handler_emit(self, record):
+            def tango_handler_emit(logger_handler, record):
                 try:
-                    msg = self.format(record)
-                    if self.level >= logging.CRITICAL:
+                    msg = logger_handler.format(record)
+                    if logger_handler.level >= logging.CRITICAL:
                         tango.server.Device.fatal_stream(msg)
-                    elif self.level >= logging.ERROR:
+                    elif logger_handler.level >= logging.ERROR:
                         tango.server.Device.error_stream(msg)
-                    elif self.level >= logging.WARNING:
+                    elif logger_handler.level >= logging.WARNING:
                         tango.server.Device.warn_stream(msg)
-                    elif self.level >= logging.INFO:
+                    elif logger_handler.level >= logging.INFO:
                         tango.server.Device.info_stream(msg)
-                    elif self.level >= logging.DEBUG:
+                    elif logger_handler.level >= logging.DEBUG:
                         tango.server.Device.debug_stream(msg)
                 except Exception:
-                    self.handleError(record)
+                    logger_handler.handleError(record)
             tango_handler.emit = tango_handler_emit
             logger.addHandler(tango_handler)
     return logger
