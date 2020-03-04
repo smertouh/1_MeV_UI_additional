@@ -69,7 +69,7 @@ class TangoAttribute:
             try:
                 pt = TangoAttribute.devices[self.device_name].ping()
                 dp = TangoAttribute.devices[self.device_name]
-                self.logger.info('Device %s for %s exists, ping=%d [s].' % (dp, self.device_name, pt))
+                self.logger.info('Device %s for %s exists, ping=%ds.' % (dp, self.device_name, pt))
             except:
                 self.logger.warning('Exception connecting to %s.' % self.device_name, exc_info=True)
                 dp = None
@@ -96,8 +96,10 @@ class TangoAttribute:
         return self.connected and self.read_result.quality == tango._tango.AttrQuality.ATTR_VALID
 
     def is_boolean(self):
-        stat = self.config.data_format == tango.AttrDataFormat.SCALAR and\
-            self.config.data_type == bool
+        # stat = self.config.data_format == tango.AttrDataFormat.SCALAR and\
+        #     self.config.data_type == bool
+        value = self.read_result.value
+        stat = isinstance(value, bool)
         return stat
 
     def is_scalar(self):
@@ -148,7 +150,7 @@ class TangoAttribute:
             raise
 
     def value(self):
-        if self.is_boolean():
+        if self.is_boolean() or self.read_result.value is None:
             rvalue = self.read_result.value
         else:
             rvalue = self.read_result.value * self.coeff
