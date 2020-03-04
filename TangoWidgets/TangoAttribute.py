@@ -160,5 +160,5 @@ class TangoAttribute:
         try:
             txt = self.format % self.value()
         except:
-            txt = str(self.read_result.value)
+            txt = str(self.value())
         return txt
