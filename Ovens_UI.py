@@ -64,46 +64,46 @@ class MainWindow(QMainWindow):
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # top oven
-            TangoLED('binp/nbi/adam5/do03', self.pushButton_49),
-            TangoLED('binp/nbi/adam5/do02', self.pushButton_53),
-            TangoLED('binp/nbi/adam5/do01', self.pushButton_54),
-            TangoLabel('binp/nbi/adam6/ai06', self.label_68),
-            TangoLabel('binp/nbi/adam6/ai05', self.label_69),
-            TangoLabel('binp/nbi/adam6/ai04', self.label_73),
-            TangoLabel('binp/nbi/adam6/ai03', self.label_75),
-            TangoLabel('binp/nbi/adam6/ai02', self.label_78),
-            TangoLabel('binp/nbi/adam6/ai01', self.label_80),
-            TangoLabel('ET7000_server/test/pet2_7015/ai05', self.label_107),
-            TangoLabel('ET7000_server/test/pet2_7015/ai06', self.label_110),
+            TangoLED('binp/nbi/adam5/do01', self.pushButton_49),  # oven
+            TangoLED('binp/nbi/adam5/do02', self.pushButton_53),  # tube
+            TangoLED('binp/nbi/adam5/do00', self.pushButton_54),  # fan
+            TangoLabel('binp/nbi/adam6/ai06', self.label_68),  # oven U
+            TangoLabel('binp/nbi/adam6/ai05', self.label_69),  # oven I
+            TangoLabel('binp/nbi/adam6/ai04', self.label_73),  # tube U
+            TangoLabel('binp/nbi/adam6/ai03', self.label_75),  # tube I
+            TangoLabel('binp/nbi/adam6/ai02', self.label_78),  # fan U
+            TangoLabel('binp/nbi/adam6/ai01', self.label_80),  # fan I
+            TangoLabel('ET7000_server/test/pet2_7015/ai05', self.label_107),  # tube T
+            TangoLabel('ET7000_server/test/pet2_7015/ai06', self.label_110),  # Cs T
             # bottom oven
-            TangoLED('binp/nbi/adam10/do03', self.pushButton_55),
-            TangoLED('binp/nbi/adam10/do02', self.pushButton_56),
-            TangoLED('binp/nbi/adam10/do01', self.pushButton_57),
-            TangoLabel('binp/nbi/adam11/ai06', self.label_93),
-            TangoLabel('binp/nbi/adam11/ai05', self.label_88),
-            TangoLabel('binp/nbi/adam11/ai04', self.label_92),
-            TangoLabel('binp/nbi/adam11/ai03', self.label_96),
-            TangoLabel('binp/nbi/adam11/ai02', self.label_86),
-            TangoLabel('binp/nbi/adam11/ai01', self.label_97),
-            TangoLabel('ET7000_server/test/pet2_7015/ai01', self.label_100),
-            TangoLabel('ET7000_server/test/pet2_7015/ai00', self.label_101),
+            TangoLED('binp/nbi/adam10/do01', self.pushButton_55),  # oven
+            TangoLED('binp/nbi/adam10/do02', self.pushButton_56),  # tube
+            TangoLED('binp/nbi/adam10/do00', self.pushButton_57),  # fan
+            TangoLabel('binp/nbi/adam11/ai06', self.label_93),  # oven U
+            TangoLabel('binp/nbi/adam11/ai05', self.label_88),  # oven I
+            TangoLabel('binp/nbi/adam11/ai04', self.label_92),  # tube U
+            TangoLabel('binp/nbi/adam11/ai03', self.label_96),  # tube I
+            TangoLabel('binp/nbi/adam11/ai02', self.label_86),  # fan U
+            TangoLabel('binp/nbi/adam11/ai01', self.label_97),  # fan I
+            TangoLabel('ET7000_server/test/pet2_7015/ai01', self.label_100),  # tube T
+            TangoLabel('ET7000_server/test/pet2_7015/ai00', self.label_101),  # Cs T
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
             # top oven
-            TangoCheckBox('binp/nbi/adam5/do03', self.checkBox_20),
-            TangoCheckBox('binp/nbi/adam5/do02', self.checkBox_21),
-            TangoCheckBox('binp/nbi/adam5/do01', self.checkBox_22),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao03', self.doubleSpinBox),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao02', self.doubleSpinBox_3),
-            TangoAbstractSpinBox('binp/nbi/adam7/ao01', self.doubleSpinBox_9),
+            TangoCheckBox('binp/nbi/adam5/do01', self.checkBox_20),  # oven
+            TangoCheckBox('binp/nbi/adam5/do02', self.checkBox_21),  # tube
+            TangoCheckBox('binp/nbi/adam5/do00', self.checkBox_22),  # fan
+            TangoAbstractSpinBox('binp/nbi/adam7/ao01', self.doubleSpinBox),  # oven
+            TangoAbstractSpinBox('binp/nbi/adam7/ao02', self.doubleSpinBox_3),  # tube
+            TangoAbstractSpinBox('binp/nbi/adam7/ao00', self.doubleSpinBox_9),  # fan
             # bottom oven
-            TangoCheckBox('binp/nbi/adam10/do03', self.checkBox_23),
-            TangoCheckBox('binp/nbi/adam10/do02', self.checkBox_24),
-            TangoCheckBox('binp/nbi/adam10/do01', self.checkBox_25),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao03', self.doubleSpinBox_11),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao02', self.doubleSpinBox_13),
-            TangoAbstractSpinBox('binp/nbi/adam12/ao01', self.doubleSpinBox_14),
+            TangoCheckBox('binp/nbi/adam10/do01', self.checkBox_23),  # oven
+            TangoCheckBox('binp/nbi/adam10/do02', self.checkBox_24),  # tube
+            TangoCheckBox('binp/nbi/adam10/do00', self.checkBox_25),  # fan
+            TangoAbstractSpinBox('binp/nbi/adam12/ao01', self.doubleSpinBox_11),  # oven
+            TangoAbstractSpinBox('binp/nbi/adam12/ao02', self.doubleSpinBox_13),  # tube
+            TangoAbstractSpinBox('binp/nbi/adam12/ao00', self.doubleSpinBox_14),  # fan
         )
         # Defile and start timer callback task
         self.timer = QTimer()
