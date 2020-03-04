@@ -2,6 +2,7 @@ import logging
 import json
 import os
 import time
+import sys
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget
@@ -213,5 +214,12 @@ def get_tango_device_attribute_property(device_name: str, attr_name: str, prop_n
         prop = ''
     return prop
 
+
+def log_exception(self, text='Exception: '):
+    msg = text + str(sys.exc_info()[1])
+    if self.logger.level >= logging.WARNING:
+        self.logger.warning(msg)
+    else:
+        self.logger.debug(msg, exc_info=True)
 
 

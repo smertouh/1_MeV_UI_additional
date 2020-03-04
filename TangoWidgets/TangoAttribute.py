@@ -112,7 +112,7 @@ class TangoAttribute:
         try:
             if self.use_history and not force and self.device_proxy.is_attribute_polled(self.attribute_name):
                 at = self.device_proxy.attribute_history(self.attribute_name, 1)[0]
-                if at.time.totime() > self.read_result.totime():
+                if at.time.totime() > self.read_result.time.totime():
                     self.read_result = at
             else:
                 self.read_result = self.device_proxy.read_attribute(self.attribute_name)

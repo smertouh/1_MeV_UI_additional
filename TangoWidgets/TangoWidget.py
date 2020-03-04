@@ -94,7 +94,7 @@ class TangoWidget:
 
     def decorate(self):
         if not self.attribute.connected:
-            self.logger.debug('%s erreor' % self.name)
+            self.logger.debug('%s error' % self.name)
             self.decorate_error()
         elif not self.attribute.is_scalar():
             self.logger.debug('%s non scalar' % self.name)

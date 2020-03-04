@@ -11,7 +11,6 @@ import tango
 
 class TangoLabel(TangoWidget):
     def __init__(self, name, widget: QLabel, prop=None, refresh=False):
-        super().__init__(name, widget, readonly=True)
         self.property = prop
         if self.property is None:
             self.database = None
@@ -19,6 +18,7 @@ class TangoLabel(TangoWidget):
             self.database = tango.Database()
         self.property_value = None
         self.refresh = refresh
+        super().__init__(name, widget, readonly=True)
 
     def read_property(self):
         if self.database is None:
