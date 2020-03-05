@@ -67,11 +67,11 @@ class MainWindow(QMainWindow):
             TangoLED('binp/nbi/adam5/do01', self.pushButton_49),  # oven
             TangoLED('binp/nbi/adam5/do02', self.pushButton_53),  # tube
             TangoLED('binp/nbi/adam5/do00', self.pushButton_54),  # fan
-            TangoLabel('binp/nbi/adam6/ai06', self.label_68),  # oven U
-            TangoLabel('binp/nbi/adam6/ai05', self.label_69),  # oven I
+            TangoLabel('binp/nbi/adam6/ai02', self.label_68),  # oven U
+            TangoLabel('binp/nbi/adam6/ai03', self.label_69),  # oven I
             TangoLabel('binp/nbi/adam6/ai04', self.label_73),  # tube U
-            TangoLabel('binp/nbi/adam6/ai03', self.label_75),  # tube I
-            TangoLabel('binp/nbi/adam6/ai02', self.label_78),  # fan U
+            TangoLabel('binp/nbi/adam6/ai05', self.label_75),  # tube I
+            TangoLabel('binp/nbi/adam6/ai00', self.label_78),  # fan U
             TangoLabel('binp/nbi/adam6/ai01', self.label_80),  # fan I
             TangoLabel('ET7000_server/test/pet2_7015/ai05', self.label_107),  # tube T
             TangoLabel('ET7000_server/test/pet2_7015/ai06', self.label_110),  # Cs T
@@ -79,11 +79,11 @@ class MainWindow(QMainWindow):
             TangoLED('binp/nbi/adam10/do01', self.pushButton_55),  # oven
             TangoLED('binp/nbi/adam10/do02', self.pushButton_56),  # tube
             TangoLED('binp/nbi/adam10/do00', self.pushButton_57),  # fan
-            TangoLabel('binp/nbi/adam11/ai06', self.label_93),  # oven U
-            TangoLabel('binp/nbi/adam11/ai05', self.label_88),  # oven I
+            TangoLabel('binp/nbi/adam11/ai02', self.label_93),  # oven U
+            TangoLabel('binp/nbi/adam11/ai03', self.label_88),  # oven I
             TangoLabel('binp/nbi/adam11/ai04', self.label_92),  # tube U
-            TangoLabel('binp/nbi/adam11/ai03', self.label_96),  # tube I
-            TangoLabel('binp/nbi/adam11/ai02', self.label_86),  # fan U
+            TangoLabel('binp/nbi/adam11/ai05', self.label_96),  # tube I
+            TangoLabel('binp/nbi/adam11/ai00', self.label_86),  # fan U
             TangoLabel('binp/nbi/adam11/ai01', self.label_97),  # fan I
             TangoLabel('ET7000_server/test/pet2_7015/ai01', self.label_100),  # tube T
             TangoLabel('ET7000_server/test/pet2_7015/ai00', self.label_101),  # Cs T
