@@ -90,7 +90,6 @@ class TangoWidget:
             self.set_attribute_value()
             self.decorate()
         self.update_dt = time.time() - t0
-        #print('update', self.attr_proxy, int(self.update_dt*1000.0), 'ms')
 
     def decorate(self):
         if not self.attribute.connected:

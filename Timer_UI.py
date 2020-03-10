@@ -74,13 +74,13 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/timing/channel_enable1', self.label_31, prop='label'),  # ch1
             TangoLabel('binp/nbi/timing/channel_enable2', self.label_34, prop='label'),  # ch2
             TangoLabel('binp/nbi/timing/channel_enable3', self.label_35, prop='label'),  # ch3
-            TangoLabel('binp/nbi/timing/channel_enable4', self.label_36, prop='label'),  # ch3
+            TangoLabel('binp/nbi/timing/channel_enable4', self.label_36, prop='label'),  # ch4
             TangoLabel('binp/nbi/timing/channel_enable5', self.label_38, prop='label'),  # ch
             TangoLabel('binp/nbi/timing/channel_enable6', self.label_39, prop='label'),  # ch
             TangoLabel('binp/nbi/timing/channel_enable7', self.label_40, prop='label'),  # ch
             TangoLabel('binp/nbi/timing/channel_enable8', self.label_41, prop='label'),  # ch
             TangoLabel('binp/nbi/timing/channel_enable9', self.label_42, prop='label'),  # ch
-            TangoLabel('binp/nbi/timing/channel_enable10', self.label_43, prop='label'),  # ch10
+            TangoLabel('binp/nbi/timing/channel_enable10', self.label_43, prop='label'),  # ch
             TangoLabel('binp/nbi/timing/channel_enable11', self.label_44, prop='label'),  # ch11
             # pg
             TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_31),
@@ -94,18 +94,18 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox),  # period
             TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox),  # single/periodical
             TangoCheckBox('binp/nbi/timing/channel_enable0', self.checkBox_8),  # ch0
-            TangoCheckBox('binp/nbi/timing/channel_enable1', self.checkBox_9),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable2', self.checkBox_10),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable3', self.checkBox_11),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable4', self.checkBox_12),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable5', self.checkBox_13),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable6', self.checkBox_14),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable7', self.checkBox_15),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable8', self.checkBox_16),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable9', self.checkBox_17),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable10', self.checkBox_18),  # ch
-            TangoCheckBox('binp/nbi/timing/channel_enable11', self.checkBox_19),  # ch
-            TangoAbstractSpinBox('binp/nbi/timing/pulse_start0', self.spinBox_10),  # ch
+            TangoCheckBox('binp/nbi/timing/channel_enable1', self.checkBox_9),  # ch1
+            TangoCheckBox('binp/nbi/timing/channel_enable2', self.checkBox_10),  # ch2
+            TangoCheckBox('binp/nbi/timing/channel_enable3', self.checkBox_11),  # ch3
+            TangoCheckBox('binp/nbi/timing/channel_enable4', self.checkBox_12),  # ch4
+            TangoCheckBox('binp/nbi/timing/channel_enable5', self.checkBox_13),  # ch5
+            TangoCheckBox('binp/nbi/timing/channel_enable6', self.checkBox_14),  # ch6
+            TangoCheckBox('binp/nbi/timing/channel_enable7', self.checkBox_15),  # ch7
+            TangoCheckBox('binp/nbi/timing/channel_enable8', self.checkBox_16),  # ch8
+            TangoCheckBox('binp/nbi/timing/channel_enable9', self.checkBox_17),  # ch9
+            TangoCheckBox('binp/nbi/timing/channel_enable10', self.checkBox_18),  # ch10
+            TangoCheckBox('binp/nbi/timing/channel_enable11', self.checkBox_19),  # ch11
+            TangoAbstractSpinBox('binp/nbi/timing/pulse_start0', self.spinBox_10),  # ch1
             TangoAbstractSpinBox('binp/nbi/timing/pulse_start1', self.spinBox_12),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_start2', self.spinBox_14),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_start3', self.spinBox_16),  # ch
@@ -116,8 +116,8 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/timing/pulse_start8', self.spinBox_26),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_start9', self.spinBox_28),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_start10', self.spinBox_30),  # ch
-            TangoAbstractSpinBox('binp/nbi/timing/pulse_start11', self.spinBox_32),  # ch
-            TangoAbstractSpinBox('binp/nbi/timing/pulse_stop0', self.spinBox_11),  # ch
+            TangoAbstractSpinBox('binp/nbi/timing/pulse_start11', self.spinBox_32),  # ch11
+            TangoAbstractSpinBox('binp/nbi/timing/pulse_stop0', self.spinBox_11),  # ch0
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop1', self.spinBox_13),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop2', self.spinBox_15),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop3', self.spinBox_17),  # ch
@@ -128,9 +128,9 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop8', self.spinBox_27),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop9', self.spinBox_29),  # ch
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop10', self.spinBox_31),  # ch
-            TangoAbstractSpinBox('binp/nbi/timing/pulse_stop11', self.spinBox_33),  # ch
-            TangoAbstractSpinBox('binp/nbi/adc0/Acq_start', self.spinBox_34),  # ch
-            TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),  # ch
+            TangoAbstractSpinBox('binp/nbi/timing/pulse_stop11', self.spinBox_33),  # ch11
+            TangoAbstractSpinBox('binp/nbi/adc0/Acq_start', self.spinBox_34),  # adc start
+            TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),   # adc stop
         )
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
@@ -272,12 +272,12 @@ class MainWindow(QMainWindow):
             return
         # during pulse
         if self.check_timer_state(self.timer_device):   # pulse is on
-            # pulse ON LED
+            # pulse ON LED -> ON
             self.pushButton_29.setEnabled(True)
             self.pushButton.setStyleSheet('color: red; font: bold')
             self.pushButton.setText('Stop')
         else:   # pulse is off
-            # pulse ON LED
+            # pulse ON LED -> OFF
             self.pushButton_29.setEnabled(False)
             self.pushButton.setStyleSheet('')
             if self.comboBox.currentIndex() == 0:
