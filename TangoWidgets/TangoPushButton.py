@@ -16,9 +16,9 @@ class TangoPushButton(TangoWriteWidget):
         self.widget.pressed.connect(self.pressed)
         self.widget.released.connect(self.released)
 
-    def set_widget_value(self):
-        self.widget.setChecked(bool(self.attr.value))
-        return self.attr.value
+    # def set_widget_value(self):
+    #     self.widget.setChecked(bool(self.attr.value))
+    #     return self.attr.value
 
     def released(self):
         if self.widget.isCheckable():
@@ -37,10 +37,10 @@ class TangoPushButton(TangoWriteWidget):
 
     # compare widget displayed value and read attribute value
     def compare(self):
-        if self.readonly:
+        if self.attribute.is_readonly():
             return True
         else:
             if self.widget.isCheckable():
-                return self.attr.value == self.widget.isChecked()
+                return self.attribute.value() == self.widget.isChecked()
             else:
                 return True
