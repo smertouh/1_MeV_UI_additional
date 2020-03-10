@@ -25,6 +25,7 @@ from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
+from TangoWidgets.RF_ready_LED import RF_ready_LED
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
@@ -88,7 +89,7 @@ class MainWindow(QMainWindow):
             TangoLED('binp/nbi/lauda/6230_7', self.pushButton_30),  # Pump On
             #TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
             # rf system
-            #TangoLED('', self.pushButton_32),  # RF system ready
+            RF_ready_LED('binp/nbi/timing/di60', self.pushButton_32),  # RF system ready
         )
         # read write attributes TangoWidgets list
         self.wtwdgts = (

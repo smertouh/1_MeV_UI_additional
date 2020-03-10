@@ -5,30 +5,11 @@ Created on Jul 28, 2019
 @author: sanin
 '''
 
-import sys
-import json
-import time
-
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import qApp
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QComboBox
-from PyQt5.QtWidgets import QCheckBox
-from PyQt5.QtWidgets import QPlainTextEdit
-from PyQt5.QtWidgets import QLineEdit
 from PyQt5 import uic
-from PyQt5.QtCore import QSize
-from PyQt5.QtCore import QPoint
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-import tango
-
-from TangoWidgets.Utils import *
 from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
