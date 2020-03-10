@@ -83,10 +83,12 @@ class MainWindow(QMainWindow):
             TangoLabel('binp/nbi/timing/channel_enable10', self.label_43, prop='label'),  # ch
             TangoLabel('binp/nbi/timing/channel_enable11', self.label_44, prop='label'),  # ch11
             # pg
-            TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_31),
+            TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_31),  # PG offset on
             # lauda
-            #TangoLED('binp/nbi/lauda/6230_7', self.pushButton_34),  # Pump On
-            TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
+            TangoLED('binp/nbi/lauda/6230_7', self.pushButton_30),  # Pump On
+            #TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
+            # rf system
+            #TangoLED('', self.pushButton_32),  # RF system ready
         )
         # read write attributes TangoWidgets list
         self.wtwdgts = (

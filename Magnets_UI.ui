@@ -302,6 +302,18 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -529,6 +541,18 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
         </property>
         <property name="font">
          <font>
@@ -1465,14 +1489,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>23</width>
+          <height>23</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>23</width>
+          <height>23</height>
          </size>
         </property>
         <property name="baseSize">
@@ -1500,14 +1524,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>23</width>
+          <height>23</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>23</width>
+          <height>23</height>
          </size>
         </property>
         <property name="baseSize">
@@ -1535,14 +1559,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>23</width>
+          <height>23</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>23</width>
+          <height>23</height>
          </size>
         </property>
         <property name="baseSize">

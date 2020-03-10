@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = config_logger(level=logging.DEBUG)
+        self.logger = config_logger(level=logging.INFO)
         # members definition
         self.n = 0
         self.elapsed = 0.0

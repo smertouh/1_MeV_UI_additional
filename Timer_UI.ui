@@ -821,14 +821,14 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>0</width>
-            <height>0</height>
+            <width>23</width>
+            <height>23</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>16777215</width>
-            <height>16777215</height>
+            <width>23</width>
+            <height>23</height>
            </size>
           </property>
           <property name="font">
@@ -856,14 +856,14 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>0</width>
-            <height>0</height>
+            <width>23</width>
+            <height>23</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>16777215</width>
-            <height>16777215</height>
+            <width>23</width>
+            <height>23</height>
            </size>
           </property>
           <property name="font">
@@ -891,14 +891,14 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>0</width>
-            <height>0</height>
+            <width>23</width>
+            <height>23</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>16777215</width>
-            <height>16777215</height>
+            <width>23</width>
+            <height>23</height>
            </size>
           </property>
           <property name="font">
@@ -965,14 +965,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -997,14 +997,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -1535,14 +1535,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -1602,14 +1602,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -1765,14 +1765,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -1838,14 +1838,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>26</width>
-             <height>26</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -2012,14 +2012,14 @@ QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}</string>
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -2280,14 +2280,14 @@ QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}</string>
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -2484,14 +2484,14 @@ QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}</string>
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -2551,14 +2551,14 @@ QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}</string>
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -2688,14 +2688,14 @@ QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}</string>
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -2752,14 +2752,14 @@ QCheckBox::indicator:unchecked {image: url(:/unchecked_red.png);}</string>
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>16777215</height>
+             <width>23</width>
+             <height>23</height>
             </size>
            </property>
            <property name="font">

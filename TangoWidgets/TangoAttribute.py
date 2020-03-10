@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QWidget
 import tango
 
 from .Utils import *
-#from .TangoWidget import TangoWidget
+
 
 class TangoAttribute:
     devices = {}
