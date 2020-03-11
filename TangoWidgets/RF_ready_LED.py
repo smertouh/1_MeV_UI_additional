@@ -11,11 +11,14 @@ class RF_ready_LED(TangoLED):
         self.cc = TangoAttribute('binp/nbi/adc0/chan22')
         self.pr = TangoAttribute('binp/nbi/timing/di60')
 
+    def read(self, force=False):
+        self.av.read(True)
+        self.cc.read(True)
+        self.pr.read(True)
+        return self.attribute.read(force)
+
     def set_widget_value(self):
         try:
-            self.av.read(True)
-            self.cc.read(True)
-            self.pr.read(True)
             if not self.av.is_valid() or self.av.value() < 8.0 or \
                     not self.cc.is_valid() or self.cc.value() < 0.1 or \
                     not self.pr.value():
