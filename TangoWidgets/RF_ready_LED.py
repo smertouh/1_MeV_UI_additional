@@ -8,7 +8,7 @@ class RF_ready_LED(TangoLED):
     def __init__(self, name, widget: QPushButton):
         super().__init__(name, widget)
         self.av = TangoAttribute('binp/nbi/adc0/chan16')  # anode voltage >8.0 kV
-        self.cc = TangoAttribute('binp/nbi/adc0/chan22')  # cathode corrent >0.1
+        self.cc = TangoAttribute('binp/nbi/adc0/chan22')  # cathode current >0.1
         self.pr = TangoAttribute('binp/nbi/timing/di60')  #
 
     def read(self, force=False):
@@ -27,4 +27,4 @@ class RF_ready_LED(TangoLED):
                 self.widget.setChecked(True)
         except:
             self.widget.setChecked(False)
-        return self.widget.checked()
+        return self.widget.isChecked()
