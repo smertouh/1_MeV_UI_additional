@@ -20,7 +20,7 @@ from TangoWidgets.Utils import *
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'RF_System_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
-APPLICATION_VERSION = '1_0'
+APPLICATION_VERSION = '2_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
@@ -49,18 +49,18 @@ class MainWindow(QMainWindow):
         restore_settings(self, file_name=CONFIG_FILE)
 
         # define devices in use
-        try:
-            #dn = 'binp/nbi/dac0'
-            #self.dac_device = tango.DeviceProxy(dn)
-            #TangoWidget.DEVICES[dn] = self.dac_device
-            dn = 'binp/nbi/adc0'
-            self.adc_device = tango.DeviceProxy(dn)
-            TangoWidget.DEVICES[dn] = self.adc_device
-            dn = 'binp/nbi/timing'
-            #self.timer_device = tango.DeviceProxy(dn)
-            #TangoWidget.DEVICES[dn] = self.timer_device
-        except:
-            pass
+        # try:
+        #     dn = 'binp/nbi/dac0'
+        #     self.dac_device = tango.DeviceProxy(dn)
+        #     TangoWidget.DEVICES[dn] = self.dac_device
+        #     dn = 'binp/nbi/adc0'
+        #     self.adc_device = tango.DeviceProxy(dn)
+        #     TangoWidget.DEVICES[dn] = self.adc_device
+        #     dn = 'binp/nbi/timing'
+        #     self.timer_device = tango.DeviceProxy(dn)
+        #     TangoWidget.DEVICES[dn] = self.timer_device
+        # except:
+        #     pass
         # define _coeff s
         # try:
         #     self.av = self.adc_device.read_attribute('chan16')
