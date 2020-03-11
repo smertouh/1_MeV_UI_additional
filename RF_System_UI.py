@@ -13,6 +13,7 @@ import PyQt5.QtGui as QtGui
 from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.RF_ready_LED import RF_ready_LED
+from TangoWidgets.RF_on_LED import RF_on_LED
 from TangoWidgets.TangoPushButton import TangoPushButton
 from TangoWidgets.Utils import *
 
@@ -38,10 +39,10 @@ class MainWindow(QMainWindow):
         # Load the UI
         uic.loadUi(UI_FILE, self)
         # main window parameters
-        self.resize(QSize(480, 640))                # size
-        self.move(QPoint(50, 50))                   # position
-        self.setWindowTitle(APPLICATION_NAME)       # title
-        self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
+        self.resize(QSize(480, 640))                 # size
+        self.move(QPoint(50, 50))                    # position
+        self.setWindowTitle(APPLICATION_NAME)        # title
+        self.setWindowIcon(QtGui.QIcon('icon.png'))  # icon
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
@@ -49,41 +50,42 @@ class MainWindow(QMainWindow):
 
         # define devices in use
         try:
-            dn = 'binp/nbi/dac0'
-            self.dac_device = tango.DeviceProxy(dn)
-            TangoWidget.DEVICES[dn] = self.dac_device
+            #dn = 'binp/nbi/dac0'
+            #self.dac_device = tango.DeviceProxy(dn)
+            #TangoWidget.DEVICES[dn] = self.dac_device
             dn = 'binp/nbi/adc0'
             self.adc_device = tango.DeviceProxy(dn)
             TangoWidget.DEVICES[dn] = self.adc_device
             dn = 'binp/nbi/timing'
-            self.timer_device = tango.DeviceProxy(dn)
-            TangoWidget.DEVICES[dn] = self.timer_device
+            #self.timer_device = tango.DeviceProxy(dn)
+            #TangoWidget.DEVICES[dn] = self.timer_device
         except:
             pass
         # define _coeff s
-        try:
-            self.av = self.adc_device.read_attribute('chan16')
-            self.av_config = self.adc_device.get_attribute_config_ex('chan16')[0]
-            self.av_coeff = float(self.av_config.display_unit)
-        except:
-            self.av_coeff = 1.0
-        try:
-            self.cc = self.adc_device.read_attribute('chan22')
-            self.cc_config = self.adc_device.get_attribute_config_ex('chan22')[0]
-            self.cc_coeff = float(self.cc_config.display_unit)
-        except:
-            self.cc_coeff = 1.0
-        try:
-            self.ua = self.adc_device.read_attribute('chan1')
-            self.ua_config = self.adc_device.get_attribute_config_ex('chan1')[0]
-            self.ua_coeff = float(self.ua_config.display_unit)
-        except:
-            self.ua_coeff = 1.0
+        # try:
+        #     self.av = self.adc_device.read_attribute('chan16')
+        #     self.av_config = self.adc_device.get_attribute_config_ex('chan16')[0]
+        #     self.av_coeff = float(self.av_config.display_unit)
+        # except:
+        #     self.av_coeff = 1.0
+        # try:
+        #     self.cc = self.adc_device.read_attribute('chan22')
+        #     self.cc_config = self.adc_device.get_attribute_config_ex('chan22')[0]
+        #     self.cc_coeff = float(self.cc_config.display_unit)
+        # except:
+        #     self.cc_coeff = 1.0
+        # try:
+        #     self.ua = self.adc_device.read_attribute('chan1')
+        #     self.ua_config = self.adc_device.get_attribute_config_ex('chan1')[0]
+        #     self.ua_coeff = float(self.ua_config.display_unit)
+        # except:
+        #     self.ua_coeff = 1.0
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # rf system
             RF_ready_LED('binp/nbi/timing/di60', self.pushButton_1),  # RF system ready
+            RF_on_LED('binp/nbi/adc0/chan1', self.pushButton_2),  # RF system ready
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
@@ -126,15 +128,16 @@ class MainWindow(QMainWindow):
             #         self.pushButton_1.setChecked(True)
             # except:
             #     self.pushButton_1.setChecked(False)
-            try:
-                self.ua = self.adc_device.read_attribute('chan1')
-                if self.ua.quality != tango._tango.AttrQuality.ATTR_VALID or\
-                        self.ua.value * self.ua_coeff < 0.5:
-                    self.pushButton_2.setEnabled(False)
-                else:
-                    self.pushButton_2.setEnabled(True)
-            except:
-                self.pushButton_2.setEnabled(False)
+            # try:
+            #     self.ua = self.adc_device.read_attribute('chan1')
+            #     if self.ua.quality != tango._tango.AttrQuality.ATTR_VALID or\
+            #             self.ua.value * self.ua_coeff < 0.5:
+            #         #self.pushButton_2.setEnabled(False)
+            #         pass
+            #     else:
+            #         self.pushButton_2.setEnabled(True)
+            # except:
+            #     self.pushButton_2.setEnabled(False)
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
