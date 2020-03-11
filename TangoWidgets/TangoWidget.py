@@ -54,7 +54,7 @@ class TangoWidget:
         self.widget.setStyleSheet('color: black')
 
     def read(self, force=False):
-        return self.attribute.read()
+        return self.attribute.read(force)
 
     def write(self, value):
         return self.attribute.write(value)
