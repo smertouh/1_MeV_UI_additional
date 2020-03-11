@@ -27,4 +27,4 @@ class RF_ready_LED(TangoLED):
                 self.widget.setChecked(True)
         except:
             self.widget.setChecked(False)
-        return self.attribute.value()
+        return self.widget.checked()
