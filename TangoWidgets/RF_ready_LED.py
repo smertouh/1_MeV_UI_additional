@@ -16,6 +16,9 @@ class RF_ready_LED(TangoLED):
         self.pr.read(True)
         return self.attribute.read(force)
 
+    def decorate(self):
+        self.set_widget_value()
+
     def set_widget_value(self):
         try:
             if not self.av.is_valid() or self.av.value() < 8.0 or \
