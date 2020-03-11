@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QPushButton
-import tango
 from .TangoAttribute import TangoAttribute
 from.TangoLED import TangoLED
 
