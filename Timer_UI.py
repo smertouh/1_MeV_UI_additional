@@ -23,6 +23,7 @@ from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
+from TangoWidgets.Timer_on_LED import Timer_on_LED
 from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
 from TangoWidgets.RF_ready_LED import RF_ready_LED
@@ -31,7 +32,7 @@ from TangoWidgets.Utils import *
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'Timer_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
-APPLICATION_VERSION = '1_0'
+APPLICATION_VERSION = '2_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
@@ -135,6 +136,7 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_start', self.spinBox_34),  # adc start
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),   # adc stop
         )
+        self.timer_on_led = TangoLED('binp/nbi/timing/', self.pushButton_29),  # oven
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots

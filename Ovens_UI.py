@@ -19,7 +19,6 @@ import PyQt5.QtGui as QtGui
 
 import tango
 
-from TangoWidgets.Utils import *
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
@@ -32,7 +31,7 @@ from TangoWidgets.Utils import *
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'Ovens_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
-APPLICATION_VERSION = '1_0'
+APPLICATION_VERSION = '2_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
