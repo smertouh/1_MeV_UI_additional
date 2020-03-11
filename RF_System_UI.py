@@ -11,12 +11,8 @@ from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
 from TangoWidgets.TangoWidget import TangoWidget
-from TangoWidgets.TangoCheckBox import TangoCheckBox
-from TangoWidgets.TangoComboBox import TangoComboBox
-from TangoWidgets.TangoLED import TangoLED
-from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
-from TangoWidgets.TangoRadioButton import TangoRadioButton
+from TangoWidgets.RF_ready_LED import RF_ready_LED
 from TangoWidgets.TangoPushButton import TangoPushButton
 from TangoWidgets.Utils import *
 
@@ -87,7 +83,7 @@ class MainWindow(QMainWindow):
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # rf system
-            #TangoLED('binp/nbi/timing/di63', self.pushButton_1),
+            RF_ready_LED('binp/nbi/timing/di60', self.pushButton_1),  # RF system ready
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
@@ -116,20 +112,20 @@ class MainWindow(QMainWindow):
         self.elapsed = 0.0
         count = 0
         while time.time() - t0 < TIMER_PERIOD/2000.0:
-            try:
-                self.av = self.adc_device.read_attribute('chan16')
-                self.cc = self.adc_device.read_attribute('chan22')
-                pr = self.timer_device.read_attribute('di60')
-                if self.av.quality != tango._tango.AttrQuality.ATTR_VALID or\
-                        self.av.value * self.av_coeff < 8.0 or\
-                        self.cc.quality != tango._tango.AttrQuality.ATTR_VALID or\
-                        self.cc.value * self.cc_coeff < 0.1 or\
-                        not pr.value:
-                    self.pushButton_1.setChecked(False)
-                else:
-                    self.pushButton_1.setChecked(True)
-            except:
-                self.pushButton_1.setChecked(False)
+            # try:
+            #     self.av = self.adc_device.read_attribute('chan16')
+            #     self.cc = self.adc_device.read_attribute('chan22')
+            #     pr = self.timer_device.read_attribute('di60')
+            #     if self.av.quality != tango._tango.AttrQuality.ATTR_VALID or\
+            #             self.av.value * self.av_coeff < 8.0 or\
+            #             self.cc.quality != tango._tango.AttrQuality.ATTR_VALID or\
+            #             self.cc.value * self.cc_coeff < 0.1 or\
+            #             not pr.value:
+            #         self.pushButton_1.setChecked(False)
+            #     else:
+            #         self.pushButton_1.setChecked(True)
+            # except:
+            #     self.pushButton_1.setChecked(False)
             try:
                 self.ua = self.adc_device.read_attribute('chan1')
                 if self.ua.quality != tango._tango.AttrQuality.ATTR_VALID or\
