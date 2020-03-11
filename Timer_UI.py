@@ -136,7 +136,9 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_start', self.spinBox_34),  # adc start
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),   # adc stop
         )
-        self.timer_on_led = TangoLED('binp/nbi/timing/', self.pushButton_29),  # oven
+        # timer on
+        #self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29),  # timer on led
+        #self.rdwdgts.append(self.timer_on_led)
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots
