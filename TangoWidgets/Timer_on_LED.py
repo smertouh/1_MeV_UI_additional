@@ -17,6 +17,9 @@ class Timer_on_LED(TangoLED):
         self.widget.setChecked(self.value)
         return self.widget.isChecked()
 
+    def decorate(self):
+        self.set_widget_value()
+
     def check_state(self):
         timer_device = self.attribute.device_proxy
         if timer_device is None:

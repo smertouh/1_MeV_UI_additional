@@ -5,17 +5,12 @@ Created on Jul 28, 2019
 @author: sanin
 """
 
-import sys
-import time
-import logging
 import os.path
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import uic
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
-
-import tango
 
 from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
@@ -137,8 +132,8 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),   # adc stop
         )
         # timer on
-        #self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29),  # timer on led
-        #self.rdwdgts.append(self.timer_on_led)
+        self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29),  # timer on led
+        self.rdwdgts += self.timer_on_led
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots
