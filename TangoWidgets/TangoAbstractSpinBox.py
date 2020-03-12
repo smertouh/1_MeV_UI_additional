@@ -17,14 +17,16 @@ class TangoAbstractSpinBox(TangoWriteWidget):
     def __init__(self, name, widget: QAbstractSpinBox, readonly=False):
         super().__init__(name, widget, readonly)
         self.widget.setKeyboardTracking(False)
+        self.widget.old_step_by = self.widget.stepBy
+        self.widget.stepBy = self.step_by
         if not readonly:
             self.widget.valueChanged.connect(self.callback)
             self.widget.last_keyPressEvent = self.widget.keyPressEvent
             self.widget.keyPressEvent = self.keyPressEvent
 
-    def update(self, decorate_only=False):
-        super().update(decorate_only)
-        self.widget.lineEdit().deselect()
+    # def update(self, decorate_only=False):
+    #     super().update(decorate_only)
+    #     self.widget.lineEdit().deselect()
 
     def set_widget_value(self):
         if not self.attribute.is_valid():
@@ -46,3 +48,14 @@ class TangoAbstractSpinBox(TangoWriteWidget):
         k = e.key()
         if k == QtCore.Qt.Key_Enter or k == QtCore.Qt.Key_Return:
             self.callback(self.widget.value())
+
+    def callback(self, value):
+        super().callback(value)
+        self.widget.lineEdit().deselect()
+
+    def deselect(self):
+        self.widget.lineEdit().deselect()
+
+    def step_by(self, n):
+        self.widget.old_step_by(n)
+        self.widget.lineEdit().deselect()
