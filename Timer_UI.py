@@ -134,6 +134,7 @@ class MainWindow(QMainWindow):
         # timer on
         self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29)  # timer on led
         self.rdwdgts.append(self.timer_on_led)
+        self.timer_device = self.timer_on_led.attribute.device_proxy
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots
@@ -227,7 +228,8 @@ class MainWindow(QMainWindow):
 
     def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:   # single
-            if self.check_timer_state(self.timer_device):
+            if self.timer_on_led.value:   # pulse is on
+            #if self.check_timer_state(self.timer_device):
                 self.pulse_off()
             else:
                 # check protection interlock
@@ -235,10 +237,13 @@ class MainWindow(QMainWindow):
                     self.logger.error('Shot is rejected')
                     self.pushButton.setStyleSheet('border: 3px solid red')
                     return
-                self.timer_device.write_attribute('Start_single', 1)
-                self.timer_device.write_attribute('Start_single', 0)
+                self.timer_on_led.attribute.device_proxy.write_attribute('Start_single', 1)
+                #self.timer_device.write_attribute('Start_single', 1)
+                self.timer_on_led.attribute.device_proxy.write_attribute('Start_single', 0)
+                #self.timer_device.write_attribute('Start_single', 0)
         elif self.comboBox.currentIndex() == 1:  # periodical
-            if self.check_timer_state(self.timer_device):
+            if self.timer_on_led.value:   # pulse is on
+            #if self.check_timer_state(self.timer_device):
                 self.pulse_off()
             self.comboBox.setCurrentIndex(0)
 
@@ -259,7 +264,8 @@ class MainWindow(QMainWindow):
     def pulse_off(self):
         for k in range(12):
             try:
-                self.timer_device.write_attribute('channel_enable' + str(k), False)
+                #self.timer_device.write_attribute('channel_enable' + str(k), False)
+                self.timer_on_led.attribute.device_proxy.write_attribute('channel_enable' + str(k), False)
             except:
                 self.logger.debug("Exception ", exc_info=True)
 
