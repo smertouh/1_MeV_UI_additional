@@ -58,13 +58,13 @@ class MainWindow(QMainWindow):
         #all_widgets = get_widgets(self)
         restore_settings(self, file_name=CONFIG_FILE)
         # timer device
-        try:
-            self.timer_device = tango.DeviceProxy('binp/nbi/timing')
-            TangoWidget.DEVICES['binp/nbi/timing'] = self.timer_device
-        except:
-            self.timer_device = None
+        # try:
+        #     self.timer_device = tango.DeviceProxy('binp/nbi/timing')
+        #     TangoWidget.DEVICES['binp/nbi/timing'] = self.timer_device
+        # except:
+        #     self.timer_device = None
         # read only attributes TangoWidgets list
-        self.rdwdgts = (
+        self.rdwdgts = [
             # timer
             TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
             TangoLabel('binp/nbi/timing/channel_enable0', self.label_30, prop='label'),  # ch0
@@ -86,9 +86,9 @@ class MainWindow(QMainWindow):
             #TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
             # rf system
             RF_ready_LED('binp/nbi/timing/di60', self.pushButton_32),  # RF system ready
-        )
+        ]
         # read write attributes TangoWidgets list
-        self.wtwdgts = (
+        self.wtwdgts = [
             # timer
             TangoAbstractSpinBox('binp/nbi/timing/Period', self.spinBox),  # period
             TangoComboBox('binp/nbi/timing/Start_mode', self.comboBox),  # single/periodical
@@ -130,10 +130,10 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/timing/pulse_stop11', self.spinBox_33),  # ch11
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_start', self.spinBox_34),  # adc start
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),   # adc stop
-        )
+        ]
         # timer on
         self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29)  # timer on led
-        self.rdwdgts += (self.timer_on_led,)
+        self.rdwdgts.append(self.timer_on_led)
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots

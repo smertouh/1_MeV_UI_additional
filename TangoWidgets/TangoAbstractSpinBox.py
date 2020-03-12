@@ -22,6 +22,10 @@ class TangoAbstractSpinBox(TangoWriteWidget):
             self.widget.last_keyPressEvent = self.widget.keyPressEvent
             self.widget.keyPressEvent = self.keyPressEvent
 
+    def update(self, decorate_only=False):
+        super().update(decorate_only)
+        self.widget.lineEdit().deselect()
+
     def set_widget_value(self):
         if not self.attribute.is_valid():
             # dont set value from invalid attribute
