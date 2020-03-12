@@ -5,17 +5,17 @@ from.TangoLED import TangoLED
 
 class Timer_on_LED(TangoLED):
     def __init__(self, name, widget: QPushButton):
-        super().__init__(name, widget)
         self.timer_state_channels = ['channel_state'+str(k) for k in range(12)]
         self.value = False
+        super().__init__(name, widget)
 
     def read(self, force=False):
         self.value = self.check_state()
         return self.value
 
     def set_widget_value(self):
-        self.widget.setChecked(self.value)
-        return self.widget.isChecked()
+        self.widget.setEnabled(self.value)
+        return self.widget.isEnabled()
 
     def decorate(self):
         self.set_widget_value()

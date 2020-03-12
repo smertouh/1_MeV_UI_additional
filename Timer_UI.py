@@ -132,8 +132,8 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('binp/nbi/adc0/Acq_stop', self.spinBox_35),   # adc stop
         )
         # timer on
-        self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29),  # timer on led
-        self.rdwdgts += self.timer_on_led
+        self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29)  # timer on led
+        self.rdwdgts += (self.timer_on_led,)
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
         # Connect signals with slots
@@ -273,14 +273,15 @@ class MainWindow(QMainWindow):
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
         # during pulse
-        if self.check_timer_state(self.timer_device):   # pulse is on
+        #if self.check_timer_state(self.timer_device):   # pulse is on
+        if self.timer_on_led.value:   # pulse is on
             # pulse ON LED -> ON
-            self.pushButton_29.setEnabled(True)
+            #self.pushButton_29.setEnabled(True)
             self.pushButton.setStyleSheet('color: red; font: bold')
             self.pushButton.setText('Stop')
         else:   # pulse is off
             # pulse ON LED -> OFF
-            self.pushButton_29.setEnabled(False)
+            #self.pushButton_29.setEnabled(False)
             self.pushButton.setStyleSheet('')
             if self.comboBox.currentIndex() == 0:
                 self.pushButton.setText('Shoot')
