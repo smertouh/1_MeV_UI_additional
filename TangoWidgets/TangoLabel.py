@@ -4,6 +4,7 @@ Created on Jan 3, 2020
 
 @author: sanin
 '''
+
 from PyQt5.QtWidgets import QLabel
 from TangoWidgets.TangoWidget import TangoWidget
 import tango

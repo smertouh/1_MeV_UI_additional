@@ -46,39 +46,6 @@ class MainWindow(QMainWindow):
 
         restore_settings(self, file_name=CONFIG_FILE)
 
-        # define devices in use
-        # try:
-        #     dn = 'binp/nbi/dac0'
-        #     self.dac_device = tango.DeviceProxy(dn)
-        #     TangoWidget.DEVICES[dn] = self.dac_device
-        #     dn = 'binp/nbi/adc0'
-        #     self.adc_device = tango.DeviceProxy(dn)
-        #     TangoWidget.DEVICES[dn] = self.adc_device
-        #     dn = 'binp/nbi/timing'
-        #     self.timer_device = tango.DeviceProxy(dn)
-        #     TangoWidget.DEVICES[dn] = self.timer_device
-        # except:
-        #     pass
-        # define _coeff s
-        # try:
-        #     self.av = self.adc_device.read_attribute('chan16')
-        #     self.av_config = self.adc_device.get_attribute_config_ex('chan16')[0]
-        #     self.av_coeff = float(self.av_config.display_unit)
-        # except:
-        #     self.av_coeff = 1.0
-        # try:
-        #     self.cc = self.adc_device.read_attribute('chan22')
-        #     self.cc_config = self.adc_device.get_attribute_config_ex('chan22')[0]
-        #     self.cc_coeff = float(self.cc_config.display_unit)
-        # except:
-        #     self.cc_coeff = 1.0
-        # try:
-        #     self.ua = self.adc_device.read_attribute('chan1')
-        #     self.ua_config = self.adc_device.get_attribute_config_ex('chan1')[0]
-        #     self.ua_coeff = float(self.ua_config.display_unit)
-        # except:
-        #     self.ua_coeff = 1.0
-
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # rf system

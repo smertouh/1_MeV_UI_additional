@@ -1,43 +1,20 @@
 # coding: utf-8
-'''
+"""
 Created on Jul 28, 2019
 
 @author: sanin
-'''
+"""
 
-import sys
-import json
-import logging
-import time
-import math
-
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import qApp
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QComboBox
-from PyQt5.QtWidgets import QCheckBox
-from PyQt5.QtWidgets import QPlainTextEdit
-from PyQt5.QtWidgets import QLineEdit
 from PyQt5 import uic
-from PyQt5.QtCore import QSize
-from PyQt5.QtCore import QPoint
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-import tango
-
-from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
-from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
-from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
-from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
+from TangoWidgets.TangoPfiefferPressure import TangoPfiefferPressure
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
@@ -47,7 +24,6 @@ APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Global configuration dictionary
 TIMER_PERIOD = 300  # ms
 
 
@@ -71,29 +47,7 @@ class MainWindow(QMainWindow):
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
         restore_settings(self, file_name=CONFIG_FILE)        # define devices in use
-        # additional devices
-        try:
-            dn = 'ET7000_server/test/pet7_7026'
-            self.pressure_tank = tango.DeviceProxy(dn)
-            TangoWidget.DEVICES[dn] = self.pressure_tank
-            dn = 'ET7000_server/test/1'
-            self.pressure_magnet = tango.DeviceProxy(dn)
-            TangoWidget.DEVICES[dn] = self.pressure_magnet
-        except:
-            pass
-        # define _coeff s
-        try:
-            self.pt = self.pressure_tank.read_attribute('ai05')
-            self.pt_config = self.pressure_tank.get_attribute_config_ex('ai05')[0]
-            self.pt_coeff = float(self.av_config.display_unit)
-        except:
-            self.pt_coeff = 1.0
-        try:
-            self.pm = self.pressure_magnet.read_attribute('ai09')
-            self.pm_config = self.pressure_magnet.get_attribute_config_ex('ai09')[0]
-            self.pm_coeff = float(self.pm_config.display_unit)
-        except:
-            self.pm_coeff = 1.0
+
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # Interlock 15 kV
@@ -130,6 +84,10 @@ class MainWindow(QMainWindow):
             TangoLabel('ET7000_server/test/pet2_7015/ai02', self.label_104),
             # T Calorimeter
             TangoLabel('ET7000_server/test/pet12_7018/ai03', self.label_106),
+            # tank pressure
+            TangoPfiefferPressure('ET7000_server/test/pet7_7026/ai05', self.label_93),
+            # magnet pressure
+            TangoPfiefferPressure('ET7000_server/test/1/ai09', self.label_88),
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
@@ -172,24 +130,9 @@ class MainWindow(QMainWindow):
         save_settings(self, file_name=CONFIG_FILE)
         self.timer.stop()
 
-    def process_additional_widgets(self):
-        try:
-            self.pt = self.pressure_tank.read_attribute('ai05')
-            pt = math.pow(10.0, (1.667 * self.pt.value*self.pt_coeff - 11.46))
-            self.label_93.setText('%8.2e' % pt)
-        except:
-            self.label_93.setText('********')
-        try:
-            self.pm = self.pressure_magnet.read_attribute('ai09')
-            pm = math.pow(10.0, (1.667 * self.pm.value*self.pm_coeff - 11.46))
-            self.label_88.setText('%8.2e' % pm)
-        except:
-            self.label_88.setText('********')
-
     def timer_handler(self):
         t0 = time.time()
         self.elapsed = 0.0
-        self.process_additional_widgets()
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             self.elapsed = time.time() - self.elapsed
             return
@@ -208,7 +151,7 @@ class MainWindow(QMainWindow):
                 self.elapsed = time.time() - self.elapsed
                 return
         self.elapsed = time.time() - self.elapsed
-        logging.debug('Loop takes %5.0f ms %d %d'% (self.elapsed*1000.0, count, self.n))
+        # logging.debug('Loop takes %5.0f ms %d %d'% (self.elapsed*1000.0, count, self.n))
 
 
 if __name__ == '__main__':
