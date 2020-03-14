@@ -1,42 +1,19 @@
 # coding: utf-8
-'''
+"""
 Created on Jul 28, 2019
 
 @author: sanin
-'''
+"""
 
-import sys
-import json
-import logging
-import time
-
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import qApp
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QComboBox
-from PyQt5.QtWidgets import QCheckBox
-from PyQt5.QtWidgets import QPlainTextEdit
-from PyQt5.QtWidgets import QLineEdit
 from PyQt5 import uic
-from PyQt5.QtCore import QSize
-from PyQt5.QtCore import QPoint
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-import tango
-
-from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
-from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
-from TangoWidgets.TangoRadioButton import TangoRadioButton
-from TangoWidgets.TangoPushButton import TangoPushButton
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
@@ -46,7 +23,6 @@ APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Global configuration dictionary
 TIMER_PERIOD = 700  # ms
 
 
