@@ -1,40 +1,19 @@
 # coding: utf-8
-'''
+"""
 Created on Jul 28, 2019
 
 @author: sanin
-'''
+"""
 
-import sys
-import json
-import logging
-import time
-
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import qApp
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QComboBox
-from PyQt5.QtWidgets import QCheckBox
-from PyQt5.QtWidgets import QPlainTextEdit
-from PyQt5.QtWidgets import QLineEdit
 from PyQt5 import uic
-from PyQt5.QtCore import QSize
-from PyQt5.QtCore import QPoint
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-from TangoWidgets.Utils import *
 from TangoWidgets.TangoWidget import TangoWidget
-from TangoWidgets.TangoCheckBox import TangoCheckBox
-from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
-from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
 from TangoWidgets.TangoAttribute import TangoAttribute
 from TangoWidgets.Utils import *
@@ -62,10 +41,10 @@ class MainWindow(QMainWindow):
         # Load the UI
         uic.loadUi(UI_FILE, self)
         # main window parameters
-        self.resize(QSize(480, 640))                # size
-        self.move(QPoint(50, 50))                   # position
-        self.setWindowTitle(APPLICATION_NAME)       # title
-        self.setWindowIcon(QtGui.QIcon('icon.png')) # icon
+        self.resize(QSize(480, 640))                 # size
+        self.move(QPoint(50, 50))                    # position
+        self.setWindowTitle(APPLICATION_NAME)        # title
+        self.setWindowIcon(QtGui.QIcon('icon.png'))  # icon
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 

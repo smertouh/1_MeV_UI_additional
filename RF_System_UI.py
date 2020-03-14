@@ -1,16 +1,15 @@
 # coding: utf-8
-'''
+"""
 Created on Jul 28, 2019
 
 @author: sanin
-'''
+"""
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import uic
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.RF_ready_LED import RF_ready_LED
 from TangoWidgets.RF_on_LED import RF_on_LED
@@ -24,7 +23,6 @@ APPLICATION_VERSION = '2_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Global configuration dictionary
 TIMER_PERIOD = 300  # ms
 
 
@@ -113,31 +111,7 @@ class MainWindow(QMainWindow):
             return
         self.elapsed = 0.0
         count = 0
-        while time.time() - t0 < TIMER_PERIOD/2000.0:
-            # try:
-            #     self.av = self.adc_device.read_attribute('chan16')
-            #     self.cc = self.adc_device.read_attribute('chan22')
-            #     pr = self.timer_device.read_attribute('di60')
-            #     if self.av.quality != tango._tango.AttrQuality.ATTR_VALID or\
-            #             self.av.value * self.av_coeff < 8.0 or\
-            #             self.cc.quality != tango._tango.AttrQuality.ATTR_VALID or\
-            #             self.cc.value * self.cc_coeff < 0.1 or\
-            #             not pr.value:
-            #         self.pushButton_1.setChecked(False)
-            #     else:
-            #         self.pushButton_1.setChecked(True)
-            # except:
-            #     self.pushButton_1.setChecked(False)
-            # try:
-            #     self.ua = self.adc_device.read_attribute('chan1')
-            #     if self.ua.quality != tango._tango.AttrQuality.ATTR_VALID or\
-            #             self.ua.value * self.ua_coeff < 0.5:
-            #         #self.pushButton_2.setEnabled(False)
-            #         pass
-            #     else:
-            #         self.pushButton_2.setEnabled(True)
-            # except:
-            #     self.pushButton_2.setEnabled(False)
+        while time.time() - t0 < TIMER_PERIOD/1000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
