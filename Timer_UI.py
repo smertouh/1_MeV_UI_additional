@@ -12,15 +12,12 @@ from PyQt5 import uic
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoComboBox import TangoComboBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.Timer_on_LED import Timer_on_LED
-from TangoWidgets.TangoRadioButton import TangoRadioButton
-from TangoWidgets.TangoPushButton import TangoPushButton
 from TangoWidgets.RF_ready_LED import RF_ready_LED
 from TangoWidgets.Utils import *
 
@@ -31,9 +28,8 @@ APPLICATION_VERSION = '2_1'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Global configuration dictionary
+# Globals
 TIMER_PERIOD = 300  # ms
-timer_state_channels = ['channel_state'+str(k) for k in range(12)]
 
 
 class MainWindow(QMainWindow):
@@ -45,6 +41,7 @@ class MainWindow(QMainWindow):
         # members definition
         self.n = 0
         self.elapsed = 0.0
+        self.remained = 0.0
         # Load the UI
         uic.loadUi(UI_FILE, self)
         # Default main window parameters
@@ -55,15 +52,7 @@ class MainWindow(QMainWindow):
         #
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
         #
-        #all_widgets = get_widgets(self)
         restore_settings(self, file_name=CONFIG_FILE)
-        # timer device
-        # try:
-        #     self.timer_device = tango.DeviceProxy('binp/nbi/timing')
-        #     TangoWidget.DEVICES['binp/nbi/timing'] = self.timer_device
-        # except:
-        #     self.timer_device = None
-        # read only attributes TangoWidgets list
         self.rdwdgts = [
             # timer
             TangoLabel('binp/nbi/adc0/Elapsed', self.label_3),  # elapsed
@@ -82,8 +71,8 @@ class MainWindow(QMainWindow):
             # pg
             TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_31),  # PG offset on
             # lauda
-            TangoLED('binp/nbi/lauda/6230_7', self.pushButton_30),  # Pump On
-            #TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
+            # TangoLED('binp/nbi/lauda/6230_7', self.pushButton_30),  # Pump On
+            TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
             # rf system
             RF_ready_LED('binp/nbi/timing/di60', self.pushButton_32),  # RF system ready
         ]
@@ -141,12 +130,11 @@ class MainWindow(QMainWindow):
         self.comboBox.currentIndexChanged.disconnect(self.comboBox.tango_widget.callback)  # single/periodical combo
         self.comboBox.currentIndexChanged.connect(self.single_periodical_callback)  # single/periodical combo
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
-        self.pushButton_3.clicked.connect(self.show_more_button_clicked)
-        self.pushButton_2.clicked.connect(self.execute_button_clicked)
-        # Defile and start timer callback task
+        self.pushButton_3.clicked.connect(self.show_more_button_clicked)  # show more button
+        self.pushButton_2.clicked.connect(self.execute_button_clicked)  # execute button
+        # Defile callback task and start timer
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
-        # start timer device
         self.timer.start(TIMER_PERIOD)
         # resize main window
         self.show_more_button_clicked()
@@ -174,10 +162,6 @@ class MainWindow(QMainWindow):
         value = ((not self.checkBox_20.isChecked()) or self.pushButton_30.isChecked()) and \
                 ((not self.checkBox_21.isChecked()) or self.pushButton_31.isChecked()) and \
                 ((not self.checkBox_22.isChecked()) or self.pushButton_32.isChecked())
-        # if value:
-        #     self.pushButton.setStyleSheet('')
-        # else:
-        #     self.pushButton.setStyleSheet('border: 3px solid red')
         return value
 
     def execute_button_clicked(self):
@@ -196,12 +180,12 @@ class MainWindow(QMainWindow):
     def show_more_button_clicked(self):
         if self.pushButton_3.isChecked():
             self.frame.setVisible(True)
-            #self.resize(QSize(418, 751))
+            # self.resize(QSize(418, 751))
             self.resize(QSize(self.gridLayout_2.sizeHint().width(),
                               self.gridLayout_2.sizeHint().height()+self.gridLayout_3.sizeHint().height()))
         else:
             self.frame.setVisible(False)
-            #self.resize(QSize(418, 124))
+            # self.resize(QSize(418, 124))
             self.resize(self.gridLayout_2.sizeHint())
 
     def single_periodical_callback(self, value):
@@ -229,7 +213,6 @@ class MainWindow(QMainWindow):
     def run_button_clicked(self, value):
         if self.comboBox.currentIndex() == 0:   # single
             if self.timer_on_led.value:   # pulse is on
-            #if self.check_timer_state(self.timer_device):
                 self.pulse_off()
             else:
                 # check protection interlock
@@ -238,33 +221,15 @@ class MainWindow(QMainWindow):
                     self.pushButton.setStyleSheet('border: 3px solid red')
                     return
                 self.timer_on_led.attribute.device_proxy.write_attribute('Start_single', 1)
-                #self.timer_device.write_attribute('Start_single', 1)
                 self.timer_on_led.attribute.device_proxy.write_attribute('Start_single', 0)
-                #self.timer_device.write_attribute('Start_single', 0)
         elif self.comboBox.currentIndex() == 1:  # periodical
             if self.timer_on_led.value:   # pulse is on
-            #if self.check_timer_state(self.timer_device):
                 self.pulse_off()
             self.comboBox.setCurrentIndex(0)
-
-    @staticmethod
-    def check_timer_state(timer_device):
-        if timer_device is None:
-            return False
-        state = False
-        avs = []
-        try:
-            avs = timer_device.read_attributes(timer_state_channels)
-        except:
-            pass
-        for av in avs:
-            state = state or av.value
-        return state
 
     def pulse_off(self):
         for k in range(12):
             try:
-                #self.timer_device.write_attribute('channel_enable' + str(k), False)
                 self.timer_on_led.attribute.device_proxy.write_attribute('channel_enable' + str(k), False)
             except:
                 self.logger.debug("Exception ", exc_info=True)
@@ -279,15 +244,12 @@ class MainWindow(QMainWindow):
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
             return
         # during pulse
-        #if self.check_timer_state(self.timer_device):   # pulse is on
         if self.timer_on_led.value:   # pulse is on
             # pulse ON LED -> ON
-            #self.pushButton_29.setEnabled(True)
             self.pushButton.setStyleSheet('color: red; font: bold')
             self.pushButton.setText('Stop')
         else:   # pulse is off
             # pulse ON LED -> OFF
-            #self.pushButton_29.setEnabled(False)
             self.pushButton.setStyleSheet('')
             if self.comboBox.currentIndex() == 0:
                 self.pushButton.setText('Shoot')
@@ -310,10 +272,8 @@ class MainWindow(QMainWindow):
             count += 1
             if count == max(len(self.rdwdgts), len(self.wtwdgts)):
                 self.elapsed = time.time() - t0
-                #print(self.elapsed)
                 return
             self.elapsed = time.time() - t0
-            #print(self.elapsed)
 
 
 if __name__ == '__main__':

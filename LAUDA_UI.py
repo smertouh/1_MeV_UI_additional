@@ -27,8 +27,6 @@ from PyQt5.QtCore import QPoint
 from PyQt5.QtCore import QTimer
 import PyQt5.QtGui as QtGui
 
-import tango
-
 from TangoWidgets.Utils import *
 from TangoWidgets.TangoWidget import TangoWidget
 from TangoWidgets.TangoCheckBox import TangoCheckBox
@@ -38,6 +36,7 @@ from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.TangoRadioButton import TangoRadioButton
 from TangoWidgets.TangoPushButton import TangoPushButton
+from TangoWidgets.TangoAttribute import TangoAttribute
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
@@ -47,7 +46,7 @@ APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
-# Global configuration dictionary
+# Global parameters
 TIMER_PERIOD = 1500  # ms
 
 
@@ -95,7 +94,7 @@ class MainWindow(QMainWindow):
         self.spinBox_4.valueChanged.connect(self.setpoint_valueChanged)
         # lauda device
         try:
-            self.lauda = TangoWidget.DEVICES['binp/nbi/lauda']
+            self.lauda = TangoAttribute.devices['binp/nbi/lauda']
         except:
             self.lauda = None
         # Defile and start timer callback task
