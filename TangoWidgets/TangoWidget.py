@@ -87,7 +87,7 @@ class TangoWidget:
                 self.set_widget_value()
             self.decorate()
         except:
-            self.logger.warning('Exception %s updating widget %s' % (sys.exc_info()[1], self.name))
+            self.logger.info('Exception: %s' % sys.exc_info()[1])
             self.logger.debug('Exception Info:', exc_info=True)
             self.set_attribute_value()
             self.decorate()

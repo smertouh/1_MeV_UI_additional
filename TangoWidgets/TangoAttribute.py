@@ -51,16 +51,17 @@ class TangoAttribute:
             self.disconnect()
 
     def disconnect(self):
+        self.time = time.time()
         if not self.connected:
             return
         self.connected = False
-        self.time = time.time()
         self.logger.debug('Attribute %s has been disconnected.', self.full_name)
 
     def reconnect(self):
         if self.connected:
             return
         if time.time() - self.time > self.reconnect_timeout:
+            self.logger.debug('Reconnection timeout exceeded')
             self.connect()
 
     def create_device_proxy(self):
@@ -69,9 +70,9 @@ class TangoAttribute:
             try:
                 pt = TangoAttribute.devices[self.device_name].ping()
                 dp = TangoAttribute.devices[self.device_name]
-                self.logger.info('Device %s for %s exists, ping=%ds.' % (dp, self.device_name, pt))
+                self.logger.debug('Device %s for %s exists, ping=%ds.' % (dp, self.device_name, pt))
             except:
-                self.logger.warning('Exception connecting to %s %s.' % (self.device_name, sys.exc_info()[0]))
+                self.logger.warning('Exception connecting to %s %s.' % (self.device_name, sys.exc_info()[1]))
                 self.logger.debug('Exception:', exc_info=True)
                 dp = None
                 TangoAttribute.devices[self.device_name] = dp
@@ -91,6 +92,8 @@ class TangoAttribute:
         self.readonly = self.readonly or self.is_readonly()
 
     def is_readonly(self):
+        if not self.connected:
+            return True
         return self.config.writable == tango.AttrWriteType.READ
 
     def is_valid(self):
@@ -99,11 +102,15 @@ class TangoAttribute:
     def is_boolean(self):
         # stat = self.config.data_format == tango.AttrDataFormat.SCALAR and\
         #     self.config.data_type == bool
+        if not self.connected:
+            return False
         value = self.read_result.value
         stat = isinstance(value, bool)
         return stat
 
     def is_scalar(self):
+        if not self.connected:
+            return False
         return self.config.data_format == tango._tango.AttrDataFormat.SCALAR
 
     def read(self, force=False):

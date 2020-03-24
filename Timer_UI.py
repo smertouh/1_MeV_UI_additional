@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = config_logger(level=logging.DEBUG)
+        self.logger = config_logger(level=logging.INFO)
         # members definition
         self.n = 0
         self.elapsed = 0.0
