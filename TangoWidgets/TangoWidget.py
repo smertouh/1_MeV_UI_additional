@@ -110,12 +110,11 @@ class TangoWidget:
             else:
                 self.decorate_valid()
 
-    def set_attribute_value(self):
-        if not self.attribute.is_valid():
-            return
+    def set_attribute_value(self, v=None):
         if self.attribute.is_readonly():
             return
-        v = self.get_widget_value()
+        if v is None:
+            v = self.get_widget_value()
         if v is None:
             return
         if isinstance(v, bool) and (not self.attribute.is_boolean()):
