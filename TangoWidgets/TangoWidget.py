@@ -95,7 +95,7 @@ class TangoWidget:
 
     def decorate(self):
         if not self.attribute.connected:
-            self.logger.debug('%s error' % self.name)
+            self.logger.debug('%s not connected' % self.name)
             self.decorate_error()
         elif not self.attribute.is_scalar():
             self.logger.debug('%s non scalar' % self.name)
@@ -110,16 +110,16 @@ class TangoWidget:
             else:
                 self.decorate_valid()
 
-    def set_attribute_value(self, v=None):
+    def set_attribute_value(self, value=None):
         if self.attribute.is_readonly():
             return
-        if v is None:
-            v = self.get_widget_value()
-        if v is None:
+        if value is None:
+            value = self.get_widget_value()
+        if value is None:
             return
-        if isinstance(v, bool) and (not self.attribute.is_boolean()):
+        if isinstance(value, bool) and (not self.attribute.is_boolean()):
             return
-        self.write(v)
+        self.write(value)
 
     def get_widget_value(self):
         result = None
@@ -132,7 +132,7 @@ class TangoWidget:
         return result
 
     def callback(self, value):
-        #self.logger.debug('Callback entry')
+        # self.logger.debug('Callback entry')
         if self.attribute.is_readonly():
             return
         try:
