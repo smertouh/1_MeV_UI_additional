@@ -20,15 +20,16 @@ class TangoWidget:
     RECONNECT_TIMEOUT = 3.0    # seconds
     DEVICES = {}
 
-    def __init__(self, name: str, widget: QWidget, readonly=True, level=logging.DEBUG):
+    def __init__(self, name: str, widget: QWidget, readonly: bool = True,  level=logging.DEBUG):
         # configure logging
         self.logger = config_logger(level=level)
         self.name = name
         self.widget = widget
         self.widget.tango_widget = self
+        self.update_dt = 0.0
         # create attribute proxy
         self.attribute = TangoAttribute(name, level=level, readonly=readonly)
-        # update view
+        # first update with set widget value from attribute
         self.update(decorate_only=False)
 
     def decorate_error(self, *args, **kwargs):
@@ -51,7 +52,8 @@ class TangoWidget:
         self.decorate_invalid(*args, **kwargs)
 
     def decorate_valid(self, *args, **kwargs):
-        self.widget.setStyleSheet('color: black')
+        # self.widget.setStyleSheet('color: black')
+        self.widget.setStyleSheet('')
 
     def read(self, force=False):
         return self.attribute.read(force)
@@ -85,7 +87,7 @@ class TangoWidget:
                 self.set_widget_value()
             self.decorate()
         except:
-            self.logger.warning('Exception updating widget: %s' % sys.exc_info()[1])
+            self.logger.warning('Exception %s updating widget %s' % (sys.exc_info()[1], self.name))
             self.logger.debug('Exception Info:', exc_info=True)
             self.set_attribute_value()
             self.decorate()
