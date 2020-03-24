@@ -903,7 +903,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>200.00</string>
+         <string>0.00</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
@@ -1077,7 +1077,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>200.00</string>
+         <string>0.00</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
@@ -1117,7 +1117,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>100.00</string>
+         <string>0.00</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
@@ -1228,7 +1228,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>100.00</string>
+         <string>0.00</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
@@ -1385,7 +1385,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>200.00</string>
+         <string>0.00</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
@@ -1452,7 +1452,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>100.00</string>
+         <string>0.00</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>

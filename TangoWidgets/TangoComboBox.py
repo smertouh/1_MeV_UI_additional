@@ -43,7 +43,7 @@ class TangoComboBox(TangoWriteWidget):
     def callback(self, value):
         if self.attribute.connected:
             try:
-                self.attribute.write(int(value))
+                self.write(int(value))
                 self.decorate_valid()
             except:
                 self.logger.debug('Exception %s in callback', sys.exc_info()[0])

@@ -92,9 +92,10 @@ class TangoAttribute:
         self.readonly = self.readonly or self.is_readonly()
 
     def is_readonly(self):
-        if not self.connected:
+        if self.config is not None:
+            return self.config.writable == tango.AttrWriteType.READ
+        else:
             return True
-        return self.config.writable == tango.AttrWriteType.READ
 
     def is_valid(self):
         return self.connected and self.read_result.quality == tango._tango.AttrQuality.ATTR_VALID

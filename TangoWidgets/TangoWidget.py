@@ -87,7 +87,7 @@ class TangoWidget:
                 self.set_widget_value()
             self.decorate()
         except:
-            self.logger.info('Exception: %s' % sys.exc_info()[1])
+            self.logger.info('Exception: %s' % sys.exc_info()[0])
             self.logger.debug('Exception Info:', exc_info=True)
             self.set_attribute_value()
             self.decorate()
@@ -119,7 +119,10 @@ class TangoWidget:
             return
         if isinstance(value, bool) and (not self.attribute.is_boolean()):
             return
-        self.write(value)
+        try:
+            self.write(value)
+        except:
+            pass
 
     def get_widget_value(self):
         result = None
