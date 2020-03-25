@@ -59,6 +59,7 @@ class TangoAttribute:
 
     def reconnect(self):
         if self.device_name in TangoAttribute.devices and TangoAttribute.devices[self.device_name] is not self.device_proxy:
+            self.logger.debug('Device Proxy changed')
             self.connect()
         if self.connected:
             return
