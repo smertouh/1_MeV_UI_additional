@@ -159,11 +159,11 @@ class TangoAttribute:
             raise
 
     def value(self):
+        if self.read_result is None:
+            return None
         if self.is_boolean() or self.read_result.value is None:
-            rvalue = self.read_result.value
-        else:
-            rvalue = self.read_result.value * self.coeff
-        return rvalue
+            return self.read_result.value
+        return self.read_result.value * self.coeff
 
     def text(self):
         try:

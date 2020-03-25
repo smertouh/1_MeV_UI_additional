@@ -69,14 +69,16 @@ class TangoWidget:
         if not (self.attribute.is_scalar() and self.attribute.is_valid()):
             # dont set value from invalid attribute
             return
+        # block update events for widget
         bs = self.widget.blockSignals(True)
-        if hasattr(self.attribute, 'value'):
-            if hasattr(self.widget, 'setValue'):
-                self.widget.setValue(self.attribute.value())
-            elif hasattr(self.widget, 'setChecked'):
-                self.widget.setChecked(self.attribute.value())
-            elif hasattr(self.widget, 'setText'):
-                self.widget.setText(self.attribute.text())
+        # set widget value
+        if hasattr(self.widget, 'setValue'):
+            self.widget.setValue(self.attribute.value())
+        elif hasattr(self.widget, 'setChecked'):
+            self.widget.setChecked(self.attribute.value())
+        elif hasattr(self.widget, 'setText'):
+            self.widget.setText(self.attribute.text())
+        # restore update events for widget
         self.widget.blockSignals(bs)
 
     def update(self, decorate_only=False) -> None:
