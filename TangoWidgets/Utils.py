@@ -19,7 +19,23 @@ from PyQt5.QtCore import QPoint
 import tango
 import tango.server
 
+
 def config_logger(name: str=__name__, level: int=logging.DEBUG, tango_logging=False):
+    def tango_handler_emit(logger_handler, record):
+        try:
+            msg = logger_handler.format(record)
+            if logger_handler.level >= logging.CRITICAL:
+                tango.server.Device.fatal_stream(msg)
+            elif logger_handler.level >= logging.ERROR:
+                tango.server.Device.error_stream(msg)
+            elif logger_handler.level >= logging.WARNING:
+                tango.server.Device.warn_stream(msg)
+            elif logger_handler.level >= logging.INFO:
+                tango.server.Device.info_stream(msg)
+            elif logger_handler.level >= logging.DEBUG:
+                tango.server.Device.debug_stream(msg)
+        except Exception:
+            logger_handler.handleError(record)
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
         logger.propagate = False
@@ -33,21 +49,6 @@ def config_logger(name: str=__name__, level: int=logging.DEBUG, tango_logging=Fa
         if tango_logging:
             tango_handler = logging.Handler()
             tango_handler.setFormatter(log_formatter)
-            def tango_handler_emit(logger_handler, record):
-                try:
-                    msg = logger_handler.format(record)
-                    if logger_handler.level >= logging.CRITICAL:
-                        tango.server.Device.fatal_stream(msg)
-                    elif logger_handler.level >= logging.ERROR:
-                        tango.server.Device.error_stream(msg)
-                    elif logger_handler.level >= logging.WARNING:
-                        tango.server.Device.warn_stream(msg)
-                    elif logger_handler.level >= logging.INFO:
-                        tango.server.Device.info_stream(msg)
-                    elif logger_handler.level >= logging.DEBUG:
-                        tango.server.Device.debug_stream(msg)
-                except Exception:
-                    logger_handler.handleError(record)
             tango_handler.emit = tango_handler_emit
             logger.addHandler(tango_handler)
     return logger
@@ -73,10 +74,8 @@ def get_widgets(obj):
     wgts = {}
     for att in dir(obj):
         attr = getattr(obj, att)
-        #print(att, attr)
         if attr is not None and isinstance(attr, QtWidgets.QWidget) and attr not in wgts:
             wgts[att] = attr
-            print('widget:', att, attr)
     return wgts
 
 
@@ -190,9 +189,6 @@ def read_folder(folder, mask='.py'):
 
 
 def split_attribute_name(full_name):
-    #splitted = full_name.split('/')
-    #if len(splitted) < 4:
-    #    raise IndexError('Incorrect attribute name format')
     n = full_name.rfind('/')
     if n >= 0:
         # device/attrib pattern used
