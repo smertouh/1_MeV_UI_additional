@@ -32,7 +32,7 @@ class TangoAttribute:
         self.readonly = readonly
         # configure logging
         self.logger = config_logger(level=level)
-        #self.reconnect_timeout = TangoWidget.RECONNECT_TIMEOUT
+        # self.reconnect_timeout = TangoWidget.RECONNECT_TIMEOUT
         # connect attribute
         self.connect()
         self.time = time.time()
