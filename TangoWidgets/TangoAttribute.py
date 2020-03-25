@@ -58,6 +58,8 @@ class TangoAttribute:
         self.logger.debug('Attribute %s has been disconnected.', self.full_name)
 
     def reconnect(self):
+        if self.device_name in TangoAttribute.devices and TangoAttribute.devices[self.device_name] is not self.device_proxy:
+            self.connect()
         if self.connected:
             return
         if time.time() - self.time > self.reconnect_timeout:
