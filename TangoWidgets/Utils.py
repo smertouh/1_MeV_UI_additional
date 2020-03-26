@@ -201,9 +201,9 @@ def split_attribute_name(full_name):
     return device, attrib
 
 
-def time_ms():
+def time_ms(format_str='%H:%M:%S', ms_format_str=',%3d'):
     t = time.time()
-    return time.strftime('%H:%M:%S')+(',%3d' % int((t-int(t))*1000.0))
+    return time.strftime(format_str)+(ms_format_str % int((t-int(t))*1000.0))
 
 
 def get_tango_device_attribute_property(device_name: str, attr_name: str, prop_name: str):
