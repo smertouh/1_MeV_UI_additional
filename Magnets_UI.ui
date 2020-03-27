@@ -890,7 +890,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="4">
+      <item row="2" column="4" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="label_149">
         <property name="font">
          <font>
@@ -909,7 +909,7 @@
          <enum>Qt::PlainText</enum>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -1064,7 +1064,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="4">
+      <item row="1" column="4" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="label_140">
         <property name="font">
          <font>
@@ -1083,7 +1083,7 @@
          <enum>Qt::PlainText</enum>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -1104,7 +1104,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
+      <item row="1" column="7" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="label_142">
         <property name="font">
          <font>
@@ -1123,7 +1123,7 @@
          <enum>Qt::PlainText</enum>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -1215,7 +1215,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="7">
+      <item row="2" column="7" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="label_151">
         <property name="font">
          <font>
@@ -1234,7 +1234,7 @@
          <enum>Qt::PlainText</enum>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -1372,7 +1372,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="4">
+      <item row="3" column="4" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="label_150">
         <property name="font">
          <font>
@@ -1391,7 +1391,7 @@
          <enum>Qt::PlainText</enum>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -1439,7 +1439,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="7">
+      <item row="3" column="7" alignment="Qt::AlignLeft">
        <widget class="QLabel" name="label_152">
         <property name="font">
          <font>
@@ -1456,9 +1456,6 @@
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
