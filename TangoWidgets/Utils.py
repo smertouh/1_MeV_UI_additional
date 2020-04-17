@@ -142,8 +142,10 @@ def set_widget_state(obj, config, name=None):
 def restore_settings(self, widgets=(), file_name='config.json'):
     self.config = {}
     try:
+        # open and read config file
         with open(file_name, 'r') as configfile:
             s = configfile.read()
+        # interpret file contents by json
         self.config = json.loads(s)
         # restore log level
         if 'log_level' in self.config:
@@ -153,8 +155,10 @@ def restore_settings(self, widgets=(), file_name='config.json'):
         if 'main_window' in self.config:
             self.resize(QSize(self.config['main_window']['size'][0], self.config['main_window']['size'][1]))
             self.move(QPoint(self.config['main_window']['position'][0], self.config['main_window']['position'][1]))
+        # restore widgets state
         for w in widgets:
             set_widget_state(w, self.config)
+        # OK message
         self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
     except:
         self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
@@ -164,14 +168,17 @@ def restore_settings(self, widgets=(), file_name='config.json'):
 
 def save_settings(self, widgets=(), file_name='config.json'):
     try:
-        # Save window size and position
+        # save current window size and position
         p = self.pos()
         s = self.size()
         self.config['main_window'] = {'size': (s.width(), s.height()), 'position': (p.x(), p.y())}
+        # get state of widgets
         for w in widgets:
             get_widget_state(w, self.config)
+        # write to file
         with open(file_name, 'w') as configfile:
             configfile.write(json.dumps(self.config, indent=4))
+        # OK message
         self.logger.info('Configuration saved to %s' % file_name)
         return True
     except:
@@ -202,8 +209,10 @@ def split_attribute_name(full_name):
 
 
 def time_ms(format_str='%H:%M:%S', ms_format_str=',%3d'):
+    # convert current time to the string in %H:%M:%S,%ms format
     t = time.time()
-    return time.strftime(format_str)+(ms_format_str % int((t-int(t))*1000.0))
+    ms = int((t - int(t)) * 1000.0)
+    return time.strftime(format_str) + (ms_format_str % ms)
 
 
 def get_tango_device_attribute_property(device_name: str, attr_name: str, prop_name: str):
