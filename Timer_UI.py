@@ -37,19 +37,19 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = config_logger(level=logging.INFO)
+        self.logger = config_logger(level=logging.DEBUG)
         # members definition
         self.n = 0
         self.elapsed = 0.0
         self.remained = 0.0
-        # Load the UI
+        # Load the Qt UI
         uic.loadUi(UI_FILE, self)
         # Default main window parameters
         self.resize(QSize(480, 640))                 # size
         self.move(QPoint(50, 50))                    # position
         self.setWindowTitle(APPLICATION_NAME)        # title
         self.setWindowIcon(QtGui.QIcon('icon.png'))  # icon
-        #
+        # Welcom message
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
         #
         restore_settings(self, file_name=CONFIG_FILE)
