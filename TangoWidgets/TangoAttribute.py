@@ -75,7 +75,7 @@ class TangoAttribute:
                 dp = TangoAttribute.devices[self.device_name]
                 self.logger.debug('Device %s for %s exists, ping=%ds.' % (dp, self.device_name, pt))
             except:
-                self.logger.warning('Exception connecting to %s %s.' % (self.device_name, sys.exc_info()[1]))
+                self.logger.warning('Exception connecting to %s %s.' % (self.device_name, sys.exc_info()[0]))
                 self.logger.debug('Exception:', exc_info=True)
                 dp = None
                 TangoAttribute.devices[self.device_name] = dp

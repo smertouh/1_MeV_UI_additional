@@ -17,7 +17,7 @@ from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
-APPLICATION_NAME = 'Magnets_UI'
+APPLICATION_NAME = 'Voltages_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
 APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
@@ -49,22 +49,6 @@ class MainWindow(QMainWindow):
 
         # read attributes TangoWidgets list
         self.rdwdgts = (
-            # magnet 1
-            TangoLED('binp/nbi/magnet1/output_state', self.pushButton_38),
-            TangoLabel('binp/nbi/magnet1/voltage', self.label_149),
-            TangoLabel('binp/nbi/magnet1/current', self.label_151),
-            # magnet 2
-            TangoLED('binp/nbi/magnet2/output_state', self.pushButton_41),
-            TangoLabel('binp/nbi/magnet2/voltage', self.label_150),
-            TangoLabel('binp/nbi/magnet2/current', self.label_152),
-            # magnet 3
-            TangoLED('binp/nbi/magnet3/output_state', self.pushButton_45),
-            TangoLabel('binp/nbi/magnet3/voltage', self.label_157),
-            TangoLabel('binp/nbi/magnet3/current', self.label_159),
-            # magnet 4
-            TangoLED('binp/nbi/magnet4/output_state', self.pushButton_46),
-            TangoLabel('binp/nbi/magnet4/voltage', self.label_158),
-            TangoLabel('binp/nbi/magnet4/current', self.label_160),
             # pg
             TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_42),
             TangoLabel('binp/nbi/pg_offset/voltage', self.label_140),
@@ -76,26 +60,10 @@ class MainWindow(QMainWindow):
         )
         # writable attributes TangoWidgets list
         self.wtwdgts = (
-            # magnet 1
-            TangoCheckBox('binp/nbi/magnet1/output_state', self.checkBox_54),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_voltage', self.doubleSpinBox_53),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_current', self.doubleSpinBox_55),
-            # magnet 2
-            TangoCheckBox('binp/nbi/magnet2/output_state', self.checkBox_55),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_voltage', self.doubleSpinBox_54),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_current', self.doubleSpinBox_56),
-            # magnet 3
-            TangoCheckBox('binp/nbi/magnet3/output_state', self.checkBox_56),
-            TangoAbstractSpinBox('binp/nbi/magnet3/programmed_voltage', self.doubleSpinBox_57),
-            TangoAbstractSpinBox('binp/nbi/magnet3/programmed_current', self.doubleSpinBox_59),
-            # magnet 2
-            TangoCheckBox('binp/nbi/magnet4/output_state', self.checkBox_57),
-            TangoAbstractSpinBox('binp/nbi/magnet4/programmed_voltage', self.doubleSpinBox_58),
-            TangoAbstractSpinBox('binp/nbi/magnet4/programmed_current', self.doubleSpinBox_60),
             # pg
             TangoCheckBox('binp/nbi/pg_offset/output_state', self.checkBox_52),
-            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_voltage', self.doubleSpinBox_50),
             TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_current', self.doubleSpinBox_49),
+            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_voltage', self.doubleSpinBox_50),
             # extraction
             TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao00', self.doubleSpinBox_5),
             TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao01', self.doubleSpinBox_8),
