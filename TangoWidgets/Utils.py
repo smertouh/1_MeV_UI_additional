@@ -37,9 +37,9 @@ def config_logger(name: str=__name__, level: int=logging.DEBUG, tango_logging=Fa
         except Exception:
             logger_handler.handleError(record)
     logger = logging.getLogger(name)
+    logger.setLevel(level)
     if not logger.hasHandlers():
         logger.propagate = False
-        logger.setLevel(level)
         f_str = '%(asctime)s,%(msecs)3d %(levelname)-7s %(filename)s %(funcName)s(%(lineno)s) %(message)s'
         log_formatter = logging.Formatter(f_str, datefmt='%H:%M:%S')
         console_handler = logging.StreamHandler()
