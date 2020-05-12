@@ -80,7 +80,7 @@ class TangoAttribute:
             try:
                 pt = TangoAttribute.devices[self.device_name].ping()
                 dp = TangoAttribute.devices[self.device_name]
-                self.logger.debug('Device %s for %s exists, ping=%ds' % (dp, self.device_name, pt))
+                self.logger.debug('Device %s for %s exists, ping=%ds' % (self.device_name, self.attribute_name, pt))
             except:
                 self.logger.warning('Exception %s connecting to %s' % (sys.exc_info()[0], self.device_name))
                 self.logger.debug('Exception:', exc_info=True)
@@ -138,7 +138,8 @@ class TangoAttribute:
                     to = 0.0
                 else:
                     to = 0.001
-                self.read_result = self.device_proxy.read_attribute_reply(self.read_call_id, timeout=to)
+                # elf.read_result = self.device_proxy.read_attribute_reply(self.read_call_id, timeout=to)
+                self.read_result = self.device_proxy.read_attribute_reply(self.read_call_id)
                 # clear call id
                 self.read_call_id = None
         except tango.AsynReplyNotArrived:
@@ -179,7 +180,8 @@ class TangoAttribute:
                     to = 0.0
                 else:
                     to = 0.001
-                self.device_proxy.write_attribute_reply(self.write_call_id, timeout=to)
+                #self.device_proxy.write_attribute_reply(self.write_call_id, timeout=to)
+                self.device_proxy.write_attribute_reply(self.write_call_id)
                 # clear call id
                 self.write_call_id = None
         except tango.AsynReplyNotArrived:
