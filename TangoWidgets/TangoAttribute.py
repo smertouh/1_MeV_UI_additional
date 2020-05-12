@@ -10,6 +10,7 @@ import time
 
 from PyQt5.QtWidgets import QWidget
 import tango
+from tango import DeviceProxy, GreenMode
 
 from .Utils import *
 
@@ -87,6 +88,7 @@ class TangoAttribute:
                 TangoAttribute.devices[self.device_name] = dp
         if dp is None:
             dp = tango.DeviceProxy(self.device_name)
+            ###dp.set_green_mode(GreenMode.Asyncio)
             self.logger.info('Device proxy for %s has been created' % self.device_name)
             TangoAttribute.devices[self.device_name] = dp
         return dp
@@ -170,7 +172,7 @@ class TangoAttribute:
                 wvalue = value / self.coeff
             if self.write_call_id is None:
                 # no request before, so send it
-                self.write_call_id = self.device_proxy.write_attribute_asynch([self.attribute_name, wvalue])
+                self.write_call_id = self.device_proxy.write_attribute_asynch(self.attribute_name, wvalue)
             else:
                 # write request has been sent before
                 if force:
