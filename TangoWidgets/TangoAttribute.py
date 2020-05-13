@@ -21,6 +21,7 @@ class TangoAttributeConnectionError(tango.ConnectionFailed):
 
 class TangoAttribute:
     devices = {}
+    attributes = {}
     reconnect_timeout = 5.0
 
     def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
@@ -50,6 +51,7 @@ class TangoAttribute:
         self.force_read = False
         self.sync_read = False
         self.sync_write = True
+        TangoAttribute.attributes[self.full_name] = self
 
     def connect(self):
         try:
@@ -69,13 +71,14 @@ class TangoAttribute:
         if not self.connected:
             return
         self.connected = False
-        self.device_proxy = None
+        #self.device_proxy = None
         self.logger.debug('Attribute %s has been disconnected', self.full_name)
 
     def reconnect(self):
         if self.device_name in TangoAttribute.devices and TangoAttribute.devices[self.device_name] is not self.device_proxy:
             self.logger.debug('Device proxy changed for %s' % self.full_name)
-            self.connect()
+            if time.time() - self.time > self.reconnect_timeout:
+                self.connect()
         if self.connected:
             return
         if time.time() - self.time > self.reconnect_timeout:
@@ -96,12 +99,12 @@ class TangoAttribute:
                 dp = None
                 TangoAttribute.devices[self.device_name] = dp
         if dp is None:
-            dp = tango.DeviceProxy(self.device_name)
             try:
+                dp = tango.DeviceProxy(self.device_name)
                 dp.ping()
                 self.logger.info('Device proxy for %s has been created' % self.device_name)
             except:
-                self.logger.warning('No ping from %s' % self.device_name)
+                self.logger.warning('Device %s creation exception' % self.device_name)
                 dp = None
             TangoAttribute.devices[self.device_name] = dp
         return dp
