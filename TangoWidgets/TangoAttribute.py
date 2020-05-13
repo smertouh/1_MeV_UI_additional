@@ -60,9 +60,9 @@ class TangoAttribute:
             self.time = 0.0
             self.logger.info('Attribute %s has been connected' % self.full_name)
         except:
+            self.disconnect()
             self.logger.warning('Can not connect attribute %s' % self.full_name)
             self.logger.debug('Exception connecting attribute %s' % self.full_name, exc_info=True)
-            self.disconnect()
 
     def disconnect(self):
         self.time = time.time()
@@ -97,7 +97,12 @@ class TangoAttribute:
                 TangoAttribute.devices[self.device_name] = dp
         if dp is None:
             dp = tango.DeviceProxy(self.device_name)
-            self.logger.info('Device proxy for %s has been created %s' % (self.device_name, dp))
+            try:
+                dp.ping()
+                self.logger.info('Device proxy for %s has been created' % self.device_name)
+            except:
+                self.logger.warning('No ping from %s' % self.device_name)
+                dp = None
             TangoAttribute.devices[self.device_name] = dp
         return dp
 
