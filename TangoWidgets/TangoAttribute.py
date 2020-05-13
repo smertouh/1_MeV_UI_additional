@@ -237,7 +237,7 @@ class TangoAttribute:
     def write_async(self, value):
         if self.write_call_id is None:
             # no request before, so send it
-            self.write_call_id = self.device_proxy.write_attribute_asynch(self.attribute_name, wvalue)
+            self.write_call_id = self.device_proxy.write_attribute_asynch(self.attribute_name, value)
         # check for request complete
         self.device_proxy.write_attribute_reply(self.write_call_id)
         # clear call id
