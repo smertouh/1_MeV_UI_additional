@@ -157,6 +157,7 @@ class MainWindow(QMainWindow):
         #             self.logger.debug('Timer device locked successfully')
         #         else:
         #             self.logger.error('Can not lock timer device')
+        self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
 
     def check_protection_interlock(self):
         value = ((not self.checkBox_20.isChecked()) or self.pushButton_30.isChecked()) and \
