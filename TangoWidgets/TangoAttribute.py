@@ -131,6 +131,12 @@ class TangoAttribute:
             raise TangoAttributeConnectionError(msg)
 
     def read(self, force=False):
+        if force:
+            self.read_synch()
+        else:
+            self.read_asynch()
+
+    def read_asynch(self):
         self.reconnect()
         self.test_connection()
         try:
