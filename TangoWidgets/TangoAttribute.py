@@ -21,7 +21,7 @@ class TangoAttributeConnectionError(tango.ConnectionFailed):
 
 class TangoAttribute:
     devices = {}
-    reconnect_timeout = 5.0
+    reconnect_timeout = 7.0
 
     def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
         # defaults
