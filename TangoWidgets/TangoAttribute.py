@@ -16,7 +16,7 @@ from .Utils import *
 
 
 class TangoAttributeConnectionError(tango.ConnectionFailed):
-   pass
+    pass
 
 
 class TangoAttribute:
@@ -82,6 +82,7 @@ class TangoAttribute:
         dp = None
         if self.device_name in TangoAttribute.devices and TangoAttribute.devices[self.device_name] is not None:
             try:
+                # check if device is alive
                 pt = TangoAttribute.devices[self.device_name].ping()
                 dp = TangoAttribute.devices[self.device_name]
                 self.logger.debug('Device %s for %s exists, ping=%ds' % (self.device_name, self.attribute_name, pt))
@@ -130,26 +131,12 @@ class TangoAttribute:
             self.logger.debug(msg)
             raise TangoAttributeConnectionError(msg)
 
-    def read(self, force=False):
-        if force:
-            self.read_synch()
-        else:
-            self.read_asynch()
-
-    def read_asynch(self):
-        self.reconnect()
-        self.test_connection()
+    def read(self, force=False, synch=False):
         try:
-            if self.read_call_id is None:
-                # no read request before, so send it
-                self.read_call_id = self.device_proxy.read_attribute_asynch(self.attribute_name)
-                self.read_time = time.time()
-            # check for read request complete
-            self.read_result = self.device_proxy.read_attribute_reply(self.read_call_id)
-            # clear call id
-            self.read_call_id = None
-            msg = '%s read in %fs' % (self.full_name, time.time() - self.read_time)
-            # self.logger.debug(msg)
+            if force or synch:
+                self.read_synch(force)
+            else:
+                self.read_asynch()
         except tango.AsynReplyNotArrived:
             msg = 'AsynReplyNotArrived for %s' % self.full_name
             # self.logger.debug(msg)
@@ -158,8 +145,12 @@ class TangoAttribute:
                 self.logger.warning(msg)
                 self.read_time = time.time()
                 raise
+        except TangoAttributeConnectionError:
+            msg = 'Attribute %s read TangoAttributeConnectionError' % self.full_name
+            self.logger.info(msg)
+            raise
         except:
-            msg = 'Attribute %s read error' % self.full_name
+            msg = 'Attribute %s read Exception' % self.full_name
             self.logger.info(msg)
             self.logger.debug('Exception:', exc_info=True)
             self.read_result = None
@@ -167,25 +158,36 @@ class TangoAttribute:
             raise
         return self.value()
 
-    def write(self, value, force=False):
-        if self.readonly:
-            return
+    def read_synch(self, force=False):
         self.reconnect()
         self.test_connection()
+        if self.use_history and not force and self.device_proxy.is_attribute_polled(self.attribute_name):
+            at = self.device_proxy.attribute_history(self.attribute_name, 1)[0]
+            if at.time.totime() > self.read_result.time.totime():
+                self.read_result = at
+        else:
+            self.read_result = self.device_proxy.read_attribute(self.attribute_name)
+
+    def read_asynch(self):
+        self.reconnect()
+        self.test_connection()
+        if self.read_call_id is None:
+            # no read request before, so send it
+            self.read_call_id = self.device_proxy.read_attribute_asynch(self.attribute_name)
+            self.read_time = time.time()
+        # check for read request complete
+        self.read_result = self.device_proxy.read_attribute_reply(self.read_call_id)
+        # clear call id
+        self.read_call_id = None
+        msg = '%s read in %fs' % (self.full_name, time.time() - self.read_time)
+        # self.logger.debug(msg)
+
+    def write(self, value, synch=True):
         try:
-            if self.is_boolean():
-                wvalue = bool(value)
+            if synch:
+                self.write_synch(value)
             else:
-                wvalue = value / self.coeff
-            if self.write_call_id is None:
-                # no request before, so send it
-                self.write_call_id = self.device_proxy.write_attribute_asynch(self.attribute_name, wvalue)
-            # check for request complete
-            self.device_proxy.write_attribute_reply(self.write_call_id)
-            # clear call id
-            self.write_call_id = None
-            msg = '%s write in %fs' % (self.full_name, time.time() - self.read_time)
-            # self.logger.debug(msg)
+                self.write_asynch(value)
         except tango.AsynReplyNotArrived:
             msg = 'AsynReplyNotArrived for %s' % self.full_name
             # self.logger.debug(msg)
@@ -194,12 +196,40 @@ class TangoAttribute:
                 self.logger.warning(msg)
                 self.write_time = time.time()
                 raise
+        except TangoAttributeConnectionError:
+            msg = 'Attribute %s write TangoAttributeConnectionError' % self.full_name
+            self.logger.info(msg)
+            raise
         except:
-            msg = 'Attribute %s write error' % self.full_name
+            msg = 'Attribute %s write Exception' % self.full_name
             self.logger.info(msg)
             self.logger.debug('Exception:', exc_info=True)
             self.disconnect()
             raise
+
+    def write_synch(self, value):
+        if self.readonly:
+            return
+        self.reconnect()
+        self.test_connection()
+        wvalue = self.write_value(value)
+        self.device_proxy.write_attribute(self.attribute_name, wvalue)
+
+    def write_asynch(self, value):
+        if self.readonly:
+            return
+        self.reconnect()
+        self.test_connection()
+        wvalue = self.write_value(value)
+        if self.write_call_id is None:
+            # no request before, so send it
+            self.write_call_id = self.device_proxy.write_attribute_asynch(self.attribute_name, wvalue)
+        # check for request complete
+        self.device_proxy.write_attribute_reply(self.write_call_id)
+        # clear call id
+        self.write_call_id = None
+        msg = '%s write in %fs' % (self.full_name, time.time() - self.read_time)
+        # self.logger.debug(msg)
 
     def value(self):
         if self.read_result is None:
@@ -207,6 +237,11 @@ class TangoAttribute:
         if self.is_boolean() or self.read_result.value is None:
             return self.read_result.value
         return self.read_result.value * self.coeff
+
+    def write_value(self, value):
+        if self.is_boolean():
+            return bool(value)
+        return value / self.coeff
 
     def text(self):
         try:
