@@ -140,6 +140,8 @@ class TangoAttribute:
         if sync is None:
             sync = self.sync_read
         try:
+            self.reconnect()
+            self.test_connection()
             if force or sync:
                 self.read_sync(force)
             else:
@@ -166,9 +168,6 @@ class TangoAttribute:
         return self.value()
 
     def read_sync(self, force=False):
-        # self.logger.debug(self.full_name)
-        self.reconnect()
-        self.test_connection()
         if self.use_history and not force and self.device_proxy.is_attribute_polled(self.attribute_name):
             at = self.device_proxy.attribute_history(self.attribute_name, 1)[0]
             if at.time.totime() > self.read_result.time.totime():
@@ -179,9 +178,6 @@ class TangoAttribute:
         self.read_call_id = None
 
     def read_async(self):
-        # self.logger.debug(self.full_name)
-        self.reconnect()
-        self.test_connection()
         if self.read_call_id is None:
             # no read request before, so send it
             self.read_call_id = self.device_proxy.read_attribute_asynch(self.attribute_name)
@@ -198,13 +194,18 @@ class TangoAttribute:
         # self.logger.debug(msg)
 
     def write(self, value, sync=None):
+        if self.readonly:
+            return
         if sync is None:
             sync = self.sync_write
         try:
+            self.reconnect()
+            self.test_connection()
+            wvalue = self.write_value(value)
             if sync:
-                self.write_sync(value)
+                self.write_sync(wvalue)
             else:
-                self.write_async(value)
+                self.write_async(wvalue)
         except tango.AsynReplyNotArrived:
             msg = 'AsynReplyNotArrived for %s' % self.full_name
             # self.logger.debug(msg)
@@ -225,19 +226,9 @@ class TangoAttribute:
             raise
 
     def write_sync(self, value):
-        if self.readonly:
-            return
-        self.reconnect()
-        self.test_connection()
-        wvalue = self.write_value(value)
-        self.device_proxy.write_attribute(self.attribute_name, wvalue)
+        self.device_proxy.write_attribute(self.attribute_name, value)
 
     def write_async(self, value):
-        if self.readonly:
-            return
-        self.reconnect()
-        self.test_connection()
-        wvalue = self.write_value(value)
         if self.write_call_id is None:
             # no request before, so send it
             self.write_call_id = self.device_proxy.write_attribute_asynch(self.attribute_name, wvalue)

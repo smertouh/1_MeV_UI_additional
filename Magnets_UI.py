@@ -113,6 +113,7 @@ class MainWindow(QMainWindow):
         self.checkBox_3.stateChanged.connect(self.cb3_callback)
         # extraction
         self.checkBox_2.stateChanged.connect(self.cb2_callback)
+        self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
 
     def cb3_callback(self, value):
         if value:
