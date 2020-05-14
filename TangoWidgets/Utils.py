@@ -37,7 +37,7 @@ def config_logger(name=__name__, level=logging.DEBUG, tango_logging=False):
         except Exception:
             logger_handler.handleError(record)
     logger = logging.getLogger(name)
-    logger.setLevel(level)
+    #logger.setLevel(level)
     if not logger.hasHandlers():
         logger.propagate = False
         f_str = '%(asctime)s,%(msecs)3d %(levelname)-7s %(filename)s %(funcName)s(%(lineno)s) %(message)s'
@@ -45,6 +45,7 @@ def config_logger(name=__name__, level=logging.DEBUG, tango_logging=False):
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(log_formatter)
         logger.addHandler(console_handler)
+        logger.setLevel(level)
         # add tango logger
         if tango_logging:
             tango_handler = logging.Handler()
