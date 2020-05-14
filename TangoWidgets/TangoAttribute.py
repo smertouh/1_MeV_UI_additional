@@ -15,7 +15,7 @@ from tango import DeviceProxy, GreenMode
 from .Utils import *
 
 
-class TangoAttributeConnectionError(tango.ConnectionFailed):
+class TangoAttributeConnectionFailed(tango.ConnectionFailed):
     pass
 
 
@@ -145,7 +145,7 @@ class TangoAttribute:
         if not self.connected:
             msg = 'Attribute %s is not connected' % self.full_name
             self.logger.debug(msg)
-            raise TangoAttributeConnectionError(msg)
+            raise TangoAttributeConnectionFailed(msg)
 
     def read(self, force=None, sync=None):
         if force is None:
@@ -167,7 +167,7 @@ class TangoAttribute:
                 self.logger.warning(msg)
                 self.read_time = time.time()
                 raise
-        except TangoAttributeConnectionError:
+        except TangoAttributeConnectionFailed:
             msg = 'Attribute %s read TangoAttributeConnectionError' % self.full_name
             self.logger.info(msg)
             raise
@@ -227,7 +227,7 @@ class TangoAttribute:
                 self.logger.warning(msg)
                 self.write_time = time.time()
                 raise
-        except TangoAttributeConnectionError:
+        except TangoAttributeConnectionFailed:
             msg = 'Attribute %s write TangoAttributeConnectionError' % self.full_name
             self.logger.info(msg)
             raise

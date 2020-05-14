@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QWidget
 import tango
 
 from .Utils import *
-from .TangoAttribute import TangoAttribute, TangoAttributeConnectionError
+from .TangoAttribute import TangoAttribute, TangoAttributeConnectionFailed
 
 
 class TangoWidget:
@@ -88,7 +88,7 @@ class TangoWidget:
             if not decorate_only:
                 self.set_widget_value()
             self.decorate()
-        except TangoAttributeConnectionError:
+        except TangoAttributeConnectionFailed:
             # self.logger.info('Exception: %s' % sys.exc_info()[1])
             self.set_attribute_value()
             self.decorate()
