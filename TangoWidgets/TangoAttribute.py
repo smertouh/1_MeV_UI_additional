@@ -52,6 +52,8 @@ class TangoAttribute:
         self.write_time = 0.0
         self.read_timeout = 5.0
         self.write_timeout = 5.0
+        self.timeout_count = 0
+        self.timeout_count_limit = 3
         self.force_read = False
         self.sync_read = False
         self.sync_write = True
@@ -159,20 +161,26 @@ class TangoAttribute:
                 self.read_sync(force)
             else:
                 self.read_async()
+            self.timeout_count = 0
         except tango.AsynReplyNotArrived:
-            msg = 'AsynReplyNotArrived for %s' % self.full_name
+            # msg = 'AsynReplyNotArrived for %s' % self.full_name
             # self.logger.debug(msg)
             if time.time() - self.read_time > self.read_timeout:
                 msg = 'Timeout reading %s' % self.full_name
                 self.logger.warning(msg)
                 self.read_time = time.time()
+                self.timeout_count += 1
+                if self.timeout_count >= self.timeout_count_limit:
+                    self.read_call_id = None
+                    self.disconnect()
+                    self.timeout_count = 0
                 raise
         except TangoAttributeConnectionFailed:
-            msg = 'Attribute %s read TangoAttributeConnectionError' % self.full_name
+            msg = 'Attribute %s read TangoAttributeConnectionFailed' % self.full_name
             self.logger.info(msg)
             raise
         except:
-            msg = 'Attribute %s read Exception' % self.full_name
+            msg = 'Attribute %s read Exception %s' % (self.full_name, sys.exc_info()[0])
             self.logger.info(msg)
             self.logger.debug('Exception:', exc_info=True)
             self.read_result = None
@@ -220,19 +228,24 @@ class TangoAttribute:
             else:
                 self.write_async(wvalue)
         except tango.AsynReplyNotArrived:
-            msg = 'AsynReplyNotArrived for %s' % self.full_name
+            # msg = 'AsynReplyNotArrived for %s' % self.full_name
             # self.logger.debug(msg)
             if time.time() - self.write_time > self.write_timeout:
                 msg = 'Timeout writing %s' % self.full_name
                 self.logger.warning(msg)
                 self.write_time = time.time()
+                self.timeout_count += 1
+                if self.timeout_count >= self.timeout_count_limit:
+                    self.write_call_id = None
+                    self.disconnect()
+                    self.timeout_count = 0
                 raise
         except TangoAttributeConnectionFailed:
-            msg = 'Attribute %s write TangoAttributeConnectionError' % self.full_name
+            msg = 'Attribute %s write TangoAttributeConnectionFailed' % self.full_name
             self.logger.info(msg)
             raise
         except:
-            msg = 'Attribute %s write Exception' % self.full_name
+            msg = 'Attribute %s write Exception %s' % (self.full_name, sys.exc_info()[0])
             self.logger.info(msg)
             self.logger.debug('Exception:', exc_info=True)
             self.disconnect()
