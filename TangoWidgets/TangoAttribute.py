@@ -24,8 +24,12 @@ class TangoAttribute:
     attributes = {}
     reconnect_timeout = 5.0
 
+    # def __new__(cls, name, *args, **kwargs):
+    #     if name in TangoAttribute.attributes:
+    #         return TangoAttribute.attributes[name]
+    #     return super(TangoAttribute, cls).__new__(cls)
+    #
     def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
-        # defaults
         self.full_name = str(name)
         self.use_history = use_history
         self.device_name, self.attribute_name = split_attribute_name(self.full_name)
@@ -41,7 +45,7 @@ class TangoAttribute:
         # connect attribute
         self.connect()
         self.time = time.time()
-        # asynch operation vars
+        # async operation vars
         self.read_call_id = None
         self.write_call_id = None
         self.read_time = 0.0
