@@ -28,7 +28,7 @@ class TangoAttribute:
     #     if name in TangoAttribute.attributes:
     #         return TangoAttribute.attributes[name]
     #     return super(TangoAttribute, cls).__new__(cls)
-    #
+
     def __init__(self, name: str, level=logging.DEBUG, readonly=False, use_history=True):
         self.full_name = str(name)
         self.use_history = use_history
