@@ -21,6 +21,7 @@ import tango.server
 
 
 def config_logger(name=__name__, level=logging.DEBUG, tango_logging=False):
+
     def tango_handler_emit(logger_handler, record):
         try:
             msg = logger_handler.format(record)
@@ -36,6 +37,7 @@ def config_logger(name=__name__, level=logging.DEBUG, tango_logging=False):
                 tango.server.Device.debug_stream(msg)
         except Exception:
             logger_handler.handleError(record)
+
     logger = logging.getLogger(name)
     #logger.setLevel(level)
     if not logger.hasHandlers():
