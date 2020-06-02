@@ -11,9 +11,9 @@ async def switch():
 
 
 async def say_after(delay, what):
-    stamp('say_after: entry', delay, what)
+    stamp('say_after(%.2f, %s) entry' % (delay, what))
     await asyncio.sleep(delay)
-    stamp('say_after: exit', delay, what)
+    stamp('say_after(%.2f, %s) exit' % (delay, what))
 
 
 async def main():
@@ -33,9 +33,10 @@ async def main():
     await asyncio.sleep(0)
     stamp("main: after await asyncio.sleep(0)")
 
-    await say_after(2.2, 'velo')
-    stamp("main: after first await")
-    await say_after(1.1, 'moto')
+    await asyncio.sleep(2.2)
+    #await say_after(2.2, 'velo')
+    #stamp("main: after first await")
+    #await say_after(1.1, 'moto')
 
     stamp("main: finished")
 
