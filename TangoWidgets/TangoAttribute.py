@@ -176,6 +176,7 @@ class TangoAttribute:
                     self.timeout_count = 0
                 raise
         except TangoAttributeConnectionFailed:
+            self.read_call_id = None
             msg = 'Attribute %s read TangoAttributeConnectionFailed' % self.full_name
             self.logger.info(msg)
             raise
@@ -183,6 +184,7 @@ class TangoAttribute:
             msg = 'Attribute %s read Exception %s' % (self.full_name, sys.exc_info()[0])
             self.logger.info(msg)
             self.logger.debug('Exception:', exc_info=True)
+            self.read_call_id = None
             self.read_result = None
             self.disconnect()
             raise
@@ -205,10 +207,9 @@ class TangoAttribute:
             self.read_time = time.time()
             # use previously read result and return
             return
-        # check for read request complete
+        # check for read request complete (Exception if not completed or error)
         self.read_result = self.device_proxy.read_attribute_reply(self.read_call_id)
-        # clear call id
-        # self.read_call_id = None
+        # new read request
         self.read_call_id = self.device_proxy.read_attribute_asynch(self.attribute_name)
         self.read_time = time.time()
         msg = '%s read in %fs' % (self.full_name, time.time() - self.read_time)

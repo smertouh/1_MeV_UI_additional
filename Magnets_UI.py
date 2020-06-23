@@ -4,6 +4,7 @@ Created on Jul 28, 2019
 
 @author: sanin
 """
+from threading import Timer
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import uic
@@ -50,7 +51,8 @@ class MainWindow(QMainWindow):
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # magnet 1
-            TangoLED('binp/nbi/magnet1/output_state', self.pushButton_38),
+            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_38),
+            self.create_widget('TangoLED', 'binp/nbi/magnet1/output_state', 'pushButton_38'),
             TangoLabel('binp/nbi/magnet1/voltage', self.label_149),
             TangoLabel('binp/nbi/magnet1/current', self.label_151),
             # magnet 2
@@ -104,16 +106,26 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10),
         )
         # Defile and start timer callback task
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.timer_handler)
+        #self.timer = QTimer()
+        self.timer = Timer(TIMER_PERIOD, self.timer_handler)
+        #self.timer.timeout.connect(self.timer_handler)
         # start timer
-        self.timer.start(TIMER_PERIOD)
+        #self.timer.start(TIMER_PERIOD)
+        self.timer.start()
         # Connect signals with slots
         # acceleration
         self.checkBox_3.stateChanged.connect(self.cb3_callback)
         # extraction
         self.checkBox_2.stateChanged.connect(self.cb2_callback)
         self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
+
+    def create_widget(self, class_name, attribute, control):
+        try:
+            widget = getattr(self, control)
+            result = globals()[class_name](attribute, widget)
+        except:
+            result = None
+        return result
 
     def cb3_callback(self, value):
         if value:
@@ -138,8 +150,9 @@ class MainWindow(QMainWindow):
     def onQuit(self) :
         # Save global settings
         save_settings(self, file_name=CONFIG_FILE)
-        self.timer.stop()
-        
+        #self.timer.stop()
+        self.timer.cancel()
+
     def timer_handler(self):
         t0 = time.time()
         if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
