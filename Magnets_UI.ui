@@ -34,7 +34,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Emittance Plot Processing</string>
+   <string>Voltages UI</string>
   </property>
   <property name="windowIcon">
    <iconset>
