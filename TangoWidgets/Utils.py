@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import QPlainTextEdit
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtCore import QSize
 from PyQt5.QtCore import QPoint
+import PyQt5.QtGui as QtGui
 
 import tango
 import tango.server
@@ -142,31 +143,35 @@ def set_widget_state(obj, config, name=None):
         return
 
 
-def restore_settings(self, widgets=(), file_name='config.json'):
-    self.config = {}
+def restore_settings(obj, widgets=(), file_name='config.json'):
+    obj.config = {}
     try:
         # open and read config file
         with open(file_name, 'r') as configfile:
             s = configfile.read()
         # interpret file contents by json
-        self.config = json.loads(s)
+        obj.config = json.loads(s)
         # restore log level
-        if 'log_level' in self.config:
-            v = self.config['log_level']
-            self.logger.setLevel(v)
+        if 'log_level' in obj.config:
+            v = obj.config['log_level']
+            obj.logger.setLevel(v)
         # restore window size and position
-        if 'main_window' in self.config:
-            self.resize(QSize(self.config['main_window']['size'][0], self.config['main_window']['size'][1]))
-            self.move(QPoint(self.config['main_window']['position'][0], self.config['main_window']['position'][1]))
+        if 'main_window' in obj.config:
+            obj.resize(QSize(obj.config['main_window']['size'][0], obj.config['main_window']['size'][1]))
+            obj.move(QPoint(obj.config['main_window']['position'][0], obj.config['main_window']['position'][1]))
+        if 'icon_file' in obj.config:
+            obj.setWindowIcon(QtGui.QIcon(obj.config['icon_file']))  # icon
+        if 'application_name' in obj.config:
+            obj.setWindowTitle(obj.config['application_name'])       # title
         # restore widgets state
         for w in widgets:
-            set_widget_state(w, self.config)
+            set_widget_state(w, obj.config)
         # OK message
-        self.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
+        obj.logger.log(logging.INFO, 'Configuration restored from %s' % file_name)
     except:
-        self.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
-        self.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
-    return self.config
+        obj.logger.log(logging.WARNING, 'Configuration restore error from %s' % file_name)
+        obj.logger.log(logging.DEBUG, 'Exception:', exc_info=True)
+    return obj.config
 
 
 def save_settings(self, widgets=(), file_name='config.json'):
@@ -237,5 +242,13 @@ def log_exception(self, text='Exception: '):
     msg = text + str(sys.exc_info()[1])
     self.logger.warning(msg)
     self.logger.debug(msg, exc_info=True)
+
+
+def create_widget(self, class_name, attribute, control):
+    try:
+        widget = getattr(self, control)
+        return globals()[class_name](attribute, widget)
+    except:
+        return None
 
 

@@ -22,27 +22,26 @@ APPLICATION_NAME = 'Magnets_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
 APPLICATION_VERSION = '1_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
-UI_FILE = APPLICATION_NAME_SHORT + '.ui'
 
 TIMER_PERIOD = 500  # ms
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, loglevel=logging.DEBUG, ui_file='UI.ui', config_file='UI.json'):
         # Initialization of the superclass
-        super(MainWindow, self).__init__(parent)
+        super().__init__(None)
         # logging config
-        self.logger = config_logger(level=logging.DEBUG)
+        self.logger = config_logger(level=loglevel)
         # members definition
         self.n = 0
         self.elapsed = 0.0
         # Load the UI
-        uic.loadUi(UI_FILE, self)
+        uic.loadUi(ui_file, self)
         # default main window parameters
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
-        self.setWindowTitle(APPLICATION_NAME)       # title
-        self.setWindowIcon(QtGui.QIcon('icons_red_xHd_icon.ico'))  # icon
+        self.setWindowTitle('UI Application')       # title
+        self.setWindowIcon(QtGui.QIcon('UI_icon.ico'))  # icon
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
@@ -106,17 +105,9 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10),
         )
         # Defile and start timer callback task
-        #self.timer = QTimer()
         self.timer = Timer(TIMER_PERIOD, self.timer_handler)
-        #self.timer.timeout.connect(self.timer_handler)
         # start timer
-        #self.timer.start(TIMER_PERIOD)
         self.timer.start()
-        # Connect signals with slots
-        # acceleration
-        self.checkBox_3.stateChanged.connect(self.cb3_callback)
-        # extraction
-        self.checkBox_2.stateChanged.connect(self.cb2_callback)
         self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
 
     def create_widget(self, class_name, attribute, control):
@@ -127,30 +118,9 @@ class MainWindow(QMainWindow):
             result = None
         return result
 
-    def cb3_callback(self, value):
-        if value:
-            self.doubleSpinBox_9.setReadOnly(False)
-            self.doubleSpinBox_10.setReadOnly(False)
-        else:
-            self.doubleSpinBox_9.setValue(0.0)
-            self.doubleSpinBox_9.setReadOnly(True)
-            self.doubleSpinBox_10.setValue(0.0)
-            self.doubleSpinBox_10.setReadOnly(True)
-
-    def cb2_callback(self, value):
-        if value:
-            self.doubleSpinBox_5.setReadOnly(False)
-            self.doubleSpinBox_8.setReadOnly(False)
-        else:
-            self.doubleSpinBox_5.setValue(0.0)
-            self.doubleSpinBox_5.setReadOnly(True)
-            self.doubleSpinBox_8.setValue(0.0)
-            self.doubleSpinBox_8.setReadOnly(True)
-
-    def onQuit(self) :
+    def on_quit(self):
         # Save global settings
         save_settings(self, file_name=CONFIG_FILE)
-        #self.timer.stop()
         self.timer.cancel()
 
     def timer_handler(self):
@@ -172,16 +142,3 @@ class MainWindow(QMainWindow):
                 self.elapsed = time.time() - self.elapsed
                 return
         self.elapsed = time.time() - self.elapsed
-
-
-if __name__ == '__main__':
-    # Create the GUI application
-    app = QApplication(sys.argv)
-    # Instantiate the main window
-    dmw = MainWindow()
-    app.aboutToQuit.connect(dmw.onQuit)
-    # Show it
-    dmw.show()
-    # Start the Qt main loop execution, exiting from this script
-    # with the same return code of Qt application
-    sys.exit(app.exec_())
