@@ -38,10 +38,10 @@ class MainWindow(QMainWindow):
         # Load the UI
         uic.loadUi(ui_file, self)
         # default main window parameters
-        self.resize(QSize(480, 640))                # size
-        self.move(QPoint(50, 50))                   # position
-        self.setWindowTitle('UI Application')       # title
-        self.setWindowIcon(QtGui.QIcon('UI_icon.ico'))  # icon
+        #self.resize(QSize(480, 640))                # size
+        #self.move(QPoint(50, 50))                   # position
+        #self.setWindowTitle('UI Application')       # title
+        #self.setWindowIcon(QtGui.QIcon('UI_icon.ico'))  # icon
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 

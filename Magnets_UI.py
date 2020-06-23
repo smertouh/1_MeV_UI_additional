@@ -39,10 +39,10 @@ class MainWindow(QMainWindow):
         # Load the UI
         uic.loadUi(UI_FILE, self)
         # default main window parameters
-        self.resize(QSize(480, 640))                # size
-        self.move(QPoint(50, 50))                   # position
-        self.setWindowTitle(APPLICATION_NAME)       # title
-        self.setWindowIcon(QtGui.QIcon('icons_red_xHd_icon.ico'))  # icon
+        #self.resize(QSize(480, 640))                # size
+        #self.move(QPoint(50, 50))                   # position
+        #self.setWindowTitle(APPLICATION_NAME)       # title
+        #self.setWindowIcon(QtGui.QIcon('icons_red_xHd_icon.ico'))  # icon
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
@@ -117,7 +117,7 @@ class MainWindow(QMainWindow):
         self.checkBox_3.stateChanged.connect(self.cb3_callback)
         # extraction
         self.checkBox_2.stateChanged.connect(self.cb2_callback)
-        self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
+        self.logger.info('\n------------ Attribute Config Finished -----------\n')
 
     def create_widget(self, class_name, attribute, control):
         try:
