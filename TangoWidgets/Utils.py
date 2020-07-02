@@ -155,14 +155,15 @@ def restore_settings(obj, widgets=(), file_name='config.json'):
         if 'log_level' in obj.config:
             v = obj.config['log_level']
             obj.logger.setLevel(v)
-        # restore window size and position
+        # restore window size and position (can be changed by user during operation)
         if 'main_window' in obj.config:
             obj.resize(QSize(obj.config['main_window']['size'][0], obj.config['main_window']['size'][1]))
             obj.move(QPoint(obj.config['main_window']['position'][0], obj.config['main_window']['position'][1]))
-        if 'icon_file' in obj.config:
-            obj.setWindowIcon(QtGui.QIcon(obj.config['icon_file']))  # icon
-        if 'application_name' in obj.config:
-            obj.setWindowTitle(obj.config['application_name'])       # title
+        # --- removed - should be configured in the UI file
+        # if 'icon_file' in obj.config:
+        #     obj.setWindowIcon(QtGui.QIcon(obj.config['icon_file']))  # icon
+        # if 'application_name' in obj.config:
+        #     obj.setWindowTitle(obj.config['application_name'])       # title
         # restore widgets state
         for w in widgets:
             set_widget_state(w, obj.config)

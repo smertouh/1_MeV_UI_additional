@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-Created on Jul 28, 2019
+Created on Jul 1, 200
 
 @author: sanin
 """
@@ -18,15 +18,15 @@ from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
-APPLICATION_NAME = 'Magnets_UI'
+APPLICATION_NAME = 'Tango UI Application'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
-APPLICATION_VERSION = '1_0'
+APPLICATION_VERSION = '0_0'
 CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
 
 TIMER_PERIOD = 500  # ms
 
 
-class MainWindow(QMainWindow):
+class TangoUI_MainWindow(QMainWindow):
     def __init__(self, loglevel=logging.DEBUG, ui_file='UI.ui', config_file='UI.json'):
         # Initialization of the superclass
         super().__init__(None)
@@ -35,13 +35,13 @@ class MainWindow(QMainWindow):
         # members definition
         self.n = 0
         self.elapsed = 0.0
-        # Load the UI
-        uic.loadUi(ui_file, self)
         # default main window parameters
-        #self.resize(QSize(480, 640))                # size
-        #self.move(QPoint(50, 50))                   # position
-        #self.setWindowTitle('UI Application')       # title
-        #self.setWindowIcon(QtGui.QIcon('UI_icon.ico'))  # icon
+        self.resize(QSize(480, 640))                # size
+        self.move(QPoint(50, 50))                   # position
+        self.setWindowTitle(APPLICATION_NAME)       # title
+        # self.setWindowIcon(QtGui.QIcon('UI_icon.ico'))  # icon
+        # load the UI
+        uic.loadUi(ui_file, self)
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
@@ -104,19 +104,32 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('ET7000_server/test/pet9_7026/ao00', self.doubleSpinBox_9),
             TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10),
         )
-        # Defile and start timer callback task
-        self.timer = Timer(TIMER_PERIOD, self.timer_handler)
-        # start timer
-        self.timer.start()
         self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
+        # defile and start timer callback task
+        self.timer = Timer(TIMER_PERIOD, self.timer_handler)
+        self.timer.start()
+        self.logger.info('\n------------ Timer Loop Activated -----------\n')
 
     def create_widget(self, class_name, attribute, control):
-        try:
-            widget = getattr(self, control)
-            result = globals()[class_name](attribute, widget)
-        except:
-            result = None
+        widget = getattr(self, control)
+        result = globals()[class_name](attribute, widget)
+        self.logger.info('%s for %s at %s has been created' % (class_name, attribute, widget))
         return result
+
+    def create_widgets(self, class_name, attribute, control):
+        self.rdwdgts = []
+        self.wtwdgts = []
+        try:
+            for item in self.config['widgets']['read']:
+                widget = self.create_widget(item['class'], item['attribute'], item['widget'])
+                self.rdwdgts.append(widget)
+            for item in self.config['widgets']['write']:
+                widget = self.create_widget(item['class'], item['attribute'], item['widget'])
+                self.wtwdgts.append(widget)
+        except:
+            self.logger.warning('Error creating TangoWidget')
+            self.logger.debug('Exception:', exc_info=True)
+        return
 
     def on_quit(self):
         # Save global settings
