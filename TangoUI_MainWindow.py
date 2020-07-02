@@ -4,6 +4,7 @@ Created on Jul 1, 200
 
 @author: sanin
 """
+import sys
 from threading import Timer
 
 from PyQt5.QtWidgets import QApplication
@@ -18,114 +19,59 @@ from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
-APPLICATION_NAME = 'Tango UI Application'
-APPLICATION_NAME_SHORT = APPLICATION_NAME
+APPLICATION_NAME = 'Tango_UI'
 APPLICATION_VERSION = '0_0'
-CONFIG_FILE = APPLICATION_NAME_SHORT + '.json'
+CONFIG_FILE = APPLICATION_NAME + '.json'
+UI_FILE = APPLICATION_NAME + '.ui'
 
 TIMER_PERIOD = 500  # ms
+TIMER_LIMIT = 200  # ms
 
 
 class TangoUI_MainWindow(QMainWindow):
-    def __init__(self, loglevel=logging.DEBUG, ui_file='UI.ui', config_file='UI.json'):
+    def __init__(self, loglevel=logging.DEBUG, ui_file=UI_FILE, config_file=CONFIG_FILE):
         # Initialization of the superclass
         super().__init__(None)
-        # logging config
+        # Logging config
         self.logger = config_logger(level=loglevel)
-        # members definition
+        # Attributes definition
+        self.widgets = []
         self.n = 0
         self.elapsed = 0.0
-        # default main window parameters
+        # Default main window parameters
         self.resize(QSize(480, 640))                # size
         self.move(QPoint(50, 50))                   # position
         self.setWindowTitle(APPLICATION_NAME)       # title
-        # self.setWindowIcon(QtGui.QIcon('UI_icon.ico'))  # icon
-        # load the UI
+        # Load the UI
         uic.loadUi(ui_file, self)
 
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
 
-        restore_settings(self, file_name=CONFIG_FILE)
+        restore_settings(self, file_name=config_file)
 
-        # read attributes TangoWidgets list
-        self.rdwdgts = (
-            # magnet 1
-            #TangoLED('binp/nbi/magnet1/output_state', self.pushButton_38),
-            self.create_widget('TangoLED', 'binp/nbi/magnet1/output_state', 'pushButton_38'),
-            TangoLabel('binp/nbi/magnet1/voltage', self.label_149),
-            TangoLabel('binp/nbi/magnet1/current', self.label_151),
-            # magnet 2
-            TangoLED('binp/nbi/magnet2/output_state', self.pushButton_41),
-            TangoLabel('binp/nbi/magnet2/voltage', self.label_150),
-            TangoLabel('binp/nbi/magnet2/current', self.label_152),
-            # magnet 3
-            TangoLED('binp/nbi/magnet3/output_state', self.pushButton_45),
-            TangoLabel('binp/nbi/magnet3/voltage', self.label_157),
-            TangoLabel('binp/nbi/magnet3/current', self.label_159),
-            # magnet 4
-            TangoLED('binp/nbi/magnet4/output_state', self.pushButton_46),
-            TangoLabel('binp/nbi/magnet4/voltage', self.label_158),
-            TangoLabel('binp/nbi/magnet4/current', self.label_160),
-            # pg
-            TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_42),
-            TangoLabel('binp/nbi/pg_offset/voltage', self.label_140),
-            TangoLabel('binp/nbi/pg_offset/current', self.label_142),
-            # acceleration
-            TangoLabel('ET7000_server/test/pet9_7026/ai00', self.label_36),
-            # extraction
-            TangoLabel('ET7000_server/test/pet4_7026/ai00', self.label_34),
-        )
-        # writable attributes TangoWidgets list
-        self.wtwdgts = (
-            # magnet 1
-            TangoCheckBox('binp/nbi/magnet1/output_state', self.checkBox_54),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_voltage', self.doubleSpinBox_53),
-            TangoAbstractSpinBox('binp/nbi/magnet1/programmed_current', self.doubleSpinBox_55),
-            # magnet 2
-            TangoCheckBox('binp/nbi/magnet2/output_state', self.checkBox_55),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_voltage', self.doubleSpinBox_54),
-            TangoAbstractSpinBox('binp/nbi/magnet2/programmed_current', self.doubleSpinBox_56),
-            # magnet 3
-            TangoCheckBox('binp/nbi/magnet3/output_state', self.checkBox_56),
-            TangoAbstractSpinBox('binp/nbi/magnet3/programmed_voltage', self.doubleSpinBox_57),
-            TangoAbstractSpinBox('binp/nbi/magnet3/programmed_current', self.doubleSpinBox_59),
-            # magnet 2
-            TangoCheckBox('binp/nbi/magnet4/output_state', self.checkBox_57),
-            TangoAbstractSpinBox('binp/nbi/magnet4/programmed_voltage', self.doubleSpinBox_58),
-            TangoAbstractSpinBox('binp/nbi/magnet4/programmed_current', self.doubleSpinBox_60),
-            # pg
-            TangoCheckBox('binp/nbi/pg_offset/output_state', self.checkBox_52),
-            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_voltage', self.doubleSpinBox_50),
-            TangoAbstractSpinBox('binp/nbi/pg_offset/programmed_current', self.doubleSpinBox_49),
-            # extraction
-            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao00', self.doubleSpinBox_5),
-            TangoAbstractSpinBox('ET7000_server/test/pet4_7026/ao01', self.doubleSpinBox_8),
-            # acceleration
-            TangoAbstractSpinBox('ET7000_server/test/pet9_7026/ao00', self.doubleSpinBox_9),
-            TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10),
-        )
+        self.create_widgets()
         self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
-        # defile and start timer callback task
+        # Defile and start timer task
         self.timer = Timer(TIMER_PERIOD, self.timer_handler)
         self.timer.start()
-        self.logger.info('\n------------ Timer Loop Activated -----------\n')
+        self.logger.info('\n\n------------ Timer Loop Activated -----------\n')
 
     def create_widget(self, class_name, attribute, control):
         widget = getattr(self, control)
         result = globals()[class_name](attribute, widget)
-        self.logger.info('%s for %s at %s has been created' % (class_name, attribute, widget))
+        self.logger.info('%s for %s at %s has been created' % (class_name, attribute, control))
         return result
 
-    def create_widgets(self, class_name, attribute, control):
-        self.rdwdgts = []
-        self.wtwdgts = []
+    def create_widgets(self):
+        self.widgets = []
         try:
-            for item in self.config['widgets']['read']:
-                widget = self.create_widget(item['class'], item['attribute'], item['widget'])
-                self.rdwdgts.append(widget)
-            for item in self.config['widgets']['write']:
-                widget = self.create_widget(item['class'], item['attribute'], item['widget'])
-                self.wtwdgts.append(widget)
+            for item in self.config['TangoWidgets']:
+                try:
+                    widget = self.create_widget(item['class'], item['attribute'], item['widget'])
+                    self.widgets.append(widget)
+                except:
+                    self.logger.warning('Error creating TangoWidget')
+                    self.logger.debug('Exception:', exc_info=True)
         except:
             self.logger.warning('Error creating TangoWidget')
             self.logger.debug('Exception:', exc_info=True)
@@ -137,21 +83,32 @@ class TangoUI_MainWindow(QMainWindow):
         self.timer.cancel()
 
     def timer_handler(self):
-        t0 = time.time()
-        if len(self.rdwdgts) <= 0 and len(self.wtwdgts) <= 0:
-            return
         self.elapsed = 0.0
-        count = 0
-        while time.time() - t0 < TIMER_PERIOD/2000.0:
-            if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
-                self.rdwdgts[self.n].update()
-            if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
-                self.wtwdgts[self.n].update(decorate_only=True)
+        t0 = time.time()
+        if len(self.widgets) <= 0:
+            return
+        for w in self.widgets[self.n:]:
+            w.update()
             self.n += 1
-            if self.n >= max(len(self.rdwdgts), len(self.wtwdgts)):
-                self.n = 0
-            count += 1
-            if count == max(len(self.rdwdgts), len(self.wtwdgts)):
-                self.elapsed = time.time() - self.elapsed
-                return
+            if time.time() - t0 > TIMER_LIMIT:
+                break
+        self.n = 0
         self.elapsed = time.time() - self.elapsed
+
+
+if __name__ == '__main__':
+    # Load options from command line
+    if len(sys.argv) > 1:
+        UI_FILE = sys.argv[1]
+    if len(sys.argv) > 2:
+        CONFIG_FILE = sys.argv[2]
+    # Create the GUI application
+    app = QApplication(sys.argv)
+    # Instantiate the main window
+    dmw = TangoUI_MainWindow()
+    app.aboutToQuit.connect(dmw.on_quit)
+    # Show it
+    dmw.show()
+    # Start the Qt main loop execution, exiting from this script
+    # with the same return code of Qt application
+    sys.exit(app.exec_())
