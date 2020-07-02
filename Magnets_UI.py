@@ -117,6 +117,7 @@ class MainWindow(QMainWindow):
         self.checkBox_3.stateChanged.connect(self.cb3_callback)
         # extraction
         self.checkBox_2.stateChanged.connect(self.cb2_callback)
+
         self.logger.info('\n------------ Attribute Config Finished -----------\n')
 
     def create_widget(self, class_name, attribute, control):
@@ -147,7 +148,7 @@ class MainWindow(QMainWindow):
             self.doubleSpinBox_8.setValue(0.0)
             self.doubleSpinBox_8.setReadOnly(True)
 
-    def onQuit(self) :
+    def onQuit(self):
         # Save global settings
         save_settings(self, file_name=CONFIG_FILE)
         #self.timer.stop()
