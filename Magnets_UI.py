@@ -106,12 +106,11 @@ class MainWindow(QMainWindow):
             TangoAbstractSpinBox('ET7000_server/test/pet7_7026/ao00', self.doubleSpinBox_10),
         )
         # Defile and start timer callback task
-        #self.timer = QTimer()
-        self.timer = Timer(TIMER_PERIOD, self.timer_handler)
-        #self.timer.timeout.connect(self.timer_handler)
-        # start timer
-        #self.timer.start(TIMER_PERIOD)
-        self.timer.start()
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timer_handler)
+        self.timer.start(TIMER_PERIOD)
+        #self.timer = Timer(TIMER_PERIOD, self.timer_handler)
+        #self.timer.start()
         # Connect signals with slots
         # acceleration
         self.checkBox_3.stateChanged.connect(self.cb3_callback)
@@ -151,8 +150,8 @@ class MainWindow(QMainWindow):
     def onQuit(self):
         # Save global settings
         save_settings(self, file_name=CONFIG_FILE)
-        #self.timer.stop()
-        self.timer.cancel()
+        self.timer.stop()
+        #self.timer.cancel()
 
     def timer_handler(self):
         t0 = time.time()
