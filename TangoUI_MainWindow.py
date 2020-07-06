@@ -10,7 +10,7 @@ from threading import Timer
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import uic
 
-#from TangoWidgets.TangoCheckBox import TangoCheckBox
+# from TangoWidgets.TangoCheckBox import TangoCheckBox
 from TangoWidgets.TangoLED import TangoLED
 from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
@@ -74,8 +74,8 @@ class TangoUI_MainWindow(QMainWindow):
                     self.logger.warning('Error creating TangoWidget')
                     self.logger.debug('Exception:', exc_info=True)
         except:
-            self.logger.warning('Error creating TangoWidget')
-            self.logger.debug('Exception:', exc_info=True)
+            self.logger.warning('Exception filling TangoWidgets')
+            self.logger.debug('Info:', exc_info=True)
         return
 
     def on_quit(self):
