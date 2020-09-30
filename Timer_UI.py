@@ -19,6 +19,7 @@ from TangoWidgets.TangoLabel import TangoLabel
 from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.Timer_on_LED import Timer_on_LED
 from TangoWidgets.RF_ready_LED import RF_ready_LED
+from TangoWidgets.Lauda_ready_LED import Lauda_ready_LED
 from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
@@ -72,7 +73,8 @@ class MainWindow(QMainWindow):
             TangoLED('binp/nbi/pg_offset/output_state', self.pushButton_31),  # PG offset on
             # lauda
             # TangoLED('binp/nbi/lauda/6230_7', self.pushButton_30),  # Pump On
-            TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
+            # TangoLED('binp/nbi/lauda/6230_0', self.pushButton_30),  # Valve
+            Lauda_ready_LED('binp/nbi/lauda/', self.pushButton_30),
             # rf system
             RF_ready_LED('binp/nbi/timing/di60', self.pushButton_32),  # RF system ready
         ]
@@ -132,6 +134,8 @@ class MainWindow(QMainWindow):
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)  # show more button
         self.pushButton_2.clicked.connect(self.execute_button_clicked)  # execute button
+        self.pushButton_4.clicked.connect(self.show_hide_interlocks)
+        self.show_hide_interlocks()
         # Defile callback task and start timer
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
@@ -157,12 +161,23 @@ class MainWindow(QMainWindow):
         #             self.logger.debug('Timer device locked successfully')
         #         else:
         #             self.logger.error('Can not lock timer device')
+        self.logger.info('\n\n------------ Attribute Config Finished -----------\n')
 
     def check_protection_interlock(self):
         value = ((not self.checkBox_20.isChecked()) or self.pushButton_30.isChecked()) and \
                 ((not self.checkBox_21.isChecked()) or self.pushButton_31.isChecked()) and \
                 ((not self.checkBox_22.isChecked()) or self.pushButton_32.isChecked())
         return value
+
+    def show_hide_interlocks(self):
+        if self.pushButton_4.isChecked():
+            self.checkBox_20.show()
+            self.checkBox_21.show()
+            self.checkBox_22.show()
+        else:
+            self.checkBox_20.hide()
+            self.checkBox_21.hide()
+            self.checkBox_22.hide()
 
     def execute_button_clicked(self):
         try:
