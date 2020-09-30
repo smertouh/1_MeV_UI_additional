@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QWidget
 import tango
 
 from .Utils import *
-from .TangoAttribute import TangoAttribute
+from .TangoAttribute import TangoAttribute, TangoAttributeConnectionFailed
 
 
 class TangoWidget:
@@ -88,6 +88,10 @@ class TangoWidget:
             if not decorate_only:
                 self.set_widget_value()
             self.decorate()
+        except TangoAttributeConnectionFailed:
+            # self.logger.info('Exception: %s' % sys.exc_info()[1])
+            self.set_attribute_value()
+            self.decorate()
         except:
             self.logger.info('Exception: %s' % sys.exc_info()[1])
             self.logger.debug('Exception Info:', exc_info=True)
@@ -97,13 +101,13 @@ class TangoWidget:
 
     def decorate(self):
         if not self.attribute.connected:
-            self.logger.debug('%s not connected' % self.name)
+            self.logger.debug('%s is not connected' % self.name)
             self.decorate_error()
         elif not self.attribute.is_scalar():
-            self.logger.debug('%s non scalar' % self.name)
+            self.logger.debug('%s is non scalar' % self.name)
             self.decorate_invalid_data_format()
         elif not self.attribute.is_valid():
-            self.logger.debug('%s invalid' % self.name)
+            self.logger.debug('%s is invalid' % self.name)
             self.decorate_invalid_quality()
         else:
             if not self.compare():

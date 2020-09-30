@@ -5,8 +5,8 @@ from.TangoLED import TangoLED
 
 class RF_ready_LED(TangoLED):
     def __init__(self, name, widget: QPushButton):
-        self.av = TangoAttribute('binp/nbi/adc0/chan16')  # anode voltage >8.0 kV
-        self.cc = TangoAttribute('binp/nbi/adc0/chan22')  # cathode current >0.1
+        self.av = TangoAttribute('binp/nbi/adc0/chan16')  # anode voltage > 8.0 kV
+        self.cc = TangoAttribute('binp/nbi/adc0/chan22')  # cathode current > 0.1
         self.pr = TangoAttribute('binp/nbi/timing/di60')  #
         super().__init__(name, widget)
 
