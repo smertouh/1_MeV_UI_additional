@@ -134,6 +134,8 @@ class MainWindow(QMainWindow):
         self.pushButton.clicked.connect(self.run_button_clicked)  # run button
         self.pushButton_3.clicked.connect(self.show_more_button_clicked)  # show more button
         self.pushButton_2.clicked.connect(self.execute_button_clicked)  # execute button
+        self.pushButton_4.clicked.connect(self.show_hide_interlocks)
+        self.show_hide_interlocks()
         # Defile callback task and start timer
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_handler)
@@ -166,6 +168,16 @@ class MainWindow(QMainWindow):
                 ((not self.checkBox_21.isChecked()) or self.pushButton_31.isChecked()) and \
                 ((not self.checkBox_22.isChecked()) or self.pushButton_32.isChecked())
         return value
+
+    def show_hide_interlocks(self):
+        if self.pushButton_4.isChecked():
+            self.checkBox_20.show()
+            self.checkBox_21.show()
+            self.checkBox_22.show()
+        else:
+            self.checkBox_20.hide()
+            self.checkBox_21.hide()
+            self.checkBox_22.hide()
 
     def execute_button_clicked(self):
         try:
