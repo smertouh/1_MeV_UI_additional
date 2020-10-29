@@ -128,7 +128,8 @@ class TangoWidget:
         try:
             self.write(value)
         except:
-            pass
+            self.logger.info('Exception: %s' % sys.exc_info()[1])
+            self.logger.debug('Exception Info:', exc_info=True)
 
     def get_widget_value(self):
         result = None
