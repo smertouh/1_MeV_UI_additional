@@ -50,7 +50,7 @@ class MainWindow(QMainWindow):
         self.move(QPoint(50, 50))                    # position
         self.setWindowTitle(APPLICATION_NAME)        # title
         self.setWindowIcon(QtGui.QIcon('icon.png'))  # icon
-        # Welcom message
+        # Welcome message
         print(APPLICATION_NAME + ' version ' + APPLICATION_VERSION + ' started')
         #
         restore_settings(self, file_name=CONFIG_FILE)
