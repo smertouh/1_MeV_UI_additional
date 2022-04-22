@@ -253,11 +253,15 @@ class MainWindow(QMainWindow):
             self.comboBox.setCurrentIndex(0)
 
     def pulse_off(self):
+        n = 0
         for k in range(12):
             try:
                 self.timer_on_led.attribute.device_proxy.write_attribute('channel_enable' + str(k), False)
             except:
-                self.logger.debug("Exception ", exc_info=True)
+                n += 1
+        if n <= 0:
+            return
+        self.logger.debug("Exception ", exc_info=True)
 
     def onQuit(self) :
         # Save global settings
