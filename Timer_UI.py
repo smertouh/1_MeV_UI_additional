@@ -130,8 +130,7 @@ class MainWindow(QMainWindow):
         # timer on LED
         self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29)  # timer on led
         self.rdwdgts.append(self.timer_on_led)
-        self.anode_power_led = TangoLED('binp/nbi/rfpowercontrol/status', self.pushButton_33)
-#        self.anode_power_led.set_widget_value = self.
+        self.anode_power_led = TangoLED('binp/nbi/rfpowercontrol/anode_power_ok', self.pushButton_33)
         self.rdwdgts.append(self.adode_power_led)
         self.timer_device = self.timer_on_led.attribute.device_proxy
         # additional decorations
@@ -174,6 +173,7 @@ class MainWindow(QMainWindow):
     def check_protection_interlock(self):
         value = ((not self.checkBox_20.isChecked()) or self.pushButton_30.isChecked()) and \
                 ((not self.checkBox_21.isChecked()) or self.pushButton_31.isChecked()) and \
+                ((not self.checkBox_23.isChecked()) or self.pushButton_33.isChecked()) and \
                 ((not self.checkBox_22.isChecked()) or self.pushButton_32.isChecked())
         return value
 
