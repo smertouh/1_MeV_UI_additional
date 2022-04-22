@@ -6,6 +6,7 @@ Created on Jul 28, 2019
 """
 
 import os.path
+import sys
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import uic
@@ -20,9 +21,11 @@ from TangoWidgets.TangoAbstractSpinBox import TangoAbstractSpinBox
 from TangoWidgets.Timer_on_LED import Timer_on_LED
 from TangoWidgets.RF_ready_LED import RF_ready_LED
 from TangoWidgets.Lauda_ready_LED import Lauda_ready_LED
-from TangoWidgets.Utils import *
 
 sys.path.append('../TangoUtils')
+from config_logger import config_logger
+from log_exception import log_exception
+from TangoWidgets.Utils import *
 
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'Timer_UI'
@@ -40,7 +43,7 @@ class MainWindow(QMainWindow):
         # Initialization of the superclass
         super(MainWindow, self).__init__(parent)
         # logging config
-        self.logger = config_logger(level=logging.DEBUG)
+        self.logger = config_logger()
         # members definition
         self.n = 0
         self.elapsed = 0.0
@@ -127,6 +130,9 @@ class MainWindow(QMainWindow):
         # timer on LED
         self.timer_on_led = Timer_on_LED('binp/nbi/timing/channel_state0', self.pushButton_29)  # timer on led
         self.rdwdgts.append(self.timer_on_led)
+        self.anode_power_led = TangoLED('binp/nbi/rfpowercontrol/status', self.pushButton_33)
+#        self.anode_power_led.set_widget_value = self.
+        self.rdwdgts.append(self.adode_power_led)
         self.timer_device = self.timer_on_led.attribute.device_proxy
         # additional decorations
         self.single_periodical_callback(self.comboBox.currentIndex())
@@ -176,10 +182,12 @@ class MainWindow(QMainWindow):
             self.checkBox_20.show()
             self.checkBox_21.show()
             self.checkBox_22.show()
+            self.checkBox_23.show()
         else:
             self.checkBox_20.hide()
             self.checkBox_21.hide()
             self.checkBox_22.hide()
+            self.checkBox_23.hide()
 
     def execute_button_clicked(self):
         try:

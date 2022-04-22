@@ -16,7 +16,6 @@ class TangoLED(TangoWidget):
             #self.bs = self.widget.blockSignals(True)
             #self.widget.released.connect(self.callback)
             self.widget.clicked.connect(self.callback)
-            #self.widget.toggled.connect(self.callback2)
         except:
             msg = '%s creation error.' % name
             self.logger.info(msg)
