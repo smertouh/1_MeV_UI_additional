@@ -22,6 +22,8 @@ from TangoWidgets.RF_ready_LED import RF_ready_LED
 from TangoWidgets.Lauda_ready_LED import Lauda_ready_LED
 from TangoWidgets.Utils import *
 
+sys.path.append('../TangoUtils')
+
 ORGANIZATION_NAME = 'BINP'
 APPLICATION_NAME = 'Timer_UI'
 APPLICATION_NAME_SHORT = APPLICATION_NAME
