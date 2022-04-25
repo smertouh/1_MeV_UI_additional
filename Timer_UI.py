@@ -261,6 +261,7 @@ class MainWindow(QMainWindow):
                 n += 1
         if n <= 0:
             return
+        self.logger.warbibg("Can not stop pulse")
         self.logger.debug("Exception ", exc_info=True)
 
     def onQuit(self) :
