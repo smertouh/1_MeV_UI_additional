@@ -53,37 +53,37 @@ class MainWindow(QMainWindow):
         # read attributes TangoWidgets list
         self.rdwdgts = (
             # APS_ILC
-            TangoLED('binp/nbi/timing/di16', self.pushButton_32),
+            TangoLED('binp/nbi/timing/di48', self.pushButton_32),
             # BC_HVC
-            TangoLED('binp/nbi/timing/di17', self.pushButton_31),
+            TangoLED('binp/nbi/timing/di49', self.pushButton_31),
             # AnV_ON
-            TangoLED('binp/nbi/timing/di18', self.pushButton_33),
+            TangoLED('binp/nbi/timing/di50', self.pushButton_33),
             # S_C_Prot
-            TangoLED('binp/nbi/timing/di19', self.pushButton_34),
+            TangoLED('binp/nbi/timing/di51', self.pushButton_34),
             # RF_FP_A1
-            TangoLED('binp/nbi/timing/di20', self.pushButton_35),
+            TangoLED('binp/nbi/timing/di52', self.pushButton_35),
             # RPL_PRT
-            TangoLED('binp/nbi/timing/di24', self.pushButton_38),
+            TangoLED('binp/nbi/timing/di53', self.pushButton_38),
             # RFG_R/L
-            TangoLED('binp/nbi/timing/di25', self.pushButton_39),
+            TangoLED('binp/nbi/timing/di54', self.pushButton_39),
             # RF_Status
-            TangoLED('binp/nbi/timing/di26', self.pushButton_37),
+            TangoLED('binp/nbi/timing/di55', self.pushButton_37),
             # HV_ILC
-            TangoLED('binp/nbi/timing/di27', self.pushButton_36),
+            TangoLED('binp/nbi/timing/di56', self.pushButton_36),
             # RF_Ready
-            TangoLED('binp/nbi/timing/di28', self.pushButton_40),
+            TangoLED('binp/nbi/timing/di63', self.pushButton_40),
             # door g1
-            TangoLED('binp/nbi/timing/di32', self.pushButton_43),
+            TangoLED('binp/nbi/timing/di59', self.pushButton_43),
             # PrA1_ready
-            TangoLED('binp/nbi/timing/di33', self.pushButton_44),
+            TangoLED('binp/nbi/timing/di60', self.pushButton_44),
             # S_C1_PRT
-            TangoLED('binp/nbi/timing/di34', self.pushButton_42),
+            TangoLED('binp/nbi/timing/di61', self.pushButton_42),
             # Bs_C1_PRT
-            TangoLED('binp/nbi/timing/di35', self.pushButton_41),
+            TangoLED('binp/nbi/timing/di62', self.pushButton_41),
             # Fil1_ILC
-            TangoLED('binp/nbi/timing/di48', self.pushButton_45),
+            TangoLED('binp/nbi/timing/di57', self.pushButton_45),
             # C_C_Prot_a1
-            TangoLED('binp/nbi/timing/di49', self.pushButton_48),
+            TangoLED('binp/nbi/timing/di58', self.pushButton_48),
 
         )
         # writable attributes TangoWidgets list
@@ -126,7 +126,7 @@ class MainWindow(QMainWindow):
             return
         self.elapsed = 0.0
         count = 0
-        while time.time() - t0 < TIMER_PERIOD/2000.0:
+        while time.time() - t0 < TIMER_PERIOD/4000.0:
             if self.n < len(self.rdwdgts) and self.rdwdgts[self.n].widget.isVisible():
                 self.rdwdgts[self.n].update()
             if self.n < len(self.wtwdgts) and self.wtwdgts[self.n].widget.isVisible():
